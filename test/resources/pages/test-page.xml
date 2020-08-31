@@ -4,6 +4,6 @@
     <Include path="./system-menu.xml" />
     <Toolbar name="toolbar" selector=".toolbar">
         <Input name="search" selector=".search"/>
-        <Button name="{string} button" selector=".button" dynamic="true"/>
+        <Button name="{text} button" selector=".button"/>
     </Toolbar>
 </Page> 

@@ -1,56 +1,43 @@
 import { PageComponent } from "./PageComponent";
-import { PageElement } from "../element";
-import { PageCompnentType } from "./PageComponentType";
+import { PageCompnentType, PageComponentConfig } from "./PageComponentType";
+import { BrowserDriver } from "../driver";
+
 
 export abstract class AbstractComponent implements PageComponent {
     readonly name: string;
     readonly selector: string;
-    readonly dynamic: boolean;
     readonly parent?: PageComponent;
     readonly children: PageComponent[];
+    readonly index: number;
 
-    constructor(name: string, selector: string, dynamic: boolean, parent?: PageComponent) {
-        this.name = name
-        this.selector = selector;
-        this.dynamic = dynamic;
-        this.parent = parent;
-        this.children = [];
+    private readonly driver: BrowserDriver;
+
+    constructor(config: PageComponentConfig) {
+        this.name = config.name;
+        this.selector = config.selector;
+        this.parent = config.parent;
+        this.driver = config.driver;
+        this.index = config.index;
+        this.children = [...config.children];
     }
 
-    pushChildComponent(...components: PageComponent[]): void {
-        this.children.push(...components);
+    getChildComponent(name: string): PageComponent | undefined {
+        return this.children.find(child => child.name === name);
     }
 
-    setChilComponts(components: PageComponent[]): void {
-        this.children.push(...components);
-    }
-
-    duplicate(): PageComponent {
-        throw new Error("Method not implemented.");
-    }
-
-    getChildComponent(name: string): PageComponent {
-        throw new Error("Method not implemented.");
-    }
-
-    getComponentEl(): Promise<PageElement> {
-        throw new Error("Method not implemented.");
-    }
-
-    getSubComponentOfType(componentType: PageCompnentType): Promise<PageComponent[]> {
-        throw new Error("Method not implemented.");
-    }
-
-    async click(): Promise<void> {
-        const componentEl = await this.getComponentEl();
-        await componentEl.click();
+    getSubComponentOfType(componentType: PageCompnentType): PageComponent[] {
+        return this.children.filter(child => child instanceof componentType) as PageComponent[];
     }
 
     async setValue(value: string): Promise<void> {
-        throw new Error(`${this.name}不支持设值`);
+        throw new Error(`${this.name} not supports setting value`);
     };
 
     async getValue(): Promise<any> {
-        throw new Error(`${this.name}不支持取值`);
+        throw new Error(`${this.name}not supports getting value`);
     };
+
+    pushChildComponents(...children: PageComponent[]) {
+        this.children.push(...children);
+    }
 }

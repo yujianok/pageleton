@@ -3,6 +3,9 @@ import { PageletonPage } from "./PageletonPage";
 import path from 'path';
 import { pageComponentTypeRegistry, PageComponent } from '../component';
 import { FileUtils } from '../uitl';
+import { BrowserDriver, BrowserDriverType } from '../driver';
+import { browserDriverFactory } from '../driver/BrowserDriverFactory';
+import { AbstractComponent } from '../component/AbstractComponent';
 
 async function parseXmlToJson(data: string): Promise<any> {
     return new Promise((resovle, reject) => {
@@ -17,11 +20,13 @@ async function parseXmlToJson(data: string): Promise<any> {
     });
 }
 
-class PageletonPageLoader {
+export class PageletonPageLoader {
 
     readonly specEncoding: string;
+    readonly driver: BrowserDriver;
 
-    constructor(specEncoding?: string) {
+    constructor(driverType?: BrowserDriverType, specEncoding?: string) {
+        this.driver = browserDriverFactory.getBrowserDriver(driverType);
         this.specEncoding = specEncoding || 'utf8';
     }
 
@@ -50,11 +55,25 @@ class PageletonPageLoader {
                         }
 
                         const { $, ...others } = node;
-                        const component = new ComponentType($.name, $.selector, $.dynamic === 'true', parent);
-                        const children = await this.parsePageComponent(specPath, others, component);
-                        component.pushChildComponent(...children);
+                        const multiple = parseInt($.multiple || '1');
+                        const components = await Promise.all(
+                            new Array(multiple).fill(undefined).map(async (v, i) => {
+                                const index = i + 1;
+                                const component = new ComponentType({
+                                    name: $.name.replace(/{index}/g, index),
+                                    driver: this.driver,
+                                    selector: $.selector.replace(/{index}/g, index),
+                                    index,
+                                    parent,
+                                    children: [],
+                                }) as AbstractComponent;
 
-                        parsedComponents = [...parsedComponents, component];
+                                const children = await this.parsePageComponent(specPath, others, parent);
+                                component.pushChildComponents(...children);
+                                return component;
+                            }))
+
+                        parsedComponents = [...parsedComponents, ...components];
                     }
                 }));
             }
@@ -70,9 +89,7 @@ class PageletonPageLoader {
         const { $, ...others } = json.Page;
 
         const rootComponents = await this.parsePageComponent(specPath, others);
-        return new PageletonPage($.name, $.path, rootComponents);;
+        return new PageletonPage($.name, $.path, rootComponents);
     }
 
 }
-
-export const pageletonPageLoader = new PageletonPageLoader();

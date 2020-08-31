@@ -1,4 +1,3 @@
-import { PageletonPage } from "./PageletonPage";
 
 export * from "./PageletonPageFactory";
 

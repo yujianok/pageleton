@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <Menu name="menu" selector=".menu">
-    <Button name="{string} button" selector=".button" dynamic="true"/>
+    <Button name="button-{index}" selector=".button:nth-child({index})" multiple="3"/>
 </Menu>

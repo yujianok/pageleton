@@ -1,4 +1,1 @@
-
-export interface BrowserDriver {
-    
-}
+export * from "./BrowserDriver";
