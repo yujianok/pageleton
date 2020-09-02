@@ -1,8 +1,13 @@
 import { ElementAdapter } from ".";
 
+export type ElementRoute = {
+    selector?: string;
+    xpath?: string;
+}
+
 export interface PageAdapter {
     goto(url: string): Promise<void>;
     close(): Promise<void>;
     getTitle(): Promise<string>;
-    getElement(selector?: string, xpath?: string, context?: ElementAdapter): Promise<ElementAdapter | undefined>;
+    getElement(routes: ElementRoute[]): Promise<ElementAdapter | undefined>;
 }

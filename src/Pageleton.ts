@@ -4,11 +4,18 @@ export type PageletonConfig = {
     specPaths: string[];
     driverType?: BrowserDriverType;
     driverConfig?: object;
-    specEncoding?: string;
     executablePath: string;
     headless?: boolean;
     args?: string[];
     timeout?: number;
+    viewport: {
+        width: number;
+        height: number;
+        isMobile: boolean;
+        deviceScaleFactor: number;
+        hasTouch: boolean;
+        isLandscape: boolean;
+    }
 }
 
 // async launchBrowser(options?: LaunchOptions) {

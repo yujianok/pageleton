@@ -1,5 +1,6 @@
-import { BrowserDriver, PageAdapter } from "../driver";
+import { PageAdapter, ElementAdapter } from "../driver";
 
+export type WaitCondition = (element: ElementAdapter) => boolean;
 export interface PageComponent {
     readonly name: string;
     readonly selector?: string;
@@ -10,4 +11,8 @@ export interface PageComponent {
 
     setValue(value: string, pageAdapter: PageAdapter): Promise<void>;
     getValue(pageAdapter: PageAdapter): Promise<any>;
+    click(pageAdapter: PageAdapter): Promise<void>;
+    mouseOver(pageAdapter: PageAdapter): Promise<void>;
+    waitUntil(condition: WaitCondition, timeout: number, pageAdapter: PageAdapter): Promise<void>;
+    waitUntilPresent(timeout: number, pageAdapter: PageAdapter): Promise<void>;
 }

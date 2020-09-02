@@ -3,13 +3,19 @@ import { PageAdapter } from "./PageAdapter";
 
 export type BrowserDriverType = 'puppeteer' | 'webdriver' | 'selenium';
 
-type LaunchOptions = {
-    driverType?: BrowserDriverType;
-    driverConfig?: object;
+export type LaunchOptions = {
     executablePath: string;
     headless?: boolean;
     args?: string[];
     timeout?: number;
+    viewport?: {
+        width?: number;
+        height?: number;
+        isMobile?: boolean;
+        deviceScaleFactor?: number;
+        hasTouch?: boolean;
+        isLandscape?: boolean;
+    }
 }
 
 export interface BrowserDriver {

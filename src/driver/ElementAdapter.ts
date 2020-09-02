@@ -4,4 +4,8 @@ export interface ElementAdapter {
     getInnerText(): Promise<string>;
     getInputValue(): Promise<string>;
     setInputValue(value: string): Promise<void>;
+    click(): Promise<void>;
+    mouseOver(): Promise<void>;
+    getPosition(): Promise<[number, number]>;
+    getSize(): Promise<[number, number]>;
 }

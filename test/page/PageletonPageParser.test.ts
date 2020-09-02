@@ -50,7 +50,7 @@ describe('Test PageletonPageParser', () => {
         const Button1 = Toolbar.children[0];
         assert.exists(Button1);
         expect(Button1.name).equal('Branch switcher');
-        expect(Button1.selector).equal('#branch-select-menu');
+        expect(Button1.selector).equal('#branch-select-menu summary');
         assert.notExists(Button1.xpath)
         expect(Button1.index).equal(1);
 

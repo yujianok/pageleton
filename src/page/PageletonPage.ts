@@ -5,17 +5,14 @@ export class PageletonPage {
     readonly name: string;
     readonly url: string;
     readonly rootComponents: PageComponent[];
-
-    private pageAdapter?: PageAdapter;
+    private getPageAdapter(): PageAdapter {
+        throw new Error("Page has not bean opened:" + this.name);
+    }
 
     constructor(name: string, url: string, rootComponents: PageComponent[]) {
         this.name = name;
         this.url = url;
         this.rootComponents = rootComponents;
-    }
-
-    async getTitle() {
-        return await this.pageAdapter?.getTitle();
     }
 
     getComponent(routes: string[]): PageComponent {
@@ -33,31 +30,44 @@ export class PageletonPage {
         return current!;
     }
 
-    async getComponentValue(routes: string[]) {
-        if (!this.pageAdapter) {
-            throw new Error("Page has not bean opened:" + this.name);
-        }
+    async getTitle() {
+        const pageAdapter = this.getPageAdapter();
 
+        return await pageAdapter.getTitle();
+    }
+
+    async getComponentValue(routes: string[]) {
         const component = this.getComponent(routes);
-        return await component?.getValue(this.pageAdapter);
+        const pageAdapter = this.getPageAdapter();
+
+        return await component.getValue(pageAdapter);
     }
 
     async setComponentValue(value: string, routes: string[]) {
-        if (!this.pageAdapter) {
-            throw new Error("Page has not bean opened:" + this.name);
-        }
-
         const component = this.getComponent(routes);
-        return await component?.setValue(value, this.pageAdapter);
+        const pageAdapter = this.getPageAdapter();
+
+        return await component.setValue(value, pageAdapter);
+    }
+
+    async clickComponent(routes: string[]) {
+        const component = this.getComponent(routes);
+        const pageAdapter = this.getPageAdapter();
+
+        return await component.click(pageAdapter)
     }
 
     async open(browserDriver: BrowserDriver) {
-        this.pageAdapter = await browserDriver.newPage();
-        await this.pageAdapter.goto(this.url);
+        const pageAdapter = await browserDriver.newPage();
+        await pageAdapter.goto(this.url);
+
+        this.getPageAdapter = () => pageAdapter;
     }
 
     async close() {
-        await this.pageAdapter!.close();
+        const pageAdapter = this.getPageAdapter();
+
+        await pageAdapter.close();
     }
 
 }

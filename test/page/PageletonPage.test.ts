@@ -1,7 +1,6 @@
-import { PageletonPageFactory, PageAdapter, PageletonPage } from "../../src";
-import path from 'path';
 import { assert, expect } from "chai";
-import { browserDriverFactory } from "../../src";
+import path from 'path';
+import { browserDriverFactory, PageletonPage, PageletonPageFactory } from "../../src";
 
 describe('Test PageletonPage', () => {
 
@@ -12,13 +11,17 @@ describe('Test PageletonPage', () => {
             await browserDriver.launch({
                 headless: false,
                 timeout: 0,
+                viewport: {
+                    width: 1440,
+                    height: 900,
+                },
                 executablePath: '/usr/bin/google-chrome-stable',
                 args: ['--start-maximized', '--no-sandbox', '--disable-setuid-sandbox']
             });
 
             const testPage = await pageletonPageFactory.getPageByName('Pageleton') as PageletonPage;
             assert.exists(testPage);
-            
+
             await testPage.open(browserDriver);
             const title = await testPage.getTitle();
             expect(title).equal('GitHub - yujianok/pageleton');
@@ -27,10 +30,16 @@ describe('Test PageletonPage', () => {
             expect(text.trim()).equal('master');
 
             await testPage.setComponentValue('abc', ['Header', 'Header Search']);
-            const inputValue = await testPage.getComponentValue( ['Header', 'Header Search']);
+            const inputValue = await testPage.getComponentValue(['Header', 'Header Search']);
             expect(inputValue).equal('abc');
+
+            await testPage.clickComponent(['toolbar', 'Branch switcher']);
+
+            await new Promise(res => setTimeout(res, 5000));
+            await testPage.close();
         } finally {
             await browserDriver.shotdown();
         }
     })
+
 })

@@ -1,6 +1,6 @@
-import puppeteer, { Browser, LaunchOptions, Page, ElementHandle } from 'puppeteer-core';
-import { BrowserDriver } from "./BrowserDriver";
-import { PageAdapter } from './PageAdapter';
+import puppeteer, { Browser, Page, ElementHandle } from 'puppeteer-core';
+import { BrowserDriver, LaunchOptions } from "./BrowserDriver";
+import { PageAdapter, ElementRoute } from './PageAdapter';
 import { ElementAdapter } from '.';
 
 class PuppeteerElementAdapter implements ElementAdapter {
@@ -8,6 +8,26 @@ class PuppeteerElementAdapter implements ElementAdapter {
 
     constructor(elementHandler: ElementHandle) {
         this.elementHandler = elementHandler;
+    }
+
+    async mouseOver(): Promise<void> {
+        await this.elementHandler.hover();
+    }
+
+    async click(): Promise<void> {
+        await this.elementHandler.evaluate(el => (el as HTMLElement).click())
+    }
+
+    async getPosition(): Promise<[number, number]> {
+        const boundingBox = await this.elementHandler.boundingBox();
+
+        return boundingBox ? [boundingBox.x, boundingBox.y] : [0, 0];
+    }
+
+    async getSize(): Promise<[number, number]> {
+        const boundingBox = await this.elementHandler.boundingBox();
+
+        return boundingBox ? [boundingBox.width, boundingBox.height] : [0, 0];
     }
 
     async getInputValue(): Promise<string> {
@@ -72,21 +92,32 @@ class PuppeteerPageAdapter implements PageAdapter {
         await this.page.close();
     }
 
-    async getElement(selector?: string, xpath?: string): Promise<ElementAdapter | undefined> {
-        let element: ElementHandle | undefined;
-        if (!selector && !xpath) {
-            throw new Error('Parameter Selector and xpath can not both been null at the same time');
-        }
+    async getElement(routes: ElementRoute[]): Promise<ElementAdapter | undefined> {
 
-        if (selector) {
-            element = await this.page.$(selector) || undefined;
-        }
+        const elementHandle = await this.page.evaluateHandle((routesJson) => {
+            const rs = JSON.parse(routesJson) as ElementRoute[];
 
-        if (xpath) {
-            element = (element ? await element.$x(xpath) : await this.page.$x(xpath)).pop();
-        }
+            let element: Element | undefined;
+            for (const route of rs) {
+                const { selector, xpath } = route;
 
-        return element && new PuppeteerElementAdapter(element);
+                if (selector) {
+                    element = (element || document).querySelector(selector) || undefined;
+                }
+
+                if (xpath && element) {
+                    element = document.evaluate(xpath, element).iterateNext() as Element;
+                }
+
+                if (!element) {
+                    break;
+                }
+            }
+
+            return element;
+        }, JSON.stringify(routes)) as ElementHandle;
+
+        return elementHandle && new PuppeteerElementAdapter(elementHandle);
     }
 }
 
@@ -96,12 +127,13 @@ export class PuppeteerBrowserDriver implements BrowserDriver {
 
     async launch(options?: LaunchOptions): Promise<void> {
         this.options = options;
-        this.browser = await puppeteer.launch({ defaultViewport: null, ...options });
+        this.browser = await puppeteer.launch({ defaultViewport: options?.viewport, ...options });
     }
 
     async shotdown(): Promise<void> {
         if (this.browser) {
             await this.browser.close();
+            this.browser = undefined;
         }
     }
 
