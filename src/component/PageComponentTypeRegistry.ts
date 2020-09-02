@@ -9,7 +9,7 @@ class PageComponentTypeRegistry {
     }
 
     getComponentType(name: string): PageCompnentType {
-        return this.componentTypeRegistry[name];
+        return this.componentTypeRegistry[name] || this.componentTypeRegistry['Component'];
     }
 
     registerComponentType(pageCompnentType: PageCompnentType): void {

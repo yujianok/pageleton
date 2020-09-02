@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-
-<Page name="test page" path="/test.html">
-    <Include path="./system-menu.xml" />
-    <Toolbar name="toolbar" selector=".toolbar">
-        <Input name="search" selector=".search"/>
-        <Button name="{text} button" selector=".button"/>
-    </Toolbar>
-</Page> 

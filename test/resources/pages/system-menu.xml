@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<Menu name="menu" selector=".menu">
-    <Button name="button-{index}" selector=".button:nth-child({index})" multiple="3"/>
-</Menu>
+<Header name="Header" selector="header.Header">
+    <Logo name="Github Logo" selector="div.Header-item:nth-child(1)" />
+    <Input name="Header Search" selector="div.header-search input" />
+    <Link name="Pull Request" selector="a.Header-link:nth-child(2)" />
+    <Link name="Issues" selector="a.Header-link:nth-child(3)" />
+    <Link name="Marketplace" selector="div:nth-child(4)>a.Header-link" />
+    <Link name="Explore" selector="a.Header-link:nth-child(5)" />
+</Header>

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<Page name="Pageleton" url="https://github.com/yujianok/pageleton">
+    <Include path="./system-menu.xml" />
+    
+    <NavBar name="NavBar" selector="ul.UnderlineNav-body">
+        <Menu name="Code" selector="li:nth-child(1)" />
+        <Menu name="Issues" selector="li:nth-child(2)" />
+        <Menu name="Pull Request" selector="li:nth-child(3)" />
+        <Menu name="Actions" selector="li:nth-child(4)" />
+        <Menu name="Projects" selector="li:nth-child(5)" />
+        <Menu name="Wiki" selector="li:nth-child(6)" />
+        <Menu name="Security" selector="li:nth-child(7)" />
+    </NavBar>
+
+    <Toolbar name="toolbar" selector=".file-navigation">
+        <Button name="Branch switcher" selector="#branch-select-menu" />
+        <Button name="Go to file" xpath="./a" />
+        <Button name="Code" selector="span" xpath=".//summary"/>
+    </Toolbar>
+</Page> 

@@ -1,11 +1,9 @@
-import xml2js from 'xml2js';
-import { PageletonPage } from "./PageletonPage";
 import path from 'path';
-import { pageComponentTypeRegistry, PageComponent } from '../component';
-import { FileUtils } from '../uitl';
-import { BrowserDriver, BrowserDriverType } from '../driver';
-import { browserDriverFactory } from '../driver/BrowserDriverFactory';
+import xml2js from 'xml2js';
+import { PageComponent, pageComponentTypeRegistry } from '../component';
 import { AbstractComponent } from '../component/AbstractComponent';
+import { FileUtils } from '../uitl';
+import { PageletonPage } from "./PageletonPage";
 
 async function parseXmlToJson(data: string): Promise<any> {
     return new Promise((resovle, reject) => {
@@ -20,23 +18,15 @@ async function parseXmlToJson(data: string): Promise<any> {
     });
 }
 
-export class PageletonPageLoader {
+class PageletonPageLoader {
 
-    readonly specEncoding: string;
-    readonly driver: BrowserDriver;
-
-    constructor(driverType?: BrowserDriverType, specEncoding?: string) {
-        this.driver = browserDriverFactory.getBrowserDriver(driverType);
-        this.specEncoding = specEncoding || 'utf8';
-    }
-
-    private async parseIncludeComponent(inculdePath: string, parent?: PageComponent): Promise<PageComponent[]> {
-        const specContent = await FileUtils.readFileAsString(inculdePath, this.specEncoding);
+    private async parseIncludeComponent(inculdePath: string, specEncoding: string, parent?: PageComponent): Promise<PageComponent[]> {
+        const specContent = await FileUtils.readFileAsString(inculdePath, specEncoding);
         const json = await parseXmlToJson(specContent);
-        return await this.parsePageComponent(inculdePath, json, parent);
+        return await this.parsePageComponent(inculdePath, specEncoding, json, parent);
     }
 
-    private async parsePageComponent(specPath: string, json: any, parent?: PageComponent): Promise<PageComponent[]> {
+    private async parsePageComponent(specPath: string, specEncoding: string, json: any, parent?: PageComponent): Promise<PageComponent[]> {
         let parsedComponents: PageComponent[] = [];
 
         for (const key in json) {
@@ -46,13 +36,10 @@ export class PageletonPageLoader {
                     if (key === "Include") {
                         const include = node as { $: { path: string } };
                         const inculdePath = path.join(specPath, '../', include.$.path);
-                        const components = await this.parseIncludeComponent(inculdePath, parent);
+                        const components = await this.parseIncludeComponent(inculdePath, specEncoding, parent);
                         parsedComponents = [...parsedComponents, ...components];
                     } else {
                         const ComponentType = pageComponentTypeRegistry.getComponentType(key);
-                        if (!ComponentType) {
-                            throw new Error('组件类型不存在:' + key);
-                        }
 
                         const { $, ...others } = node;
                         const multiple = parseInt($.multiple || '1');
@@ -60,15 +47,15 @@ export class PageletonPageLoader {
                             new Array(multiple).fill(undefined).map(async (v, i) => {
                                 const index = i + 1;
                                 const component = new ComponentType({
-                                    name: $.name.replace(/{index}/g, index),
-                                    driver: this.driver,
-                                    selector: $.selector.replace(/{index}/g, index),
+                                    name: $.name && $.name.replace(/{index}/g, index),
+                                    selector: $.selector && $.selector.replace(/{index}/g, index),
+                                    xpath: $.xpath && $.xpath.replace(/{index}/g, index),
                                     index,
                                     parent,
                                     children: [],
                                 }) as AbstractComponent;
 
-                                const children = await this.parsePageComponent(specPath, others, parent);
+                                const children = await this.parsePageComponent(specPath, specEncoding, others, parent);
                                 component.pushChildComponents(...children);
                                 return component;
                             }))
@@ -82,14 +69,16 @@ export class PageletonPageLoader {
         return parsedComponents;
     }
 
-    public async loadPageSpec(specPath: string): Promise<PageletonPage> {
-        const specContent = await FileUtils.readFileAsString(specPath, this.specEncoding);
+    public async loadPageSpec(specPath: string, specEncoding: string): Promise<PageletonPage> {
+        const specContent = await FileUtils.readFileAsString(specPath, specEncoding);
 
         const json = await parseXmlToJson(specContent);
         const { $, ...others } = json.Page;
 
-        const rootComponents = await this.parsePageComponent(specPath, others);
-        return new PageletonPage($.name, $.path, rootComponents);
+        const rootComponents = await this.parsePageComponent(specPath, specEncoding, others);
+        return new PageletonPage($.name, $.url, rootComponents);
     }
 
 }
+
+export const pageletonPageLoader = new PageletonPageLoader();
