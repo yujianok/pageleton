@@ -5,7 +5,7 @@ describe('Test PageletonPage', () => {
 
     it('test PageletonPage functions', async () => {
         
-        const browser = pageleton({
+        const browser = await pageleton({
             specPaths: ['./test/resources/pages/*-page.xml'],
             headless: false,
             timeout: 0,

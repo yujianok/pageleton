@@ -41,9 +41,9 @@ export const pageleton = (config: PageletonConfig) => {
     }
 
     return {
-        launchBrowser: () => {
+        launchBrowser: async () => {
             const browserDriver = browserDriverFactory.getBrowserDriver(config.driverType);
-            const launchDefer = browserDriver.launch(config);
+            await browserDriver.launch(config);
 
             return {
                 openPage: async (name: string) => {
@@ -53,16 +53,15 @@ export const pageleton = (config: PageletonConfig) => {
                         throw new Error('Page not exists: ' + name);
                     }
 
-                    await launchDefer;
                     await pageletonPage.open(browserDriver);
 
                     return pageletonPage;
                 },
 
                 shutdown: async () => {
-                    await launchDefer;
                     await browserDriver.shotdown();
-                }
+                },
+
             } as PageletonBrowser;
         }
     }

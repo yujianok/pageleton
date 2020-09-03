@@ -60,44 +60,46 @@ exports.pageleton = function (config) {
         config.customComponentTypes.forEach(function (cst) { return component_1.pageComponentTypeRegistry.registerComponentType(cst); });
     }
     return {
-        launchBrowser: function () {
-            var browserDriver = driver_1.browserDriverFactory.getBrowserDriver(config.driverType);
-            var launchDefer = browserDriver.launch(config);
-            return {
-                openPage: function (name) { return __awaiter(void 0, void 0, void 0, function () {
-                    var pageletonPage;
-                    return __generator(this, function (_a) {
-                        switch (_a.label) {
-                            case 0: return [4, pageletonPageFactory.getPageByName(name)];
-                            case 1:
-                                pageletonPage = _a.sent();
-                                if (!pageletonPage) {
-                                    throw new Error('Page not exists: ' + name);
-                                }
-                                return [4, launchDefer];
-                            case 2:
-                                _a.sent();
-                                return [4, pageletonPage.open(browserDriver)];
-                            case 3:
-                                _a.sent();
-                                return [2, pageletonPage];
-                        }
-                    });
-                }); },
-                shutdown: function () { return __awaiter(void 0, void 0, void 0, function () {
-                    return __generator(this, function (_a) {
-                        switch (_a.label) {
-                            case 0: return [4, launchDefer];
-                            case 1:
-                                _a.sent();
-                                return [4, browserDriver.shotdown()];
-                            case 2:
-                                _a.sent();
-                                return [2];
-                        }
-                    });
-                }); }
-            };
-        }
+        launchBrowser: function () { return __awaiter(void 0, void 0, void 0, function () {
+            var browserDriver;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        browserDriver = driver_1.browserDriverFactory.getBrowserDriver(config.driverType);
+                        return [4, browserDriver.launch(config)];
+                    case 1:
+                        _a.sent();
+                        return [2, {
+                                openPage: function (name) { return __awaiter(void 0, void 0, void 0, function () {
+                                    var pageletonPage;
+                                    return __generator(this, function (_a) {
+                                        switch (_a.label) {
+                                            case 0: return [4, pageletonPageFactory.getPageByName(name)];
+                                            case 1:
+                                                pageletonPage = _a.sent();
+                                                if (!pageletonPage) {
+                                                    throw new Error('Page not exists: ' + name);
+                                                }
+                                                return [4, pageletonPage.open(browserDriver)];
+                                            case 2:
+                                                _a.sent();
+                                                return [2, pageletonPage];
+                                        }
+                                    });
+                                }); },
+                                shutdown: function () { return __awaiter(void 0, void 0, void 0, function () {
+                                    return __generator(this, function (_a) {
+                                        switch (_a.label) {
+                                            case 0: return [4, browserDriver.shotdown()];
+                                            case 1:
+                                                _a.sent();
+                                                return [2];
+                                        }
+                                    });
+                                }); },
+                            }];
+                }
+            });
+        }); }
     };
 };

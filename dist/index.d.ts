@@ -29,5 +29,5 @@ export declare type PageletonBrowser = {
     shutdown: () => Promise<void>;
 };
 export declare const pageleton: (config: PageletonConfig) => {
-    launchBrowser: () => PageletonBrowser;
+    launchBrowser: () => Promise<PageletonBrowser>;
 };
