@@ -29,6 +29,10 @@ export type PageletonConfig = {
     customBrowserDriver?: BrowserDriverType,
 }
 
+export type Pageleton = {
+    launchBrowser: () => Promise<PageletonBrowser>;
+}
+
 export type PageletonBrowser = {
     openPage: (name: string) => Promise<PageletonPage>;
     shutdown: () => Promise<void>;
@@ -64,5 +68,5 @@ export const pageleton = (config: PageletonConfig) => {
 
             } as PageletonBrowser;
         }
-    }
+    } as Pageleton;
 }
