@@ -1,12 +1,12 @@
 import { assert, expect } from "chai";
 import path from 'path';
-import { browserDriverFactory, PageletonPage, PageletonPageFactory, init } from "../../src";
+import { pageleton } from "../../src";
 
 describe('Test PageletonPage', () => {
 
     it('test PageletonPage functions', async () => {
         
-        const browser = init({
+        const browser = pageleton({
             specPaths: [path.join(__dirname, '../resources/pages/*-page.xml')],
             headless: false,
             timeout: 0,

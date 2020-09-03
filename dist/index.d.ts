@@ -23,7 +23,7 @@ export declare type PageletonConfig = {
     customComponentTypes?: PageCompnentType[];
     customBrowserDriver?: BrowserDriverType;
 };
-export declare const init: (config: PageletonConfig) => {
+export declare const pageleton: (config: PageletonConfig) => {
     launchBrowser: () => {
         openPage: (name: string) => Promise<import("./page").PageletonPage>;
         shutdown: () => Promise<void>;

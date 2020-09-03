@@ -46,14 +46,14 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.init = void 0;
+exports.pageleton = void 0;
 var driver_1 = require("./driver");
 var page_1 = require("./page");
 var component_1 = require("./component");
 __exportStar(require("./component"), exports);
 __exportStar(require("./page"), exports);
 __exportStar(require("./driver"), exports);
-exports.init = function (config) {
+exports.pageleton = function (config) {
     var pageletonPageFactory = new page_1.PageletonPageFactory(config.specPaths, config.specEncoding);
     if (config.customComponentTypes) {
         config.customComponentTypes.forEach(function (cst) { return component_1.pageComponentTypeRegistry.registerComponentType(cst); });

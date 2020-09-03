@@ -27,7 +27,7 @@ export type PageletonConfig = {
     customBrowserDriver?: BrowserDriverType,
 }
 
-export const init = (config: PageletonConfig) => {
+export const pageleton = (config: PageletonConfig) => {
     const pageletonPageFactory = new PageletonPageFactory(config.specPaths, config.specEncoding);
     if (config.customComponentTypes) {
         config.customComponentTypes.forEach(cst => pageComponentTypeRegistry.registerComponentType(cst));
