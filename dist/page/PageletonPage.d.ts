@@ -14,4 +14,5 @@ export declare class PageletonPage {
     isComponentPresent(routes: string[]): Promise<boolean>;
     open(browserDriver: BrowserDriver): Promise<void>;
     close(): Promise<void>;
+    waitForNavigation(timeout: number): Promise<void>;
 }

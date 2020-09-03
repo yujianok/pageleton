@@ -5,7 +5,7 @@ export class PageletonPage {
     readonly name: string;
     readonly url: string;
     readonly rootComponents: PageComponent[];
-    
+
     private getPageAdapter(): PageAdapter {
         throw new Error("Page has not bean opened:" + this.name);
     }
@@ -76,6 +76,12 @@ export class PageletonPage {
         const pageAdapter = this.getPageAdapter();
 
         await pageAdapter.close();
+    }
+
+    async waitForNavigation(timeout: number): Promise<void> {
+        const pageAdapter = this.getPageAdapter();
+
+        await pageAdapter.waitForNavigation(timeout);
     }
 
 }

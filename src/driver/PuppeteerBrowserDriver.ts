@@ -93,6 +93,10 @@ class PuppeteerPageAdapter implements PageAdapter {
         await this.page.close();
     }
 
+    async waitForNavigation(timeout: number): Promise<void> {
+        await this.page.waitForNavigation({ timeout })
+    }
+
     async getElement(routes: ElementRoute[]): Promise<ElementAdapter | undefined> {
 
         const elementHandle = await this.page.evaluateHandle((routesJson) => {

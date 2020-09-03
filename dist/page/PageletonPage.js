@@ -163,6 +163,21 @@ var PageletonPage = (function () {
             });
         });
     };
+    PageletonPage.prototype.waitForNavigation = function (timeout) {
+        return __awaiter(this, void 0, void 0, function () {
+            var pageAdapter;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        pageAdapter = this.getPageAdapter();
+                        return [4, pageAdapter.waitForNavigation(timeout)];
+                    case 1:
+                        _a.sent();
+                        return [2];
+                }
+            });
+        });
+    };
     return PageletonPage;
 }());
 exports.PageletonPage = PageletonPage;
