@@ -1,11 +1,10 @@
-import { PageletonPageFactory } from "../../src"
-import path from 'path';
 import { assert, expect } from "chai";
+import { PageletonPageFactory } from "../../src";
 
 describe('Test PageletonPageFactory', () => {
 
     it('test getPageByName', async () => {
-        const pageletonPageFactory = new PageletonPageFactory([path.join(__dirname, '../resources/pages/pageleton-page.xml')]);
+        const pageletonPageFactory = new PageletonPageFactory(['./test/resources/pages/*-page.xml']);
 
         const testPage = await pageletonPageFactory.getPageByName('Pageleton');
         assert.exists(testPage);

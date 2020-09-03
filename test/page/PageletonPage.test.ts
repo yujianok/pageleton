@@ -1,5 +1,4 @@
 import { assert, expect } from "chai";
-import path from 'path';
 import { pageleton } from "../../src";
 
 describe('Test PageletonPage', () => {
@@ -7,7 +6,7 @@ describe('Test PageletonPage', () => {
     it('test PageletonPage functions', async () => {
         
         const browser = pageleton({
-            specPaths: [path.join(__dirname, '../resources/pages/*-page.xml')],
+            specPaths: ['./test/resources/pages/*-page.xml'],
             headless: false,
             timeout: 0,
             viewport: {

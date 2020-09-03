@@ -6,12 +6,14 @@ export * from './component';
 export * from './page';
 export * from './driver';
 
+const DEFAULT_PAGE_SPEC_PATHS = ['./pages/*.xml'];
+
 export type PageletonConfig = {
-    specPaths: string[];
+    specPaths?: string[];
     specEncoding?: string;
     driverType?: 'puppeteer';
     driverConfig?: object;
-    executablePath: string;
+    executablePath?: string;
     headless?: boolean;
     args?: string[];
     timeout?: number;
@@ -33,7 +35,7 @@ export type PageletonBrowser = {
 }
 
 export const pageleton = (config: PageletonConfig) => {
-    const pageletonPageFactory = new PageletonPageFactory(config.specPaths, config.specEncoding);
+    const pageletonPageFactory = new PageletonPageFactory(config.specPaths || DEFAULT_PAGE_SPEC_PATHS, config.specEncoding);
     if (config.customComponentTypes) {
         config.customComponentTypes.forEach(cst => pageComponentTypeRegistry.registerComponentType(cst));
     }

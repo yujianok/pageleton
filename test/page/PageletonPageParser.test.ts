@@ -1,11 +1,10 @@
 import { expect, assert } from 'chai';
-import path from 'path';
 import { pageletonPageLoader } from '../../src';
 
 describe('Test PageletonPageParser', () => {
 
     it('test readPageSpec', async () => {
-        const page = await pageletonPageLoader.loadPageSpec(path.join(__dirname, '../resources/pages/pageleton-page.xml'), 'UTF-8');
+        const page = await pageletonPageLoader.loadPageSpec('./test/resources/pages/pageleton-page.xml', 'UTF-8');
 
         expect(page.name).equal('Pageleton');
         expect(page.url).equal('https://github.com/yujianok/pageleton');
