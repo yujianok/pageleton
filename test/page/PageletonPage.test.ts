@@ -1,28 +1,27 @@
 import { assert, expect } from "chai";
 import path from 'path';
-import { browserDriverFactory, PageletonPage, PageletonPageFactory } from "../../src";
+import { browserDriverFactory, PageletonPage, PageletonPageFactory, init } from "../../src";
 
 describe('Test PageletonPage', () => {
 
     it('test PageletonPage functions', async () => {
-        const pageletonPageFactory = new PageletonPageFactory([path.join(__dirname, '../resources/pages/*-page.xml')]);
-        const browserDriver = browserDriverFactory.getBrowserDriver();
-        try {
-            await browserDriver.launch({
-                headless: false,
-                timeout: 0,
-                viewport: {
-                    width: 1440,
-                    height: 900,
-                },
-                executablePath: '/usr/bin/google-chrome-stable',
-                args: ['--start-maximized', '--no-sandbox', '--disable-setuid-sandbox']
-            });
+        
+        const browser = init({
+            specPaths: [path.join(__dirname, '../resources/pages/*-page.xml')],
+            headless: false,
+            timeout: 0,
+            viewport: {
+                width: 1440,
+                height: 900,
+            },
+            executablePath: '/usr/bin/google-chrome-stable',
+            args: ['--start-maximized', '--no-sandbox', '--disable-setuid-sandbox']
+        }).launchBrowser();
 
-            const testPage = await pageletonPageFactory.getPageByName('Pageleton') as PageletonPage;
+        try {
+            const testPage = await browser.openPage('Pageleton');
             assert.exists(testPage);
 
-            await testPage.open(browserDriver);
             const title = await testPage.getTitle();
             expect(title).equal('GitHub - yujianok/pageleton');
 
@@ -34,11 +33,12 @@ describe('Test PageletonPage', () => {
             expect(inputValue).equal('abc');
 
             await testPage.clickComponent(['toolbar', 'Branch switcher']);
+            const detailMenuPresent = await testPage.isComponentPresent(['toolbar', 'Branch detail menu']);
+            expect(detailMenuPresent).equal(true);
 
-            await new Promise(res => setTimeout(res, 5000));
             await testPage.close();
         } finally {
-            await browserDriver.shotdown();
+            await browser.shutdown()
         }
     })
 

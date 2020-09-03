@@ -5,6 +5,7 @@ export class PageletonPage {
     readonly name: string;
     readonly url: string;
     readonly rootComponents: PageComponent[];
+    
     private getPageAdapter(): PageAdapter {
         throw new Error("Page has not bean opened:" + this.name);
     }
@@ -30,41 +31,48 @@ export class PageletonPage {
         return current!;
     }
 
-    async getTitle() {
+    async getTitle(): Promise<string> {
         const pageAdapter = this.getPageAdapter();
 
         return await pageAdapter.getTitle();
     }
 
-    async getComponentValue(routes: string[]) {
+    async getComponentValue(routes: string[]): Promise<string> {
         const component = this.getComponent(routes);
         const pageAdapter = this.getPageAdapter();
 
         return await component.getValue(pageAdapter);
     }
 
-    async setComponentValue(value: string, routes: string[]) {
+    async setComponentValue(value: string, routes: string[]): Promise<void> {
         const component = this.getComponent(routes);
         const pageAdapter = this.getPageAdapter();
 
         return await component.setValue(value, pageAdapter);
     }
 
-    async clickComponent(routes: string[]) {
+    async clickComponent(routes: string[]): Promise<void> {
         const component = this.getComponent(routes);
         const pageAdapter = this.getPageAdapter();
 
         return await component.click(pageAdapter)
     }
 
-    async open(browserDriver: BrowserDriver) {
+    async isComponentPresent(routes: string[]): Promise<boolean> {
+        const component = this.getComponent(routes);
+        const pageAdapter = this.getPageAdapter();
+
+        return await component.isPresent(pageAdapter);
+    }
+
+    async open(browserDriver: BrowserDriver): Promise<void> {
         const pageAdapter = await browserDriver.newPage();
         await pageAdapter.goto(this.url);
 
         this.getPageAdapter = () => pageAdapter;
     }
 
-    async close() {
+    async close(): Promise<void> {
         const pageAdapter = this.getPageAdapter();
 
         await pageAdapter.close();

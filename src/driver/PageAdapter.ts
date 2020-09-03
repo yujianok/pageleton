@@ -1,4 +1,4 @@
-import { ElementAdapter } from ".";
+import { ElementAdapter } from "./ElementAdapter";
 
 export type ElementRoute = {
     selector?: string;

@@ -1,6 +1,5 @@
 import { PageAdapter, ElementAdapter, ElementRoute } from "../driver";
-import { PageComponent, WaitCondition } from "./PageComponent";
-import { PageCompnentType, PageComponentConfig } from "./PageComponentType";
+import { PageComponent, WaitCondition, PageComponentConfig, PageCompnentType } from "./PageComponent";
 
 export abstract class AbstractComponent implements PageComponent {
     readonly name: string;
@@ -73,7 +72,7 @@ export abstract class AbstractComponent implements PageComponent {
 
         while (vestige > 0) {
             const element = await this.getComponentElement(pageAdapter);
-            if (element && condition(element)) {
+            if (element && await condition(element)) {
                 return;
             } else if (vestige > 0) {
                 const nextInterval = vestige >= interval ? interval : vestige;
@@ -85,8 +84,21 @@ export abstract class AbstractComponent implements PageComponent {
         throw new Error('Waiting for component to fit condition is timeout: ' + timeout);
     }
 
+    async isPresent(pageAdapter: PageAdapter): Promise<boolean> {
+        const element = await this.getComponentElement(pageAdapter);
+        if (!element) {
+            return false;
+        }
+
+        const [width, height] = await element.getSize();
+        return width > 0 && height > 0;
+    }
+
     async waitUntilPresent(timeout: number, pageAdapter: PageAdapter): Promise<void> {
-        return await this.waitUntil((element) => !!element, timeout, pageAdapter);
+        return await this.waitUntil(async (element) => {
+            const [width, height] = await element.getSize();
+            return width > 0 && height > 0;
+        }, timeout, pageAdapter);
     }
 
     pushChildComponents(...children: PageComponent[]) {

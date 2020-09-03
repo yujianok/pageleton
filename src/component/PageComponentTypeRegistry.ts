@@ -1,4 +1,4 @@
-import { PageCompnentType } from "./PageComponentType";
+import { PageCompnentType } from "./PageComponent";
 
 class PageComponentTypeRegistry {
 

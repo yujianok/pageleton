@@ -1,8 +1,5 @@
 import { PageAdapter } from "./PageAdapter";
 
-
-export type BrowserDriverType = 'puppeteer' | 'webdriver' | 'selenium';
-
 export type LaunchOptions = {
     executablePath: string;
     headless?: boolean;
@@ -22,4 +19,8 @@ export interface BrowserDriver {
     launch(options?: LaunchOptions): Promise<void>;
     shotdown(): Promise<void>;
     newPage(): Promise<PageAdapter>;
+}
+
+export interface BrowserDriverType {
+    new(config?: any): BrowserDriver;
 }

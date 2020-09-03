@@ -45,7 +45,7 @@ describe('Test PageletonPageParser', () => {
         expect(Toolbar.name).equal('toolbar');
         expect(Toolbar.selector).equal('.file-navigation');
         expect(Toolbar.index).equal(1);
-        expect(Toolbar.children.length).equal(3);
+        expect(Toolbar.children.length).equal(4);
 
         const Button1 = Toolbar.children[0];
         assert.exists(Button1);

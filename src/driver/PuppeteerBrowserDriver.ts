@@ -1,7 +1,8 @@
 import puppeteer, { Browser, Page, ElementHandle } from 'puppeteer-core';
 import { BrowserDriver, LaunchOptions } from "./BrowserDriver";
 import { PageAdapter, ElementRoute } from './PageAdapter';
-import { ElementAdapter } from '.';
+import { ElementAdapter } from './ElementAdapter';
+
 
 class PuppeteerElementAdapter implements ElementAdapter {
     private readonly elementHandler: ElementHandle;
