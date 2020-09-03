@@ -1,6 +1,6 @@
 import { PageAdapter } from "./PageAdapter";
 export declare type LaunchOptions = {
-    executablePath: string;
+    executablePath?: string;
     headless?: boolean;
     args?: string[];
     timeout?: number;

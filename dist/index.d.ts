@@ -5,11 +5,11 @@ export * from './component';
 export * from './page';
 export * from './driver';
 export declare type PageletonConfig = {
-    specPaths: string[];
+    specPaths?: string[];
     specEncoding?: string;
     driverType?: 'puppeteer';
     driverConfig?: object;
-    executablePath: string;
+    executablePath?: string;
     headless?: boolean;
     args?: string[];
     timeout?: number;

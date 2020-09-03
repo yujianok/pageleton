@@ -53,8 +53,9 @@ var component_1 = require("./component");
 __exportStar(require("./component"), exports);
 __exportStar(require("./page"), exports);
 __exportStar(require("./driver"), exports);
+var DEFAULT_PAGE_SPEC_PATHS = ['./pages/*.xml'];
 exports.pageleton = function (config) {
-    var pageletonPageFactory = new page_1.PageletonPageFactory(config.specPaths, config.specEncoding);
+    var pageletonPageFactory = new page_1.PageletonPageFactory(config.specPaths || DEFAULT_PAGE_SPEC_PATHS, config.specEncoding);
     if (config.customComponentTypes) {
         config.customComponentTypes.forEach(function (cst) { return component_1.pageComponentTypeRegistry.registerComponentType(cst); });
     }
