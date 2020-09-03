@@ -24,11 +24,10 @@ export declare type PageletonConfig = {
     customComponentTypes?: PageCompnentType[];
     customBrowserDriver?: BrowserDriverType;
 };
-export declare type Pageleton = {
-    launchBrowser: () => Promise<PageletonBrowser>;
-};
 export declare type PageletonBrowser = {
     openPage: (name: string) => Promise<PageletonPage>;
     shutdown: () => Promise<void>;
 };
-export declare const pageleton: (config: PageletonConfig) => Pageleton;
+export declare const Pageleton: (config: PageletonConfig) => {
+    launchBrowser: () => Promise<PageletonBrowser>;
+};

@@ -1,11 +1,11 @@
 import { assert, expect } from "chai";
-import { pageleton } from "../../src";
+import { Pageleton } from "../../src";
 
 describe('Test PageletonPage', () => {
 
     it('test PageletonPage functions', async () => {
         
-        const browser = await pageleton({
+        const browser = await Pageleton({
             specPaths: ['./test/resources/pages/*-page.xml'],
             headless: false,
             timeout: 0,

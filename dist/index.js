@@ -46,7 +46,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.pageleton = void 0;
+exports.Pageleton = void 0;
 var driver_1 = require("./driver");
 var page_1 = require("./page");
 var component_1 = require("./component");
@@ -54,7 +54,7 @@ __exportStar(require("./component"), exports);
 __exportStar(require("./page"), exports);
 __exportStar(require("./driver"), exports);
 var DEFAULT_PAGE_SPEC_PATHS = ['./pages/*.xml'];
-exports.pageleton = function (config) {
+exports.Pageleton = function (config) {
     var pageletonPageFactory = new page_1.PageletonPageFactory(config.specPaths || DEFAULT_PAGE_SPEC_PATHS, config.specEncoding);
     if (config.customComponentTypes) {
         config.customComponentTypes.forEach(function (cst) { return component_1.pageComponentTypeRegistry.registerComponentType(cst); });

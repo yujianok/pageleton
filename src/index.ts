@@ -29,16 +29,12 @@ export type PageletonConfig = {
     customBrowserDriver?: BrowserDriverType,
 }
 
-export type Pageleton = {
-    launchBrowser: () => Promise<PageletonBrowser>;
-}
-
 export type PageletonBrowser = {
     openPage: (name: string) => Promise<PageletonPage>;
     shutdown: () => Promise<void>;
 }
 
-export const pageleton = (config: PageletonConfig) => {
+export const Pageleton = (config: PageletonConfig) => {
     const pageletonPageFactory = new PageletonPageFactory(config.specPaths || DEFAULT_PAGE_SPEC_PATHS, config.specEncoding);
     if (config.customComponentTypes) {
         config.customComponentTypes.forEach(cst => pageComponentTypeRegistry.registerComponentType(cst));
@@ -68,5 +64,5 @@ export const pageleton = (config: PageletonConfig) => {
 
             } as PageletonBrowser;
         }
-    } as Pageleton;
+    };
 }
