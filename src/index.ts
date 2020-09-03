@@ -1,5 +1,5 @@
 import { BrowserDriverType, browserDriverFactory } from './driver';
-import { PageletonPageFactory } from './page';
+import { PageletonPageFactory, PageletonPage } from './page';
 import { PageCompnentType, pageComponentTypeRegistry } from './component';
 
 export * from './component';
@@ -25,6 +25,11 @@ export type PageletonConfig = {
     },
     customComponentTypes?: PageCompnentType[],
     customBrowserDriver?: BrowserDriverType,
+}
+
+export type PageletonBrowser = {
+    openPage: (name: string) => Promise<PageletonPage>;
+    shutdown: () => Promise<void>;
 }
 
 export const pageleton = (config: PageletonConfig) => {
@@ -56,7 +61,7 @@ export const pageleton = (config: PageletonConfig) => {
                     await launchDefer;
                     await browserDriver.shotdown();
                 }
-            }
+            } as PageletonBrowser;
         }
     }
 }
