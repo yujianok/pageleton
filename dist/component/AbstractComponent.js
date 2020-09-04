@@ -68,11 +68,28 @@ var AbstractComponent = (function () {
                         routes = [];
                         cursor = this;
                         while (cursor) {
-                            routes.unshift({ selector: cursor.selector, xpath: cursor.xpath });
+                            routes.unshift({ name: cursor.name, selector: cursor.selector, xpath: cursor.xpath });
                             cursor = cursor.parent;
                         }
                         return [4, pageAdapter.getElement(routes)];
                     case 1: return [2, _a.sent()];
+                }
+            });
+        });
+    };
+    AbstractComponent.prototype.isElementPresent = function (element) {
+        return __awaiter(this, void 0, void 0, function () {
+            var _a, width, height;
+            return __generator(this, function (_b) {
+                switch (_b.label) {
+                    case 0:
+                        if (!element) {
+                            return [2, false];
+                        }
+                        return [4, element.getSize()];
+                    case 1:
+                        _a = _b.sent(), width = _a[0], height = _a[1];
+                        return [2, width > 0 && height > 0];
                 }
             });
         });
@@ -99,7 +116,7 @@ var AbstractComponent = (function () {
                     case 0: return [4, this.getComponentElement(pageAdapter)];
                     case 1:
                         element = _a.sent();
-                        if (!element) {
+                        if (!this.isElementPresent(element)) {
                             throw new Error('Component\'s element has not presented: ' + this.name);
                         }
                         return [4, element.click()];
@@ -118,7 +135,7 @@ var AbstractComponent = (function () {
                     case 0: return [4, this.getComponentElement(pageAdapter)];
                     case 1:
                         element = _a.sent();
-                        if (!element) {
+                        if (!this.isElementPresent(element)) {
                             throw new Error('Component\'s element has not presented: ' + this.name);
                         }
                         return [4, element.mouseOver()];
@@ -183,39 +200,22 @@ var AbstractComponent = (function () {
     };
     AbstractComponent.prototype.isPresent = function (pageAdapter) {
         return __awaiter(this, void 0, void 0, function () {
-            var element, _a, width, height;
-            return __generator(this, function (_b) {
-                switch (_b.label) {
+            var element;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
                     case 0: return [4, this.getComponentElement(pageAdapter)];
                     case 1:
-                        element = _b.sent();
-                        if (!element) {
-                            return [2, false];
-                        }
-                        return [4, element.getSize()];
-                    case 2:
-                        _a = _b.sent(), width = _a[0], height = _a[1];
-                        return [2, width > 0 && height > 0];
+                        element = _a.sent();
+                        return [2, this.isElementPresent(element)];
                 }
             });
         });
     };
     AbstractComponent.prototype.waitUntilPresent = function (timeout, pageAdapter) {
         return __awaiter(this, void 0, void 0, function () {
-            var _this = this;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4, this.waitUntil(function (element) { return __awaiter(_this, void 0, void 0, function () {
-                            var _a, width, height;
-                            return __generator(this, function (_b) {
-                                switch (_b.label) {
-                                    case 0: return [4, element.getSize()];
-                                    case 1:
-                                        _a = _b.sent(), width = _a[0], height = _a[1];
-                                        return [2, width > 0 && height > 0];
-                                }
-                            });
-                        }); }, timeout, pageAdapter)];
+                    case 0: return [4, this.waitUntil(this.isElementPresent, timeout, pageAdapter)];
                     case 1: return [2, _a.sent()];
                 }
             });

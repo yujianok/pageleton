@@ -35,6 +35,10 @@ describe('Test PageletonPage', () => {
             const detailMenuPresent = await testPage.isComponentPresent(['toolbar', 'Branch detail menu']);
             expect(detailMenuPresent).equal(true);
 
+            await testPage.clickComponent(['toolbar', 'Code']);
+            const repositoryMenuPresent = await testPage.isComponentPresent(['toolbar', 'Repository menu']);
+            expect(repositoryMenuPresent).equal(true);
+
             await testPage.close();
         } finally {
             await browser.shutdown()

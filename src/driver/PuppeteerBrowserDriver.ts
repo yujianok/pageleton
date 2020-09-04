@@ -99,29 +99,36 @@ class PuppeteerPageAdapter implements PageAdapter {
 
     async getElement(routes: ElementRoute[]): Promise<ElementAdapter | undefined> {
 
-        const elementHandle = await this.page.evaluateHandle((routesJson) => {
+        const jsHandle = await this.page.evaluateHandle((routesJson) => {
             const rs = JSON.parse(routesJson) as ElementRoute[];
 
-            let element: Element | undefined;
+            let element: Element | null = null;
             for (const route of rs) {
-                const { selector, xpath } = route;
+                const { name, selector, xpath } = route;
 
                 if (selector) {
-                    element = (element || document).querySelector(selector) || undefined;
+                    element = (element || document).querySelector(selector);
                 }
 
-                if (xpath && element) {
-                    element = document.evaluate(xpath, element).iterateNext() as Element;
+                if (xpath) {
+                    element = document.evaluate(xpath, element || document).iterateNext() as Element;
+                }
+
+                if (!selector && !xpath) {
+                    element = document.evaluate(`.//*[normalize-space()='${name}']`, element || document).iterateNext() as Element;
                 }
 
                 if (!element) {
+                    // throw new Error('Can not find element by routes:' + routesJson + 'on index of ' + rs.indexOf(route));
                     break;
                 }
             }
 
             return element;
-        }, JSON.stringify(routes)) as ElementHandle;
+        }, JSON.stringify(routes));
 
+        const elementHandle = jsHandle.asElement() || undefined;
+        
         return elementHandle && new PuppeteerElementAdapter(elementHandle);
     }
 }

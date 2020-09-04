@@ -55,7 +55,7 @@ class PageletonPageLoader {
                                     children: [],
                                 }) as AbstractComponent;
 
-                                const children = await this.parsePageComponent(specPath, specEncoding, others, parent);
+                                const children = await this.parsePageComponent(specPath, specEncoding, others, component);
                                 component.pushChildComponents(...children);
                                 return component;
                             }))

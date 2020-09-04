@@ -147,7 +147,7 @@ var PageletonPageLoader = (function () {
                                                                                     parent: parent,
                                                                                     children: [],
                                                                                 });
-                                                                                return [4, this.parsePageComponent(specPath, specEncoding, others_1, parent)];
+                                                                                return [4, this.parsePageComponent(specPath, specEncoding, others_1, component)];
                                                                             case 1:
                                                                                 children = _a.sent();
                                                                                 component.pushChildComponents.apply(component, children);

@@ -11,6 +11,7 @@ export declare abstract class AbstractComponent implements PageComponent {
     protected getChildComponent(name: string): PageComponent | undefined;
     protected getSubComponentOfType(componentType: PageCompnentType): PageComponent[];
     protected getComponentElement(pageAdapter: PageAdapter): Promise<ElementAdapter | undefined>;
+    protected isElementPresent(element?: ElementAdapter): Promise<boolean>;
     setValue(value: string, pageAdapter: PageAdapter): Promise<void>;
     getValue(pageAdapter: PageAdapter): Promise<any>;
     click(pageAdapter: PageAdapter): Promise<void>;

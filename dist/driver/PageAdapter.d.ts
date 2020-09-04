@@ -1,5 +1,6 @@
 import { ElementAdapter } from "./ElementAdapter";
 export declare type ElementRoute = {
+    name: string;
     selector?: string;
     xpath?: string;
 };

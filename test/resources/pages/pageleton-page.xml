@@ -17,6 +17,7 @@
         <Button name="Branch switcher" selector="#branch-select-menu summary" />
         <Modal name="Branch detail menu" selector="#branch-select-menu .SelectMenu" />
         <Button name="Go to file" xpath="./a" />
-        <Button name="Code" selector="span" xpath=".//summary"/>
+        <Button name="Code"/>
+        <Modal name="Repository menu" selector=".get-repo-modal" />
     </Toolbar>
 </Page> 

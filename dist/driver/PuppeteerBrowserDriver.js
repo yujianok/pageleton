@@ -237,20 +237,23 @@ var PuppeteerPageAdapter = (function () {
     };
     PuppeteerPageAdapter.prototype.getElement = function (routes) {
         return __awaiter(this, void 0, void 0, function () {
-            var elementHandle;
+            var jsHandle, elementHandle;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0: return [4, this.page.evaluateHandle(function (routesJson) {
                             var rs = JSON.parse(routesJson);
-                            var element;
+                            var element = null;
                             for (var _i = 0, rs_1 = rs; _i < rs_1.length; _i++) {
                                 var route = rs_1[_i];
-                                var selector = route.selector, xpath = route.xpath;
+                                var name_1 = route.name, selector = route.selector, xpath = route.xpath;
                                 if (selector) {
-                                    element = (element || document).querySelector(selector) || undefined;
+                                    element = (element || document).querySelector(selector);
                                 }
-                                if (xpath && element) {
-                                    element = document.evaluate(xpath, element).iterateNext();
+                                if (xpath) {
+                                    element = document.evaluate(xpath, element || document).iterateNext();
+                                }
+                                if (!selector && !xpath) {
+                                    element = document.evaluate(".//*[normalize-space()='" + name_1 + "']", element || document).iterateNext();
                                 }
                                 if (!element) {
                                     break;
@@ -259,7 +262,8 @@ var PuppeteerPageAdapter = (function () {
                             return element;
                         }, JSON.stringify(routes))];
                     case 1:
-                        elementHandle = _a.sent();
+                        jsHandle = _a.sent();
+                        elementHandle = jsHandle.asElement() || undefined;
                         return [2, elementHandle && new PuppeteerElementAdapter(elementHandle)];
                 }
             });

@@ -21,6 +21,7 @@ describe('Test PageCompoent', () => {
         close: () => Promise.resolve(),
         getTitle: () => Promise.resolve(''),
         getElement: (routes) => Promise.resolve(mockedElementAdapter),
+        waitForNavigation: (timeout: number) => Promise.resolve(),
     };
 
     class TestComponent extends AbstractComponent { };

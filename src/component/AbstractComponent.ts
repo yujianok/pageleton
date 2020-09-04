@@ -30,11 +30,20 @@ export abstract class AbstractComponent implements PageComponent {
         const routes: ElementRoute[] = [];
         let cursor: PageComponent | undefined = this;
         while (cursor) {
-            routes.unshift({ selector: cursor.selector, xpath: cursor.xpath });
+            routes.unshift({ name: cursor.name, selector: cursor.selector, xpath: cursor.xpath });
             cursor = cursor.parent;
         }
 
         return await pageAdapter.getElement(routes);
+    }
+
+    protected async isElementPresent(element?: ElementAdapter): Promise<boolean> {
+        if (!element) {
+            return false;
+        }
+
+        const [width, height] = await element.getSize();
+        return width > 0 && height > 0;
     }
 
     async setValue(value: string, pageAdapter: PageAdapter): Promise<void> {
@@ -48,21 +57,21 @@ export abstract class AbstractComponent implements PageComponent {
     async click(pageAdapter: PageAdapter): Promise<void> {
         const element = await this.getComponentElement(pageAdapter);
 
-        if (!element) {
+        if (!this.isElementPresent(element)) {
             throw new Error('Component\'s element has not presented: ' + this.name);
         }
 
-        await element.click();
+        await element!.click();
     }
 
     async mouseOver(pageAdapter: PageAdapter): Promise<void> {
         const element = await this.getComponentElement(pageAdapter);
 
-        if (!element) {
+        if (!this.isElementPresent(element)) {
             throw new Error('Component\'s element has not presented: ' + this.name);
         }
 
-        await element.mouseOver();
+        await element!.mouseOver();
     }
 
     async waitUntil(condition: WaitCondition, timeout: number, pageAdapter: PageAdapter): Promise<void> {
@@ -86,19 +95,11 @@ export abstract class AbstractComponent implements PageComponent {
 
     async isPresent(pageAdapter: PageAdapter): Promise<boolean> {
         const element = await this.getComponentElement(pageAdapter);
-        if (!element) {
-            return false;
-        }
-
-        const [width, height] = await element.getSize();
-        return width > 0 && height > 0;
+        return this.isElementPresent(element);
     }
 
     async waitUntilPresent(timeout: number, pageAdapter: PageAdapter): Promise<void> {
-        return await this.waitUntil(async (element) => {
-            const [width, height] = await element.getSize();
-            return width > 0 && height > 0;
-        }, timeout, pageAdapter);
+        return await this.waitUntil(this.isElementPresent, timeout, pageAdapter);
     }
 
     pushChildComponents(...children: PageComponent[]) {

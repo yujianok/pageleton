@@ -12,17 +12,19 @@ describe('Test PageletonPageParser', () => {
 
         const Header = page.getComponent(['Header']);
         assert.exists(Header);
+        assert.notExists(Header.parent);
         expect(Header.name).equal('Header');
-        expect(Header.selector).equal('header.Header')
+        expect(Header.selector).equal('div.HeaderMenu')
         assert.notExists(Header.xpath);
-        expect(Header.children.length).equal(6);
+        expect(Header.children.length).equal(3);
 
-        const Logo = page.getComponent(['Header', 'Github Logo']);
-        assert.exists(Logo);
-        expect(Logo.name).equal('Github Logo');
-        expect(Logo.selector).equal('div.Header-item:nth-child(1)')
-        assert.notExists(Logo.xpath);
-        expect(Logo.children.length).equal(0);
+        const Search = page.getComponent(['Header', 'Header Search']);
+        assert.exists(Search);
+        assert.exists(Search.parent);
+        expect(Search.name).equal('Header Search');
+        expect(Search.selector).equal('div.header-search input')
+        assert.notExists(Search.xpath);
+        expect(Search.children.length).equal(0);
 
         const NavBar = page.getComponent(['NavBar']);
         assert.exists(NavBar);
@@ -34,6 +36,7 @@ describe('Test PageletonPageParser', () => {
         const expectMenus = ['Code', 'Issues', 'Pull Request', 'Actions', 'Projects', 'Wiki', 'Security'];
         assert.exists(menus);
         menus.forEach((menu, i) => {
+            assert.exists(menu.parent);
             expect(menu.name).equal(expectMenus[i]);
             expect(menu.selector).equal(`li:nth-child(${i + 1})`);
             expect(menu.index).equal(1);
@@ -44,10 +47,11 @@ describe('Test PageletonPageParser', () => {
         expect(Toolbar.name).equal('toolbar');
         expect(Toolbar.selector).equal('.file-navigation');
         expect(Toolbar.index).equal(1);
-        expect(Toolbar.children.length).equal(4);
+        expect(Toolbar.children.length).equal(5);
 
         const Button1 = Toolbar.children[0];
         assert.exists(Button1);
+        assert.exists(Button1.parent);
         expect(Button1.name).equal('Branch switcher');
         expect(Button1.selector).equal('#branch-select-menu summary');
         assert.notExists(Button1.xpath)
@@ -55,6 +59,7 @@ describe('Test PageletonPageParser', () => {
 
         const Button2 = Toolbar.children[1];
         assert.exists(Button2);
+        assert.exists(Button2.parent);
         expect(Button2.name).equal('Go to file');
         assert.notExists(Button2.selector)
         expect(Button2.xpath).equal('./a');
@@ -62,9 +67,10 @@ describe('Test PageletonPageParser', () => {
 
         const Button3 = Toolbar.children[2];
         assert.exists(Button3);
+        assert.exists(Button3.parent);
         expect(Button3.name).equal('Code');
-        expect(Button3.selector).equal('span');
-        expect(Button3.xpath).equal('.//summary');
+        assert.notExists(Button3.selector);
+        assert.notExists(Button3.xpath);
         expect(Button3.index).equal(1);
     });
 
