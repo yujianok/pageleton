@@ -56,20 +56,6 @@ var Component = (function (_super) {
     function Component() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
-    Component.prototype.getValue = function (pageAdapter) {
-        return __awaiter(this, void 0, void 0, function () {
-            var element;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0: return [4, this.getComponentElement(pageAdapter)];
-                    case 1:
-                        element = _a.sent();
-                        return [4, (element === null || element === void 0 ? void 0 : element.getInnerText())];
-                    case 2: return [2, _a.sent()];
-                }
-            });
-        });
-    };
     return Component;
 }(AbstractComponent_1.AbstractComponent));
 PageComponentTypeRegistry_1.pageComponentTypeRegistry.registerComponentType(Component);
@@ -86,7 +72,7 @@ var Input = (function (_super) {
                     case 0: return [4, this.getComponentElement(pageAdapter)];
                     case 1:
                         element = _a.sent();
-                        return [4, (element === null || element === void 0 ? void 0 : element.getInputValue())];
+                        return [4, (element === null || element === void 0 ? void 0 : element.getValue())];
                     case 2: return [2, _a.sent()];
                 }
             });
@@ -100,7 +86,7 @@ var Input = (function (_super) {
                     case 0: return [4, this.getComponentElement(pageAdapter)];
                     case 1:
                         element = _a.sent();
-                        return [4, (element === null || element === void 0 ? void 0 : element.setInputValue(value))];
+                        return [4, (element === null || element === void 0 ? void 0 : element.setValue(value))];
                     case 2:
                         _a.sent();
                         return [2];
@@ -132,7 +118,7 @@ var Table = (function (_super) {
                         rowValues = _a.sent();
                         return [2, {
                                 headers: headerValues,
-                                rows: rowValues,
+                                rows: rowValues.filter(function (r) { return r.length; }),
                             }];
                 }
             });
@@ -148,10 +134,16 @@ var TableHeader = (function (_super) {
     }
     TableHeader.prototype.getValue = function (pageAdapter) {
         return __awaiter(this, void 0, void 0, function () {
-            var cells;
+            var cells, headers;
             return __generator(this, function (_a) {
-                cells = this.getSubComponentOfType(TableField);
-                return [2, Promise.all(cells.map(function (cell) { return cell.getValue(pageAdapter); }))];
+                switch (_a.label) {
+                    case 0:
+                        cells = this.getSubComponentOfType(TableField);
+                        return [4, Promise.all(cells.map(function (cell) { return cell.getValue(pageAdapter); }))];
+                    case 1:
+                        headers = _a.sent();
+                        return [2, headers.filter(function (h) { return h !== undefined; })];
+                }
             });
         });
     };
@@ -165,10 +157,16 @@ var TableRow = (function (_super) {
     }
     TableRow.prototype.getValue = function (pageAdapter) {
         return __awaiter(this, void 0, void 0, function () {
-            var cells;
+            var cells, fields;
             return __generator(this, function (_a) {
-                cells = this.getSubComponentOfType(TableField);
-                return [2, Promise.all(cells.map(function (cell) { return cell.getValue(pageAdapter); }))];
+                switch (_a.label) {
+                    case 0:
+                        cells = this.getSubComponentOfType(TableField);
+                        return [4, Promise.all(cells.map(function (cell) { return cell.getValue(pageAdapter); }))];
+                    case 1:
+                        fields = _a.sent();
+                        return [2, fields.filter(function (f) { return f !== undefined; })];
+                }
             });
         });
     };
@@ -180,6 +178,20 @@ var TableField = (function (_super) {
     function TableField() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
+    TableField.prototype.getValue = function (pageAdapter) {
+        return __awaiter(this, void 0, void 0, function () {
+            var element;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4, this.getComponentElement(pageAdapter)];
+                    case 1:
+                        element = _a.sent();
+                        return [4, (element === null || element === void 0 ? void 0 : element.getInnerText())];
+                    case 2: return [2, _a.sent()];
+                }
+            });
+        });
+    };
     return TableField;
 }(AbstractComponent_1.AbstractComponent));
 PageComponentTypeRegistry_1.pageComponentTypeRegistry.registerComponentType(TableField);

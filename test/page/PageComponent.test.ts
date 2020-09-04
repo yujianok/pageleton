@@ -3,17 +3,18 @@ import { ElementAdapter, PageAdapter, PageComponent } from "../../src";
 import { AbstractComponent } from "../../src/component/AbstractComponent";
 
 describe('Test PageCompoent', () => {
-    const timeout = 5500;
+    const timeout = 1500;
 
     const mockedElementAdapter: ElementAdapter = {
         getSubElement: (selector?: string, xpath?: string) => Promise.resolve(undefined),
         getInnerText: () => Promise.resolve(''),
-        getInputValue: () => Promise.resolve(''),
-        setInputValue: (value: string) => Promise.resolve(),
+        getValue: () => Promise.resolve(''),
+        setValue: (value: string) => Promise.resolve(),
         click: () => Promise.resolve(),
         mouseOver: () => Promise.resolve(),
         getPosition: () => Promise.resolve([1, 1]),
         getSize: () => Promise.resolve([1, 1]),
+        getAttribute: (name: string) => Promise.resolve(undefined),
     };
 
     const mockedPageAdapter: PageAdapter = {
@@ -27,7 +28,6 @@ describe('Test PageCompoent', () => {
     class TestComponent extends AbstractComponent { };
     const component: PageComponent = new TestComponent({
         name: 'testComponent',
-        index: 1,
         children: [],
     });
 
@@ -109,7 +109,7 @@ describe('Test PageCompoent', () => {
                 ...mockedPageAdapter,
                 getElement: () => Promise.resolve({
                     ...mockedElementAdapter,
-                    getSize: () => Promise.resolve(count++ > 0 ? [count % 2, count % 4] : [0, 0])
+                    getSize: () => Promise.resolve(count++ > 0 ? [1, 2] : [0, 0])
                 }),
             });
         } catch (e) {

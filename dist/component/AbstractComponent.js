@@ -50,7 +50,6 @@ var AbstractComponent = (function () {
         this.selector = config.selector;
         this.xpath = config.xpath;
         this.parent = config.parent;
-        this.index = config.index;
         this.children = __spreadArrays(config.children);
     }
     AbstractComponent.prototype.getChildComponent = function (name) {
@@ -105,6 +104,41 @@ var AbstractComponent = (function () {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 throw new Error(this.name + " not supports getting value");
+            });
+        });
+    };
+    AbstractComponent.prototype.getText = function (pageAdapter) {
+        return __awaiter(this, void 0, void 0, function () {
+            var element;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4, this.getComponentElement(pageAdapter)];
+                    case 1:
+                        element = _a.sent();
+                        return [4, this.isElementPresent(element)];
+                    case 2:
+                        if (!(_a.sent())) {
+                            throw new Error('Component\'s element is not exist: ' + this.name);
+                        }
+                        return [4, element.getInnerText()];
+                    case 3: return [2, _a.sent()];
+                }
+            });
+        });
+    };
+    AbstractComponent.prototype.getAttribute = function (name, pageAdapter) {
+        return __awaiter(this, void 0, void 0, function () {
+            var element;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4, this.getComponentElement(pageAdapter)];
+                    case 1:
+                        element = _a.sent();
+                        if (!element) {
+                            throw new Error('Component\'s element is not exist: ' + this.name);
+                        }
+                        return [2, element.getAttribute(name)];
+                }
             });
         });
     };

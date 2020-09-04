@@ -143,7 +143,6 @@ var PageletonPageLoader = (function () {
                                                                                     name: $_1.name && $_1.name.replace(/{index}/g, index),
                                                                                     selector: $_1.selector && $_1.selector.replace(/{index}/g, index),
                                                                                     xpath: $_1.xpath && $_1.xpath.replace(/{index}/g, index),
-                                                                                    index: index,
                                                                                     parent: parent,
                                                                                     children: [],
                                                                                 });

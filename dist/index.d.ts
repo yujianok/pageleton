@@ -13,6 +13,7 @@ export declare type PageletonConfig = {
     headless?: boolean;
     args?: string[];
     timeout?: number;
+    baseUrl?: string;
     viewport?: {
         width?: number;
         height?: number;

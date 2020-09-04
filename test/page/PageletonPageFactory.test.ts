@@ -9,7 +9,7 @@ describe('Test PageletonPageFactory', () => {
         const testPage = await pageletonPageFactory.getPageByName('Pageleton');
         assert.exists(testPage);
         expect(testPage?.name).equal('Pageleton');
-        expect(testPage?.url).equal('https://github.com/yujianok/pageleton');
+        expect(testPage?.url).equal('/test/resources/html/example-page.html');
 
         const notExistPage = await pageletonPageFactory.getPageByName('not exist page');
         assert.notExists(notExistPage);

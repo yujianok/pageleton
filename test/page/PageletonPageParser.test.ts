@@ -4,74 +4,86 @@ import { pageletonPageLoader } from '../../src';
 describe('Test PageletonPageParser', () => {
 
     it('test readPageSpec', async () => {
-        const page = await pageletonPageLoader.loadPageSpec('./test/resources/pages/pageleton-page.xml', 'UTF-8');
+        const page = await pageletonPageLoader.loadPageSpec('./test/resources/pages/todo-list-page.xml', 'UTF-8');
 
         expect(page.name).equal('Pageleton');
-        expect(page.url).equal('https://github.com/yujianok/pageleton');
+        expect(page.url).equal('/test/resources/html/example-page.html');
         expect(page.rootComponents.length).equal(3);
 
         const Header = page.getComponent(['Header']);
         assert.exists(Header);
         assert.notExists(Header.parent);
         expect(Header.name).equal('Header');
-        expect(Header.selector).equal('div.HeaderMenu')
+        expect(Header.selector).equal('.header')
         assert.notExists(Header.xpath);
         expect(Header.children.length).equal(3);
 
-        const Search = page.getComponent(['Header', 'Header Search']);
-        assert.exists(Search);
-        assert.exists(Search.parent);
-        expect(Search.name).equal('Header Search');
-        expect(Search.selector).equal('div.header-search input')
-        assert.notExists(Search.xpath);
-        expect(Search.children.length).equal(0);
+        const Title = page.getComponent(['Header', 'My To Do List']);
+        assert.exists(Title);
+        expect(Title.parent?.name).equal('Header');
+        expect(Title.name).equal('My To Do List');
+        assert.notExists(Title.selector);
+        assert.notExists(Title.xpath);
+        expect(Title.children.length).equal(0);
 
-        const NavBar = page.getComponent(['NavBar']);
-        assert.exists(NavBar);
-        expect(NavBar.name).equal('NavBar');
-        expect(NavBar.selector).equal('ul.UnderlineNav-body');
-        expect(NavBar.children.length).equal(7);
+        const Input = page.getComponent(['Header', 'My Input']);
+        assert.exists(Input);
+        expect(Input.parent?.name).equal('Header');
+        expect(Input.name).equal('My Input');
+        expect(Input.selector).equal('#myInput');
+        assert.notExists(Input.xpath);
+        expect(Input.children.length).equal(0);
 
-        const menus = NavBar.children;
-        const expectMenus = ['Code', 'Issues', 'Pull Request', 'Actions', 'Projects', 'Wiki', 'Security'];
-        assert.exists(menus);
-        menus.forEach((menu, i) => {
-            assert.exists(menu.parent);
-            expect(menu.name).equal(expectMenus[i]);
-            expect(menu.selector).equal(`li:nth-child(${i + 1})`);
-            expect(menu.index).equal(1);
+        const Button = page.getComponent(['Header', 'Add']);
+        assert.exists(Button);
+        expect(Button.parent?.name).equal('Header');
+        expect(Button.name).equal('Add');
+        assert.notExists(Button.selector);
+        assert.notExists(Button.xpath);
+        expect(Button.children.length).equal(0);
+
+        const Table = page.getComponent(['Todo List']);
+        assert.exists(Table);
+        expect(Table.name).equal('Todo List');
+        expect(Table.selector).equal('#myUL');
+        assert.notExists(Button.xpath);
+        expect(Table.children.length).equal(10);
+
+        const TableRows = Table.children;
+        assert.exists(TableRows);
+        TableRows.forEach((TableRow, i) => {
+            expect(TableRow.parent?.name).equal('Todo List');
+            expect(TableRow.name).equal(`Item-${i + 1}`);
+            expect(TableRow.selector).equal(`li:nth-child(${i + 1})`);
+            assert.notExists(Button.xpath);
+            expect(Table.children.length).equal(10);
+
+            const Index = page.getComponent(['Todo List', `Item-${i + 1}`, 'Item Index']);
+            assert.exists(Index);
+            expect(Index.parent?.name).equal(`Item-${i + 1}`);
+            expect(Index.name).equal('Item Index');
+            expect(Index.xpath).equal('./span[1]');
+            assert.notExists(Index.selector);
+            expect(Index.children.length).equal(0);
+
+            const Title = page.getComponent(['Todo List', `Item-${i + 1}`, 'Item Title']);
+            assert.exists(Title);
+            expect(Title.parent?.name).equal(`Item-${i + 1}`);
+            expect(Title.name).equal('Item Title');
+            expect(Title.xpath).equal('./span[2]');
+            assert.notExists(Title.selector);
+            expect(Title.children.length).equal(0);
+
+            const Icon = page.getComponent(['Todo List', `Item-${i + 1}`, 'Delete']);
+            assert.exists(Icon);
+            expect(Icon.parent?.name).equal(`Item-${i + 1}`);
+            expect(Icon.name).equal('Delete');
+            expect(Icon.xpath).equal('./span[3]');
+            assert.notExists(Icon.selector);
+            expect(Icon.children.length).equal(0);
+
         })
 
-        const Toolbar = page.getComponent(['toolbar']);
-        assert.exists(Toolbar);
-        expect(Toolbar.name).equal('toolbar');
-        expect(Toolbar.selector).equal('.file-navigation');
-        expect(Toolbar.index).equal(1);
-        expect(Toolbar.children.length).equal(5);
-
-        const Button1 = Toolbar.children[0];
-        assert.exists(Button1);
-        assert.exists(Button1.parent);
-        expect(Button1.name).equal('Branch switcher');
-        expect(Button1.selector).equal('#branch-select-menu summary');
-        assert.notExists(Button1.xpath)
-        expect(Button1.index).equal(1);
-
-        const Button2 = Toolbar.children[1];
-        assert.exists(Button2);
-        assert.exists(Button2.parent);
-        expect(Button2.name).equal('Go to file');
-        assert.notExists(Button2.selector)
-        expect(Button2.xpath).equal('./a');
-        expect(Button2.index).equal(1);
-
-        const Button3 = Toolbar.children[2];
-        assert.exists(Button3);
-        assert.exists(Button3.parent);
-        expect(Button3.name).equal('Code');
-        assert.notExists(Button3.selector);
-        assert.notExists(Button3.xpath);
-        expect(Button3.index).equal(1);
     });
 
 });

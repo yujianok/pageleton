@@ -4,10 +4,11 @@ import { Pageleton } from "../../src";
 describe('Test PageletonPage', () => {
 
     it('test PageletonPage functions', async () => {
-        
+
         const browser = await Pageleton({
             specPaths: ['./test/resources/pages/*-page.xml'],
             headless: false,
+            baseUrl: 'file://' + process.cwd(),
             timeout: 0,
             viewport: {
                 width: 1440,
@@ -22,22 +23,53 @@ describe('Test PageletonPage', () => {
             assert.exists(testPage);
 
             const title = await testPage.getTitle();
-            expect(title).equal('GitHub - yujianok/pageleton');
+            expect(title).equal('example page for pageleton unit testing');
 
-            const text = await testPage.getComponentValue(['toolbar', 'Branch switcher']) as string;
-            expect(text.trim()).equal('master');
+            const listTitle = await testPage.getComponentText(['Header', 'My To Do List']);
+            expect(listTitle).equal('My To Do List');
 
-            await testPage.setComponentValue('abc', ['Header', 'Header Search']);
-            const inputValue = await testPage.getComponentValue(['Header', 'Header Search']);
-            expect(inputValue).equal('abc');
+            const tableData = await testPage.getComponentValue(['Todo List']);
+            const expectData = {
+                headers: [],
+                rows: [
+                    ['1', 'Hit the gym'],
+                    ['2', 'Pay bills'],
+                    ['3', 'Meet George'],
+                    ['4', 'Buy eggs'],
+                    ['5', 'Read a book'],
+                    ['6', 'Organize office']
+                ]
+            };
+            expect(tableData).to.deep.equal(expectData);
 
-            await testPage.clickComponent(['toolbar', 'Branch switcher']);
-            const detailMenuPresent = await testPage.isComponentPresent(['toolbar', 'Branch detail menu']);
-            expect(detailMenuPresent).equal(true);
+            const secondItemTitle = await testPage.getComponentText(['Todo List', 'Item-2', 'Item Title']);
+            expect(secondItemTitle).equal('Pay bills');
 
-            await testPage.clickComponent(['toolbar', 'Code']);
-            const repositoryMenuPresent = await testPage.isComponentPresent(['toolbar', 'Repository menu']);
-            expect(repositoryMenuPresent).equal(true);
+            const secondItemClass = await testPage.getComponentAttribute('class', ['Todo List', 'Item-2'])
+            expect(secondItemClass).equal('checked');
+
+            await testPage.clickComponent(['Todo List', 'Item-2', 'Delete']);
+            const secondItemPresent = await testPage.isComponentPresent(['Todo List', 'Item-2']);
+            expect(secondItemPresent).equal(false);
+
+            await testPage.clickComponent(['Header', 'Add']);
+            const alertPresent = await testPage.isComponentPresent(['Alert Message']);
+            expect(alertPresent).equal(true);
+            const alertMessage = await testPage.getComponentText(['Alert Message', 'Message Content']);
+            expect(alertMessage).equal('You must write something!');
+
+            await testPage.clickComponent(['Alert Message', 'Message Content']);
+            const alertPresent2 = await testPage.isComponentPresent(['Alert Message']);
+            expect(alertPresent2).equal(false);
+
+            await testPage.setComponentValue('Test Person', ['Header', 'My Input']);
+            const inputValue = await testPage.getComponentValue(['Header', 'My Input']);
+            expect(inputValue).equal('Test Person');
+            await testPage.clickComponent(['Header', 'Add']);
+            const lastItemIndex = await testPage.getComponentText(['Todo List', 'Item-7', 'Item Index']);
+            expect(lastItemIndex).equal('7');
+            const lastItemTitle = await testPage.getComponentText(['Todo List', 'Item-7', 'Item Title']);
+            expect(lastItemTitle).equal('Test Person');
 
             await testPage.close();
         } finally {

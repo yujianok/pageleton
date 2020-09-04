@@ -178,6 +178,34 @@ var PageletonPage = (function () {
             });
         });
     };
+    PageletonPage.prototype.getComponentAttribute = function (name, routes) {
+        return __awaiter(this, void 0, void 0, function () {
+            var component, pageAdapter;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        component = this.getComponent(routes);
+                        pageAdapter = this.getPageAdapter();
+                        return [4, component.getAttribute(name, pageAdapter)];
+                    case 1: return [2, _a.sent()];
+                }
+            });
+        });
+    };
+    PageletonPage.prototype.getComponentText = function (routes) {
+        return __awaiter(this, void 0, void 0, function () {
+            var component, pageAdapter;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        component = this.getComponent(routes);
+                        pageAdapter = this.getPageAdapter();
+                        return [4, component.getText(pageAdapter)];
+                    case 1: return [2, _a.sent()];
+                }
+            });
+        });
+    };
     return PageletonPage;
 }());
 exports.PageletonPage = PageletonPage;

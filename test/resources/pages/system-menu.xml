@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-
-<Header name="Header" selector="div.HeaderMenu">
-    <Input name="Header Search" selector="div.header-search input" />
-    <Link name="Marketplace" selector="li:child(4)" />
-    <Link name="Explore" selector="li:child(4)" />
-</Header>

@@ -37,7 +37,7 @@ export class PageletonPage {
         return await pageAdapter.getTitle();
     }
 
-    async getComponentValue(routes: string[]): Promise<string> {
+    async getComponentValue(routes: string[]): Promise<any> {
         const component = this.getComponent(routes);
         const pageAdapter = this.getPageAdapter();
 
@@ -82,6 +82,20 @@ export class PageletonPage {
         const pageAdapter = this.getPageAdapter();
 
         await pageAdapter.waitForNavigation(timeout);
+    }
+
+    async getComponentAttribute(name: string, routes: string[]): Promise<string | undefined> {
+        const component = this.getComponent(routes);
+        const pageAdapter = this.getPageAdapter();
+
+        return await component.getAttribute(name, pageAdapter);
+    }
+
+    async getComponentText(routes: string[]): Promise<string> {
+        const component = this.getComponent(routes);
+        const pageAdapter = this.getPageAdapter();
+
+        return await component.getText(pageAdapter);
     }
 
 }

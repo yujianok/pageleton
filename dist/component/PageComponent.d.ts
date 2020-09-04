@@ -6,9 +6,10 @@ export interface PageComponent {
     readonly xpath?: string;
     readonly parent?: PageComponent;
     readonly children: readonly PageComponent[];
-    readonly index: number;
     setValue(value: string, pageAdapter: PageAdapter): Promise<void>;
     getValue(pageAdapter: PageAdapter): Promise<any>;
+    getText(pageAdapter: PageAdapter): Promise<string>;
+    getAttribute(name: string, pageAdapter: PageAdapter): Promise<string | undefined>;
     click(pageAdapter: PageAdapter): Promise<void>;
     mouseOver(pageAdapter: PageAdapter): Promise<void>;
     isPresent(pageAdapter: PageAdapter): Promise<boolean>;
@@ -19,7 +20,6 @@ export declare type PageComponentConfig = {
     name: string;
     selector?: string;
     xpath?: string;
-    index: number;
     parent?: PageComponent;
     children: PageComponent[];
 };

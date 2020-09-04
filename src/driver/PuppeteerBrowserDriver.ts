@@ -31,7 +31,7 @@ class PuppeteerElementAdapter implements ElementAdapter {
         return boundingBox ? [boundingBox.width, boundingBox.height] : [0, 0];
     }
 
-    async getInputValue(): Promise<string> {
+    async getValue(): Promise<string> {
         return await this.elementHandler.evaluate((el) => {
             if (el instanceof HTMLInputElement) {
                 return el.value;
@@ -41,12 +41,12 @@ class PuppeteerElementAdapter implements ElementAdapter {
         });
     }
 
-    async setInputValue(value: string): Promise<void> {
+    async setValue(value: string): Promise<void> {
         return await this.elementHandler.evaluate((el, v) => {
             if (el instanceof HTMLInputElement) {
                 el.value = v;
             } else {
-                throw new Error('Element is not a input, can not invoke setInputValue on it');
+                throw new Error('Element is not a input, can not invoke setValue on it');
             }
         }, value);
     }
@@ -71,14 +71,20 @@ class PuppeteerElementAdapter implements ElementAdapter {
 
         return elementHandler && new PuppeteerElementAdapter(elementHandler);
     }
+
+    getAttribute(name: string): Promise<string | undefined> {
+        return this.elementHandler.evaluate((el, attr) => el.getAttribute(attr) || undefined, name);
+    }
 }
 
 class PuppeteerPageAdapter implements PageAdapter {
 
     private readonly page: Page;
+    private readonly baseUrl?: string;
 
-    constructor(page: Page) {
+    constructor(page: Page, baseUrl?: string) {
         this.page = page;
+        this.baseUrl = baseUrl;
     }
 
     async getTitle(): Promise<string> {
@@ -86,7 +92,11 @@ class PuppeteerPageAdapter implements PageAdapter {
     }
 
     async goto(url: string): Promise<void> {
-        await this.page.goto(url);
+        let resovledUrl = url;
+        if (!this.page.url() || this.page.url() === 'about:blank' || !/^([a-z][a-z0-9+\-.]*):/.test(url)) {
+            resovledUrl = (this.baseUrl || '') + url;
+        }
+        await this.page.goto(resovledUrl);
     }
 
     async close(): Promise<void> {
@@ -128,7 +138,7 @@ class PuppeteerPageAdapter implements PageAdapter {
         }, JSON.stringify(routes));
 
         const elementHandle = jsHandle.asElement() || undefined;
-        
+
         return elementHandle && new PuppeteerElementAdapter(elementHandle);
     }
 }
@@ -161,7 +171,7 @@ export class PuppeteerBrowserDriver implements BrowserDriver {
             page.setDefaultTimeout(this.options.timeout);
         }
 
-        return new PuppeteerPageAdapter(page);
+        return new PuppeteerPageAdapter(page, this.options?.baseUrl);
     }
 }
 

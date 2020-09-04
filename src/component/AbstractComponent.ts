@@ -7,14 +7,12 @@ export abstract class AbstractComponent implements PageComponent {
     readonly xpath?: string;
     readonly parent?: PageComponent;
     readonly children: PageComponent[];
-    readonly index: number;
 
     constructor(config: PageComponentConfig) {
         this.name = config.name;
         this.selector = config.selector;
         this.xpath = config.xpath;
         this.parent = config.parent;
-        this.index = config.index;
         this.children = [...config.children];
     }
 
@@ -52,6 +50,26 @@ export abstract class AbstractComponent implements PageComponent {
 
     async getValue(pageAdapter: PageAdapter): Promise<any> {
         throw new Error(`${this.name} not supports getting value`);
+    }
+
+    async getText(pageAdapter: PageAdapter): Promise<string> {
+        const element = await this.getComponentElement(pageAdapter);
+
+        if (!await this.isElementPresent(element)) {
+            throw new Error('Component\'s element is not exist: ' + this.name);
+        }
+
+        return await element!.getInnerText();
+    }
+
+    async getAttribute(name: string, pageAdapter: PageAdapter): Promise<string | undefined> {
+        const element = await this.getComponentElement(pageAdapter);
+
+        if (!element) {
+            throw new Error('Component\'s element is not exist: ' + this.name);
+        }
+
+        return element.getAttribute(name);
     }
 
     async click(pageAdapter: PageAdapter): Promise<void> {

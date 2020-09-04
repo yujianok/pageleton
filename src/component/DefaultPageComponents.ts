@@ -3,22 +3,19 @@ import { pageComponentTypeRegistry } from "./PageComponentTypeRegistry";
 import { PageAdapter } from "../driver";
 
 class Component extends AbstractComponent {
-    public async getValue(pageAdapter: PageAdapter) {
-        const element = await this.getComponentElement(pageAdapter);
-        return await element?.getInnerText();
-    }
+
 }
 pageComponentTypeRegistry.registerComponentType(Component);
 
 class Input extends AbstractComponent {
     public async getValue(pageAdapter: PageAdapter) {
         const element = await this.getComponentElement(pageAdapter);
-        return await element?.getInputValue();
+        return await element?.getValue();
     }
 
     public async setValue(value: string, pageAdapter: PageAdapter) {
         const element = await this.getComponentElement(pageAdapter);
-        await element?.setInputValue(value);
+        await element?.setValue(value);
     }
 }
 pageComponentTypeRegistry.registerComponentType(Input);
@@ -38,7 +35,7 @@ class Table extends AbstractComponent {
 
         return {
             headers: headerValues,
-            rows: rowValues,
+            rows: rowValues.filter(r => r.length),
         };
     }
 }
@@ -47,7 +44,8 @@ pageComponentTypeRegistry.registerComponentType(Table);
 class TableHeader extends AbstractComponent {
     public async getValue(pageAdapter: PageAdapter) {
         const cells = this.getSubComponentOfType(TableField);
-        return Promise.all(cells.map(cell => cell.getValue(pageAdapter)));
+        const headers = await Promise.all(cells.map(cell => cell.getValue(pageAdapter)));
+        return headers.filter(h => h !== undefined);
     }
 }
 pageComponentTypeRegistry.registerComponentType(TableHeader);
@@ -55,13 +53,17 @@ pageComponentTypeRegistry.registerComponentType(TableHeader);
 class TableRow extends AbstractComponent {
     public async getValue(pageAdapter: PageAdapter) {
         const cells = this.getSubComponentOfType(TableField);
-        return Promise.all(cells.map(cell => cell.getValue(pageAdapter)));
+        const fields = await Promise.all(cells.map(cell => cell.getValue(pageAdapter)));
+        return fields.filter(f => f !== undefined);
     }
 }
 pageComponentTypeRegistry.registerComponentType(TableRow);
 
 class TableField extends AbstractComponent {
-
+    public async getValue(pageAdapter: PageAdapter) {
+        const element = await this.getComponentElement(pageAdapter);
+        return await element?.getInnerText();
+    }
 }
 pageComponentTypeRegistry.registerComponentType(TableField);
 

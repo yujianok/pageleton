@@ -50,7 +50,6 @@ class PageletonPageLoader {
                                     name: $.name && $.name.replace(/{index}/g, index),
                                     selector: $.selector && $.selector.replace(/{index}/g, index),
                                     xpath: $.xpath && $.xpath.replace(/{index}/g, index),
-                                    index,
                                     parent,
                                     children: [],
                                 }) as AbstractComponent;

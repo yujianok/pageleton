@@ -6,7 +6,6 @@ export declare abstract class AbstractComponent implements PageComponent {
     readonly xpath?: string;
     readonly parent?: PageComponent;
     readonly children: PageComponent[];
-    readonly index: number;
     constructor(config: PageComponentConfig);
     protected getChildComponent(name: string): PageComponent | undefined;
     protected getSubComponentOfType(componentType: PageCompnentType): PageComponent[];
@@ -14,6 +13,8 @@ export declare abstract class AbstractComponent implements PageComponent {
     protected isElementPresent(element?: ElementAdapter): Promise<boolean>;
     setValue(value: string, pageAdapter: PageAdapter): Promise<void>;
     getValue(pageAdapter: PageAdapter): Promise<any>;
+    getText(pageAdapter: PageAdapter): Promise<string>;
+    getAttribute(name: string, pageAdapter: PageAdapter): Promise<string | undefined>;
     click(pageAdapter: PageAdapter): Promise<void>;
     mouseOver(pageAdapter: PageAdapter): Promise<void>;
     waitUntil(condition: WaitCondition, timeout: number, pageAdapter: PageAdapter): Promise<void>;
