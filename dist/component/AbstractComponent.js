@@ -116,11 +116,13 @@ var AbstractComponent = (function () {
                     case 0: return [4, this.getComponentElement(pageAdapter)];
                     case 1:
                         element = _a.sent();
-                        if (!this.isElementPresent(element)) {
+                        return [4, this.isElementPresent(element)];
+                    case 2:
+                        if (!(_a.sent())) {
                             throw new Error('Component\'s element has not presented: ' + this.name);
                         }
                         return [4, element.click()];
-                    case 2:
+                    case 3:
                         _a.sent();
                         return [2];
                 }
@@ -135,11 +137,13 @@ var AbstractComponent = (function () {
                     case 0: return [4, this.getComponentElement(pageAdapter)];
                     case 1:
                         element = _a.sent();
-                        if (!this.isElementPresent(element)) {
+                        return [4, this.isElementPresent(element)];
+                    case 2:
+                        if (!(_a.sent())) {
                             throw new Error('Component\'s element has not presented: ' + this.name);
                         }
                         return [4, element.mouseOver()];
-                    case 2:
+                    case 3:
                         _a.sent();
                         return [2];
                 }
@@ -206,7 +210,8 @@ var AbstractComponent = (function () {
                     case 0: return [4, this.getComponentElement(pageAdapter)];
                     case 1:
                         element = _a.sent();
-                        return [2, this.isElementPresent(element)];
+                        return [4, this.isElementPresent(element)];
+                    case 2: return [2, _a.sent()];
                 }
             });
         });

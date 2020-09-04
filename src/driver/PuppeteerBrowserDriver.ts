@@ -115,7 +115,7 @@ class PuppeteerPageAdapter implements PageAdapter {
                 }
 
                 if (!selector && !xpath) {
-                    element = document.evaluate(`.//*[normalize-space()='${name}']`, element || document).iterateNext() as Element;
+                    element = document.evaluate(`(.//*[normalize-space()='${name}'])[last()]`, element || document).iterateNext() as Element;
                 }
 
                 if (!element) {

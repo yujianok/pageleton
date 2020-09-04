@@ -57,7 +57,7 @@ export abstract class AbstractComponent implements PageComponent {
     async click(pageAdapter: PageAdapter): Promise<void> {
         const element = await this.getComponentElement(pageAdapter);
 
-        if (!this.isElementPresent(element)) {
+        if (!await this.isElementPresent(element)) {
             throw new Error('Component\'s element has not presented: ' + this.name);
         }
 
@@ -67,7 +67,7 @@ export abstract class AbstractComponent implements PageComponent {
     async mouseOver(pageAdapter: PageAdapter): Promise<void> {
         const element = await this.getComponentElement(pageAdapter);
 
-        if (!this.isElementPresent(element)) {
+        if (!await this.isElementPresent(element)) {
             throw new Error('Component\'s element has not presented: ' + this.name);
         }
 
@@ -95,7 +95,7 @@ export abstract class AbstractComponent implements PageComponent {
 
     async isPresent(pageAdapter: PageAdapter): Promise<boolean> {
         const element = await this.getComponentElement(pageAdapter);
-        return this.isElementPresent(element);
+        return await this.isElementPresent(element);
     }
 
     async waitUntilPresent(timeout: number, pageAdapter: PageAdapter): Promise<void> {

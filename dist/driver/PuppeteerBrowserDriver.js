@@ -253,7 +253,7 @@ var PuppeteerPageAdapter = (function () {
                                     element = document.evaluate(xpath, element || document).iterateNext();
                                 }
                                 if (!selector && !xpath) {
-                                    element = document.evaluate(".//*[normalize-space()='" + name_1 + "']", element || document).iterateNext();
+                                    element = document.evaluate("(.//*[normalize-space()='" + name_1 + "'])[last()]", element || document).iterateNext();
                                 }
                                 if (!element) {
                                     break;
