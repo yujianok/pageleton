@@ -15,7 +15,7 @@ describe('Test PageletonPage', () => {
                 height: 900,
             },
             executablePath: '/usr/bin/google-chrome-stable',
-            args: ['--start-maximized', '--no-sandbox', '--disable-setuid-sandbox']
+            args: ['--no-sandbox', '--disable-setuid-sandbox']
         }).launchBrowser();
 
         try {
@@ -62,14 +62,14 @@ describe('Test PageletonPage', () => {
             const alertPresent2 = await testPage.isComponentPresent(['Alert Message']);
             expect(alertPresent2).equal(false);
 
-            await testPage.setComponentValue('Test Person', ['Header', 'My Input']);
+            await testPage.setComponentValue('Test Pageleton', ['Header', 'My Input']);
             const inputValue = await testPage.getComponentValue(['Header', 'My Input']);
-            expect(inputValue).equal('Test Person');
+            expect(inputValue).equal('Test Pageleton');
             await testPage.clickComponent(['Header', 'Add']);
             const lastItemIndex = await testPage.getComponentText(['Todo List', 'Item-7', 'Item Index']);
             expect(lastItemIndex).equal('7');
             const lastItemTitle = await testPage.getComponentText(['Todo List', 'Item-7', 'Item Title']);
-            expect(lastItemTitle).equal('Test Person');
+            expect(lastItemTitle).equal('Test Pageleton');
 
             await testPage.close();
         } finally {

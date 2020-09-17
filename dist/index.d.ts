@@ -31,4 +31,5 @@ export declare type PageletonBrowser = {
 };
 export declare const Pageleton: (config: PageletonConfig) => {
     launchBrowser: () => Promise<PageletonBrowser>;
+    getPageSpec: (name: string) => Promise<PageletonPage | undefined>;
 };

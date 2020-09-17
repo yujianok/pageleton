@@ -64,6 +64,10 @@ export const Pageleton = (config: PageletonConfig) => {
                 },
 
             } as PageletonBrowser;
+        },
+
+        getPageSpec: async (name: string) => {
+            return pageletonPageFactory.getPageByName(name);
         }
     };
 }

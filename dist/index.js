@@ -100,6 +100,11 @@ exports.Pageleton = function (config) {
                             }];
                 }
             });
+        }); },
+        getPageSpec: function (name) { return __awaiter(void 0, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                return [2, pageletonPageFactory.getPageByName(name)];
+            });
         }); }
     };
 };
