@@ -35,6 +35,11 @@ export type PageletonBrowser = {
     shutdown: () => Promise<void>;
 }
 
+export type PageletonInstance = {
+    launchBrowser: () => Promise<PageletonBrowser>;
+    getPageSpec: (name: string) => Promise<PageletonPage | undefined>;
+}
+
 export const Pageleton = (config: PageletonConfig) => {
     const pageletonPageFactory = new PageletonPageFactory(config.specPaths || DEFAULT_PAGE_SPEC_PATHS, config.specEncoding);
     if (config.customComponentTypes) {
@@ -69,5 +74,5 @@ export const Pageleton = (config: PageletonConfig) => {
         getPageSpec: async (name: string) => {
             return pageletonPageFactory.getPageByName(name);
         }
-    };
+    } as PageletonInstance;
 }
