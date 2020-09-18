@@ -1,9 +1,37 @@
 import path from 'path';
 import xml2js from 'xml2js';
-import { PageComponent, pageComponentTypeRegistry } from '../component';
-import { AbstractComponent } from '../component/AbstractComponent';
-import { FileUtils } from '../uitl';
-import { PageletonPage } from "./PageletonPage";
+import { readFileAsString } from '../service';
+
+export type PageSpec = {
+    readonly name: string;
+    readonly url: string;
+    readonly rootComponents: ComponentSpec[];
+    readonly getComponent: (routes: string[]) => ComponentSpec;
+}
+
+const getComponent = function (this: PageSpec, routes: string[]) {
+    let current: ComponentSpec | undefined
+    let children: readonly ComponentSpec[] = this.rootComponents;
+
+    for (const route of routes) {
+        current = children.find(c => c.name === route);
+        if (!current) {
+            throw new Error('Component can not be found, path:' + routes.join('>'));
+        }
+        children = current.children;
+    }
+
+    return current!;
+}
+
+export type ComponentSpec = {
+    readonly name: string;
+    readonly selector?: string;
+    readonly xpath?: string;
+    readonly parent?: ComponentSpec;
+    readonly children: readonly ComponentSpec[];
+    readonly type: string;
+}
 
 async function parseXmlToJson(data: string): Promise<any> {
     return new Promise((resovle, reject) => {
@@ -18,16 +46,16 @@ async function parseXmlToJson(data: string): Promise<any> {
     });
 }
 
-class PageletonPageLoader {
+class PageSpecLoader {
 
-    private async parseIncludeComponent(inculdePath: string, specEncoding: string, parent?: PageComponent): Promise<PageComponent[]> {
-        const specContent = await FileUtils.readFileAsString(inculdePath, specEncoding);
+    private async parseIncludeComponent(inculdePath: string, specEncoding: string, parent?: ComponentSpec): Promise<ComponentSpec[]> {
+        const specContent = await readFileAsString(inculdePath, specEncoding);
         const json = await parseXmlToJson(specContent);
         return await this.parsePageComponent(inculdePath, specEncoding, json, parent);
     }
 
-    private async parsePageComponent(specPath: string, specEncoding: string, json: any, parent?: PageComponent): Promise<PageComponent[]> {
-        let parsedComponents: PageComponent[] = [];
+    private async parsePageComponent(specPath: string, specEncoding: string, json: any, parent?: ComponentSpec): Promise<ComponentSpec[]> {
+        let parsedComponents: ComponentSpec[] = [];
 
         for (const key in json) {
             if (json.hasOwnProperty(key)) {
@@ -39,25 +67,24 @@ class PageletonPageLoader {
                         const components = await this.parseIncludeComponent(inculdePath, specEncoding, parent);
                         parsedComponents = [...parsedComponents, ...components];
                     } else {
-                        const ComponentType = pageComponentTypeRegistry.getComponentType(key);
-
                         const { $, ...others } = node;
                         const multiple = parseInt($.multiple || '1');
                         const components = await Promise.all(
                             new Array(multiple).fill(undefined).map(async (v, i) => {
                                 const index = i + 1;
-                                const component = new ComponentType({
+                                const component = {
                                     name: $.name && $.name.replace(/{index}/g, index),
                                     selector: $.selector && $.selector.replace(/{index}/g, index),
                                     xpath: $.xpath && $.xpath.replace(/{index}/g, index),
                                     parent,
-                                    children: [],
-                                }) as AbstractComponent;
+                                    children: [] as ComponentSpec[],
+                                    type: key,
+                                };
 
-                                const children = await this.parsePageComponent(specPath, specEncoding, others, component);
-                                component.pushChildComponents(...children);
+                                component.children = await this.parsePageComponent(specPath, specEncoding, others, component);
+
                                 return component;
-                            }))
+                            }));
 
                         parsedComponents = [...parsedComponents, ...components];
                     }
@@ -68,16 +95,16 @@ class PageletonPageLoader {
         return parsedComponents;
     }
 
-    public async loadPageSpec(specPath: string, specEncoding: string): Promise<PageletonPage> {
-        const specContent = await FileUtils.readFileAsString(specPath, specEncoding);
+    public async loadPageSpec(specPath: string, specEncoding: string): Promise<PageSpec> {
+        const specContent = await readFileAsString(specPath, specEncoding);
 
         const json = await parseXmlToJson(specContent);
         const { $, ...others } = json.Page;
 
         const rootComponents = await this.parsePageComponent(specPath, specEncoding, others);
-        return new PageletonPage($.name, $.url, rootComponents);
+        return { name: $.name, url: $.url, rootComponents, getComponent };
     }
 
 }
 
-export const pageletonPageLoader = new PageletonPageLoader();
+export default new PageSpecLoader();

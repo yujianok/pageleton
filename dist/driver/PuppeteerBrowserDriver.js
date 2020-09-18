@@ -52,11 +52,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.PuppeteerBrowserDriver = void 0;
 var puppeteer_core_1 = __importDefault(require("puppeteer-core"));
-var PuppeteerElementAdapter = (function () {
-    function PuppeteerElementAdapter(elementHandler) {
+var PuppeteerElementDriver = (function () {
+    function PuppeteerElementDriver(elementHandler) {
         this.elementHandler = elementHandler;
     }
-    PuppeteerElementAdapter.prototype.mouseOver = function () {
+    PuppeteerElementDriver.prototype.mouseOver = function () {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
@@ -68,7 +68,7 @@ var PuppeteerElementAdapter = (function () {
             });
         });
     };
-    PuppeteerElementAdapter.prototype.click = function () {
+    PuppeteerElementDriver.prototype.click = function () {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
@@ -80,7 +80,7 @@ var PuppeteerElementAdapter = (function () {
             });
         });
     };
-    PuppeteerElementAdapter.prototype.getPosition = function () {
+    PuppeteerElementDriver.prototype.getPosition = function () {
         return __awaiter(this, void 0, void 0, function () {
             var boundingBox;
             return __generator(this, function (_a) {
@@ -93,7 +93,7 @@ var PuppeteerElementAdapter = (function () {
             });
         });
     };
-    PuppeteerElementAdapter.prototype.getSize = function () {
+    PuppeteerElementDriver.prototype.getSize = function () {
         return __awaiter(this, void 0, void 0, function () {
             var boundingBox;
             return __generator(this, function (_a) {
@@ -106,7 +106,7 @@ var PuppeteerElementAdapter = (function () {
             });
         });
     };
-    PuppeteerElementAdapter.prototype.getValue = function () {
+    PuppeteerElementDriver.prototype.getValue = function () {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
@@ -123,7 +123,7 @@ var PuppeteerElementAdapter = (function () {
             });
         });
     };
-    PuppeteerElementAdapter.prototype.setValue = function (value) {
+    PuppeteerElementDriver.prototype.setValue = function (value) {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
@@ -140,7 +140,7 @@ var PuppeteerElementAdapter = (function () {
             });
         });
     };
-    PuppeteerElementAdapter.prototype.getInnerText = function () {
+    PuppeteerElementDriver.prototype.getInnerText = function () {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
@@ -150,50 +150,17 @@ var PuppeteerElementAdapter = (function () {
             });
         });
     };
-    PuppeteerElementAdapter.prototype.getSubElement = function (selector, xpath) {
-        return __awaiter(this, void 0, void 0, function () {
-            var elementHandler, _a;
-            return __generator(this, function (_b) {
-                switch (_b.label) {
-                    case 0:
-                        if (!selector && !xpath) {
-                            throw new Error('Parameter Selector and xpath can not both been null at the same time');
-                        }
-                        if (!selector) return [3, 2];
-                        return [4, this.elementHandler.$(selector)];
-                    case 1:
-                        elementHandler = (_b.sent()) || undefined;
-                        _b.label = 2;
-                    case 2:
-                        if (!xpath) return [3, 7];
-                        if (!elementHandler) return [3, 4];
-                        return [4, elementHandler.$x(xpath)];
-                    case 3:
-                        _a = _b.sent();
-                        return [3, 6];
-                    case 4: return [4, this.elementHandler.$x(xpath)];
-                    case 5:
-                        _a = _b.sent();
-                        _b.label = 6;
-                    case 6:
-                        elementHandler = (_a).pop();
-                        _b.label = 7;
-                    case 7: return [2, elementHandler && new PuppeteerElementAdapter(elementHandler)];
-                }
-            });
-        });
-    };
-    PuppeteerElementAdapter.prototype.getAttribute = function (name) {
+    PuppeteerElementDriver.prototype.getAttribute = function (name) {
         return this.elementHandler.evaluate(function (el, attr) { return el.getAttribute(attr) || undefined; }, name);
     };
-    return PuppeteerElementAdapter;
+    return PuppeteerElementDriver;
 }());
-var PuppeteerPageAdapter = (function () {
-    function PuppeteerPageAdapter(page, baseUrl) {
+var PuppeteerPageDriver = (function () {
+    function PuppeteerPageDriver(page, baseUrl) {
         this.page = page;
         this.baseUrl = baseUrl;
     }
-    PuppeteerPageAdapter.prototype.getTitle = function () {
+    PuppeteerPageDriver.prototype.getTitle = function () {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
@@ -203,7 +170,7 @@ var PuppeteerPageAdapter = (function () {
             });
         });
     };
-    PuppeteerPageAdapter.prototype.goto = function (url) {
+    PuppeteerPageDriver.prototype.goto = function (url) {
         return __awaiter(this, void 0, void 0, function () {
             var resovledUrl;
             return __generator(this, function (_a) {
@@ -221,7 +188,7 @@ var PuppeteerPageAdapter = (function () {
             });
         });
     };
-    PuppeteerPageAdapter.prototype.close = function () {
+    PuppeteerPageDriver.prototype.close = function () {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
@@ -233,7 +200,7 @@ var PuppeteerPageAdapter = (function () {
             });
         });
     };
-    PuppeteerPageAdapter.prototype.waitForNavigation = function (timeout) {
+    PuppeteerPageDriver.prototype.waitForNavigation = function (timeout) {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
@@ -245,7 +212,7 @@ var PuppeteerPageAdapter = (function () {
             });
         });
     };
-    PuppeteerPageAdapter.prototype.getElement = function (routes) {
+    PuppeteerPageDriver.prototype.getElement = function (routes) {
         return __awaiter(this, void 0, void 0, function () {
             var jsHandle, elementHandle;
             return __generator(this, function (_a) {
@@ -274,12 +241,18 @@ var PuppeteerPageAdapter = (function () {
                     case 1:
                         jsHandle = _a.sent();
                         elementHandle = jsHandle.asElement() || undefined;
-                        return [2, elementHandle && new PuppeteerElementAdapter(elementHandle)];
+                        return [2, elementHandle && new PuppeteerElementDriver(elementHandle)];
                 }
             });
         });
     };
-    return PuppeteerPageAdapter;
+    PuppeteerPageDriver.prototype.onNavigated = function (listener) {
+        this.page.on('framenavigated', function (frame) {
+            var url = frame.url();
+            listener(url);
+        });
+    };
+    return PuppeteerPageDriver;
 }());
 var PuppeteerBrowserDriver = (function () {
     function PuppeteerBrowserDriver() {
@@ -340,7 +313,7 @@ var PuppeteerBrowserDriver = (function () {
                         if (((_a = this.options) === null || _a === void 0 ? void 0 : _a.timeout) !== undefined) {
                             page.setDefaultTimeout(this.options.timeout);
                         }
-                        return [2, new PuppeteerPageAdapter(page, (_b = this.options) === null || _b === void 0 ? void 0 : _b.baseUrl)];
+                        return [2, new PuppeteerPageDriver(page, (_b = this.options) === null || _b === void 0 ? void 0 : _b.baseUrl)];
                 }
             });
         });

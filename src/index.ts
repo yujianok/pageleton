@@ -1,6 +1,7 @@
 import { BrowserDriverType, browserDriverFactory } from './driver';
-import { PageletonPageFactory, PageletonPage } from './page';
 import { PageCompnentType, pageComponentTypeRegistry } from './component';
+import { PageSpecFactory } from './spec';
+import PageletonBrowser from './page/PageletonBrowser';
 
 export * from './component';
 export * from './page';
@@ -30,49 +31,23 @@ export type PageletonConfig = {
     customBrowserDriver?: BrowserDriverType,
 }
 
-export type PageletonBrowser = {
-    openPage: (name: string) => Promise<PageletonPage>;
-    shutdown: () => Promise<void>;
-}
-
 export type PageletonInstance = {
     launchBrowser: () => Promise<PageletonBrowser>;
-    getPageSpec: (name: string) => Promise<PageletonPage | undefined>;
 }
 
 export const Pageleton = (config: PageletonConfig) => {
-    const pageletonPageFactory = new PageletonPageFactory(config.specPaths || DEFAULT_PAGE_SPEC_PATHS, config.specEncoding);
+
     if (config.customComponentTypes) {
         config.customComponentTypes.forEach(cst => pageComponentTypeRegistry.registerComponentType(cst));
     }
 
     return {
         launchBrowser: async () => {
+            const pageletonPageFactory = await PageSpecFactory.init(config.specPaths || DEFAULT_PAGE_SPEC_PATHS, config.specEncoding);
             const browserDriver = browserDriverFactory.getBrowserDriver(config.driverType);
             await browserDriver.launch(config);
 
-            return {
-                openPage: async (name: string) => {
-                    const pageletonPage = await pageletonPageFactory.getPageByName(name);
-
-                    if (!pageletonPage) {
-                        throw new Error('Page not exists: ' + name);
-                    }
-
-                    await pageletonPage.open(browserDriver);
-
-                    return pageletonPage;
-                },
-
-                shutdown: async () => {
-                    await browserDriver.shotdown();
-                },
-
-            } as PageletonBrowser;
-        },
-
-        getPageSpec: async (name: string) => {
-            return pageletonPageFactory.getPageByName(name);
+            return new PageletonBrowser(browserDriver, pageletonPageFactory);
         }
     } as PageletonInstance;
 }

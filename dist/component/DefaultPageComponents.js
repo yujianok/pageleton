@@ -48,9 +48,12 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 var AbstractComponent_1 = require("./AbstractComponent");
-var PageComponentTypeRegistry_1 = require("./PageComponentTypeRegistry");
+var PageComponentTypeRegistry_1 = __importDefault(require("./PageComponentTypeRegistry"));
 var Component = (function (_super) {
     __extends(Component, _super);
     function Component() {
@@ -58,36 +61,28 @@ var Component = (function (_super) {
     }
     return Component;
 }(AbstractComponent_1.AbstractComponent));
-PageComponentTypeRegistry_1.pageComponentTypeRegistry.registerComponentType(Component);
+PageComponentTypeRegistry_1.default.registerComponentType(Component);
 var Input = (function (_super) {
     __extends(Input, _super);
     function Input() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
-    Input.prototype.getValue = function (pageAdapter) {
+    Input.prototype.getValue = function (element) {
         return __awaiter(this, void 0, void 0, function () {
-            var element;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4, this.getComponentElement(pageAdapter)];
-                    case 1:
-                        element = _a.sent();
-                        return [4, (element === null || element === void 0 ? void 0 : element.getValue())];
-                    case 2: return [2, _a.sent()];
+                    case 0: return [4, element.getValue()];
+                    case 1: return [2, _a.sent()];
                 }
             });
         });
     };
-    Input.prototype.setValue = function (value, pageAdapter) {
+    Input.prototype.setValue = function (value, element) {
         return __awaiter(this, void 0, void 0, function () {
-            var element;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4, this.getComponentElement(pageAdapter)];
+                    case 0: return [4, element.setValue(value)];
                     case 1:
-                        element = _a.sent();
-                        return [4, (element === null || element === void 0 ? void 0 : element.setValue(value))];
-                    case 2:
                         _a.sent();
                         return [2];
                 }
@@ -96,29 +91,26 @@ var Input = (function (_super) {
     };
     return Input;
 }(AbstractComponent_1.AbstractComponent));
-PageComponentTypeRegistry_1.pageComponentTypeRegistry.registerComponentType(Input);
+PageComponentTypeRegistry_1.default.registerComponentType(Input);
 var Table = (function (_super) {
     __extends(Table, _super);
     function Table() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
-    Table.prototype.getValue = function (pageAdapter) {
+    Table.prototype.getValue = function (element, page, component) {
         return __awaiter(this, void 0, void 0, function () {
-            var heads, rows, headerValues, rowValues;
+            var headerValues, rowValues;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0:
-                        heads = this.getSubComponentOfType(TableHeader);
-                        rows = this.getSubComponentOfType(TableRow);
-                        return [4, Promise.all(heads.map(function (head) { return head.getValue(pageAdapter); }))];
+                    case 0: return [4, this.getSubComponentValue(component, TableHeader, page)];
                     case 1:
                         headerValues = _a.sent();
-                        return [4, Promise.all(rows.map(function (row) { return row.getValue(pageAdapter); }))];
+                        return [4, this.getSubComponentValue(component, TableRow, page)];
                     case 2:
                         rowValues = _a.sent();
                         return [2, {
-                                headers: headerValues,
-                                rows: rowValues.filter(function (r) { return r.length; }),
+                                headers: headerValues[0] || [],
+                                rows: rowValues.filter(function (r) { return r && r.length; }),
                             }];
                 }
             });
@@ -126,72 +118,64 @@ var Table = (function (_super) {
     };
     return Table;
 }(AbstractComponent_1.AbstractComponent));
-PageComponentTypeRegistry_1.pageComponentTypeRegistry.registerComponentType(Table);
+PageComponentTypeRegistry_1.default.registerComponentType(Table);
 var TableHeader = (function (_super) {
     __extends(TableHeader, _super);
     function TableHeader() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
-    TableHeader.prototype.getValue = function (pageAdapter) {
+    TableHeader.prototype.getValue = function (element, page, component) {
         return __awaiter(this, void 0, void 0, function () {
-            var cells, headers;
+            var cellValues;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0:
-                        cells = this.getSubComponentOfType(TableField);
-                        return [4, Promise.all(cells.map(function (cell) { return cell.getValue(pageAdapter); }))];
+                    case 0: return [4, this.getSubComponentValue(component, TableField, page)];
                     case 1:
-                        headers = _a.sent();
-                        return [2, headers.filter(function (h) { return h !== undefined; })];
+                        cellValues = _a.sent();
+                        return [2, cellValues.filter(function (c) { return c !== undefined; })];
                 }
             });
         });
     };
     return TableHeader;
 }(AbstractComponent_1.AbstractComponent));
-PageComponentTypeRegistry_1.pageComponentTypeRegistry.registerComponentType(TableHeader);
+PageComponentTypeRegistry_1.default.registerComponentType(TableHeader);
 var TableRow = (function (_super) {
     __extends(TableRow, _super);
     function TableRow() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
-    TableRow.prototype.getValue = function (pageAdapter) {
+    TableRow.prototype.getValue = function (element, page, component) {
         return __awaiter(this, void 0, void 0, function () {
-            var cells, fields;
+            var cellValues;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0:
-                        cells = this.getSubComponentOfType(TableField);
-                        return [4, Promise.all(cells.map(function (cell) { return cell.getValue(pageAdapter); }))];
+                    case 0: return [4, this.getSubComponentValue(component, TableField, page)];
                     case 1:
-                        fields = _a.sent();
-                        return [2, fields.filter(function (f) { return f !== undefined; })];
+                        cellValues = _a.sent();
+                        return [2, cellValues.filter(function (c) { return c !== undefined; })];
                 }
             });
         });
     };
     return TableRow;
 }(AbstractComponent_1.AbstractComponent));
-PageComponentTypeRegistry_1.pageComponentTypeRegistry.registerComponentType(TableRow);
+PageComponentTypeRegistry_1.default.registerComponentType(TableRow);
 var TableField = (function (_super) {
     __extends(TableField, _super);
     function TableField() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
-    TableField.prototype.getValue = function (pageAdapter) {
+    TableField.prototype.getValue = function (element) {
         return __awaiter(this, void 0, void 0, function () {
-            var element;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4, this.getComponentElement(pageAdapter)];
-                    case 1:
-                        element = _a.sent();
-                        return [4, (element === null || element === void 0 ? void 0 : element.getInnerText())];
-                    case 2: return [2, _a.sent()];
+                    case 0: return [4, element.getInnerText()];
+                    case 1: return [2, _a.sent()];
                 }
             });
         });
     };
     return TableField;
 }(AbstractComponent_1.AbstractComponent));
-PageComponentTypeRegistry_1.pageComponentTypeRegistry.registerComponentType(TableField);
+PageComponentTypeRegistry_1.default.registerComponentType(TableField);

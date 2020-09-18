@@ -1,12 +1,12 @@
 import { assert, expect } from "chai";
-import { ElementAdapter, PageAdapter, PageComponent } from "../../src";
-import { AbstractComponent } from "../../src/component/AbstractComponent";
+import { PageComponent, AbstractComponent } from "../../src/component";
+import { ElementDriver, NavigationListener, PageDriver } from "../../src/driver";
+import { ComponentSpec } from "../../src/spec";
 
 describe('Test PageCompoent', () => {
     const timeout = 1500;
 
-    const mockedElementAdapter: ElementAdapter = {
-        getSubElement: (selector?: string, xpath?: string) => Promise.resolve(undefined),
+    const mockedElementAdapter: ElementDriver = {
         getInnerText: () => Promise.resolve(''),
         getValue: () => Promise.resolve(''),
         setValue: (value: string) => Promise.resolve(),
@@ -17,25 +17,28 @@ describe('Test PageCompoent', () => {
         getAttribute: (name: string) => Promise.resolve(undefined),
     };
 
-    const mockedPageAdapter: PageAdapter = {
+    const mockedPageAdapter: PageDriver = {
         goto: (url: string) => Promise.resolve(),
         close: () => Promise.resolve(),
         getTitle: () => Promise.resolve(''),
         getElement: (routes) => Promise.resolve(mockedElementAdapter),
         waitForNavigation: (timeout: number) => Promise.resolve(),
+        onNavigated: (listener: NavigationListener) => { },
     };
 
     class TestComponent extends AbstractComponent { };
-    const component: PageComponent = new TestComponent({
+    const component: PageComponent = new TestComponent();
+    const mockedComponentSpec: ComponentSpec = {
         name: 'testComponent',
         children: [],
-    });
+        type: 'TestComponent',
+    }
 
     it('test waitUntil', async () => {
         const begin = Date.now();
 
         try {
-            await component.waitUntil(() => Promise.resolve(false), timeout, mockedPageAdapter)
+            await component.waitUntil(() => Promise.resolve(false), timeout, mockedElementAdapter, mockedPageAdapter, mockedComponentSpec)
         } catch (e) {
             expect(e + '').equal('Error: Waiting for component to fit condition is timeout: ' + timeout)
         } finally {
@@ -47,7 +50,7 @@ describe('Test PageCompoent', () => {
         const begin2 = Date.now();
         try {
             let conditionCheckCount = 0;
-            await component.waitUntil(() => Promise.resolve(conditionCheckCount++ === 1), timeout, mockedPageAdapter)
+            await component.waitUntil(() => Promise.resolve(conditionCheckCount++ === 1), timeout, mockedElementAdapter, mockedPageAdapter, mockedComponentSpec)
         } catch (e) {
             assert.notExists(e);
         } finally {
@@ -59,10 +62,14 @@ describe('Test PageCompoent', () => {
     it('test waitUntilPresent', async () => {
         const begin = Date.now();
         try {
-            await component.waitUntilPresent(timeout, {
-                ...mockedPageAdapter,
-                getElement: () => Promise.resolve(undefined)
-            });
+            await component.waitUntilPresent(
+                timeout,
+                {
+                    ...mockedElementAdapter,
+                    getSize: () => Promise.resolve([0, 0])
+                },
+                mockedPageAdapter,
+                mockedComponentSpec);
         } catch (e) {
             expect(e + '').equal('Error: Waiting for component to fit condition is timeout: ' + timeout);
         } finally {
@@ -74,48 +81,18 @@ describe('Test PageCompoent', () => {
         const begin2 = Date.now();
         try {
             let count = 0;
-            await component.waitUntilPresent(timeout, {
-                ...mockedPageAdapter,
-                getElement: () => Promise.resolve(count++ >= 1 ? mockedElementAdapter : undefined)
-            });
+            await component.waitUntilPresent(
+                timeout,
+                {
+                    ...mockedElementAdapter,
+                    getSize: () => Promise.resolve(count++ > 0 ? [1, 2] : [0, 0])
+                },
+                mockedPageAdapter,
+                mockedComponentSpec);
         } catch (e) {
             assert.notExists(e);
         } finally {
             const elapse = Date.now() - begin2;
-            expect(elapse).lte(timeout);
-        }
-
-        const begin3 = Date.now();
-        try {
-            await component.waitUntilPresent(timeout, {
-                ...mockedPageAdapter,
-                getElement: () => Promise.resolve({
-                    ...mockedElementAdapter,
-                    getSize: () => Promise.resolve([0, 0])
-                }),
-            });
-        } catch (e) {
-            expect(e + '').equal('Error: Waiting for component to fit condition is timeout: ' + timeout)
-        } finally {
-            const elapse = Date.now() - begin3;
-            const deviation = Math.abs(elapse - timeout);
-            expect(deviation).lte(100);
-        }
-
-        const begin4 = Date.now();
-        try {
-            let count = 0;
-            await component.waitUntilPresent(timeout, {
-                ...mockedPageAdapter,
-                getElement: () => Promise.resolve({
-                    ...mockedElementAdapter,
-                    getSize: () => Promise.resolve(count++ > 0 ? [1, 2] : [0, 0])
-                }),
-            });
-        } catch (e) {
-            assert.notExists(e);
-        } finally {
-            const elapse = Date.now() - begin4;
             expect(elapse).lte(timeout);
         }
     })

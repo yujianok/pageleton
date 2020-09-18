@@ -35,158 +35,74 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-var __spreadArrays = (this && this.__spreadArrays) || function () {
-    for (var s = 0, i = 0, il = arguments.length; i < il; i++) s += arguments[i].length;
-    for (var r = Array(s), k = 0, i = 0; i < il; i++)
-        for (var a = arguments[i], j = 0, jl = a.length; j < jl; j++, k++)
-            r[k] = a[j];
-    return r;
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AbstractComponent = void 0;
+var PageComponentTypeRegistry_1 = __importDefault(require("./PageComponentTypeRegistry"));
+var ComponentSpecService_1 = require("../service/ComponentSpecService");
 var AbstractComponent = (function () {
-    function AbstractComponent(config) {
-        this.name = config.name;
-        this.selector = config.selector;
-        this.xpath = config.xpath;
-        this.parent = config.parent;
-        this.children = __spreadArrays(config.children);
+    function AbstractComponent() {
     }
-    AbstractComponent.prototype.getChildComponent = function (name) {
-        return this.children.find(function (child) { return child.name === name; });
-    };
-    AbstractComponent.prototype.getSubComponentOfType = function (componentType) {
-        return this.children.filter(function (child) { return child instanceof componentType; });
-    };
-    AbstractComponent.prototype.getComponentElement = function (pageAdapter) {
+    AbstractComponent.prototype.setValue = function (value, element, page, component) {
         return __awaiter(this, void 0, void 0, function () {
-            var routes, cursor;
+            return __generator(this, function (_a) {
+                throw new Error(this.constructor.name + " not supports setting value");
+            });
+        });
+    };
+    AbstractComponent.prototype.getValue = function (element, page, component) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                throw new Error(this.constructor.name + " not supports getting value");
+            });
+        });
+    };
+    AbstractComponent.prototype.getText = function (element, page, component) {
+        return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0:
-                        routes = [];
-                        cursor = this;
-                        while (cursor) {
-                            routes.unshift({ name: cursor.name, selector: cursor.selector, xpath: cursor.xpath });
-                            cursor = cursor.parent;
-                        }
-                        return [4, pageAdapter.getElement(routes)];
+                    case 0: return [4, element.getInnerText()];
                     case 1: return [2, _a.sent()];
                 }
             });
         });
     };
-    AbstractComponent.prototype.isElementPresent = function (element) {
-        return __awaiter(this, void 0, void 0, function () {
-            var _a, width, height;
-            return __generator(this, function (_b) {
-                switch (_b.label) {
-                    case 0:
-                        if (!element) {
-                            return [2, false];
-                        }
-                        return [4, element.getSize()];
-                    case 1:
-                        _a = _b.sent(), width = _a[0], height = _a[1];
-                        return [2, width > 0 && height > 0];
-                }
-            });
-        });
-    };
-    AbstractComponent.prototype.setValue = function (value, pageAdapter) {
+    AbstractComponent.prototype.getAttribute = function (name, element, page, component) {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
-                throw new Error(this.name + " not supports setting value");
+                return [2, element.getAttribute(name)];
             });
         });
     };
-    AbstractComponent.prototype.getValue = function (pageAdapter) {
+    AbstractComponent.prototype.click = function (element, page, component) {
         return __awaiter(this, void 0, void 0, function () {
-            return __generator(this, function (_a) {
-                throw new Error(this.name + " not supports getting value");
-            });
-        });
-    };
-    AbstractComponent.prototype.getText = function (pageAdapter) {
-        return __awaiter(this, void 0, void 0, function () {
-            var element;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4, this.getComponentElement(pageAdapter)];
+                    case 0: return [4, element.click()];
                     case 1:
-                        element = _a.sent();
-                        return [4, this.isElementPresent(element)];
-                    case 2:
-                        if (!(_a.sent())) {
-                            throw new Error('Component\'s element is not exist: ' + this.name);
-                        }
-                        return [4, element.getInnerText()];
-                    case 3: return [2, _a.sent()];
-                }
-            });
-        });
-    };
-    AbstractComponent.prototype.getAttribute = function (name, pageAdapter) {
-        return __awaiter(this, void 0, void 0, function () {
-            var element;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0: return [4, this.getComponentElement(pageAdapter)];
-                    case 1:
-                        element = _a.sent();
-                        if (!element) {
-                            throw new Error('Component\'s element is not exist: ' + this.name);
-                        }
-                        return [2, element.getAttribute(name)];
-                }
-            });
-        });
-    };
-    AbstractComponent.prototype.click = function (pageAdapter) {
-        return __awaiter(this, void 0, void 0, function () {
-            var element;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0: return [4, this.getComponentElement(pageAdapter)];
-                    case 1:
-                        element = _a.sent();
-                        return [4, this.isElementPresent(element)];
-                    case 2:
-                        if (!(_a.sent())) {
-                            throw new Error('Component\'s element has not presented: ' + this.name);
-                        }
-                        return [4, element.click()];
-                    case 3:
                         _a.sent();
                         return [2];
                 }
             });
         });
     };
-    AbstractComponent.prototype.mouseOver = function (pageAdapter) {
+    AbstractComponent.prototype.mouseOver = function (element, page, component) {
         return __awaiter(this, void 0, void 0, function () {
-            var element;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4, this.getComponentElement(pageAdapter)];
+                    case 0: return [4, element.mouseOver()];
                     case 1:
-                        element = _a.sent();
-                        return [4, this.isElementPresent(element)];
-                    case 2:
-                        if (!(_a.sent())) {
-                            throw new Error('Component\'s element has not presented: ' + this.name);
-                        }
-                        return [4, element.mouseOver()];
-                    case 3:
                         _a.sent();
                         return [2];
                 }
             });
         });
     };
-    AbstractComponent.prototype.waitUntil = function (condition, timeout, pageAdapter) {
+    AbstractComponent.prototype.waitUntil = function (condition, timeout, element, page, component) {
         return __awaiter(this, void 0, void 0, function () {
-            var interval, forever, vestige, _loop_1, this_1, state_1;
+            var interval, forever, vestige, _loop_1, state_1;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -194,34 +110,31 @@ var AbstractComponent = (function () {
                         forever = timeout <= 0;
                         vestige = forever ? interval : timeout;
                         _loop_1 = function () {
-                            var element, _a, nextInterval_1;
+                            var _a, nextInterval_1;
                             return __generator(this, function (_b) {
                                 switch (_b.label) {
-                                    case 0: return [4, this_1.getComponentElement(pageAdapter)];
-                                    case 1:
-                                        element = _b.sent();
+                                    case 0:
                                         _a = element;
-                                        if (!_a) return [3, 3];
-                                        return [4, condition(element)];
-                                    case 2:
+                                        if (!_a) return [3, 2];
+                                        return [4, condition(element, page, component)];
+                                    case 1:
                                         _a = (_b.sent());
-                                        _b.label = 3;
-                                    case 3:
-                                        if (!_a) return [3, 4];
+                                        _b.label = 2;
+                                    case 2:
+                                        if (!_a) return [3, 3];
                                         return [2, { value: void 0 }];
-                                    case 4:
-                                        if (!(vestige > 0)) return [3, 6];
+                                    case 3:
+                                        if (!(vestige > 0)) return [3, 5];
                                         nextInterval_1 = vestige >= interval ? interval : vestige;
                                         return [4, new Promise(function (res) { return setTimeout(res, nextInterval_1); })];
-                                    case 5:
+                                    case 4:
                                         _b.sent();
                                         vestige = forever ? interval : vestige - interval;
-                                        _b.label = 6;
-                                    case 6: return [2];
+                                        _b.label = 5;
+                                    case 5: return [2];
                                 }
                             });
                         };
-                        this_1 = this;
                         _a.label = 1;
                     case 1:
                         if (!(vestige > 0)) return [3, 3];
@@ -236,37 +149,63 @@ var AbstractComponent = (function () {
             });
         });
     };
-    AbstractComponent.prototype.isPresent = function (pageAdapter) {
+    AbstractComponent.prototype.isPresent = function (element, page, component) {
         return __awaiter(this, void 0, void 0, function () {
-            var element;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0: return [4, this.getComponentElement(pageAdapter)];
+            var _a, width, height;
+            return __generator(this, function (_b) {
+                switch (_b.label) {
+                    case 0: return [4, element.getSize()];
                     case 1:
-                        element = _a.sent();
-                        return [4, this.isElementPresent(element)];
-                    case 2: return [2, _a.sent()];
+                        _a = _b.sent(), width = _a[0], height = _a[1];
+                        return [2, width > 0 && height > 0];
                 }
             });
         });
     };
-    AbstractComponent.prototype.waitUntilPresent = function (timeout, pageAdapter) {
+    AbstractComponent.prototype.waitUntilPresent = function (timeout, element, page, component) {
         return __awaiter(this, void 0, void 0, function () {
+            var _this = this;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4, this.waitUntil(this.isElementPresent, timeout, pageAdapter)];
+                    case 0: return [4, this.waitUntil(function (e, p, c) { return _this.isPresent(e, p, c); }, timeout, element, page, component)];
                     case 1: return [2, _a.sent()];
                 }
             });
         });
     };
-    AbstractComponent.prototype.pushChildComponents = function () {
-        var _a;
-        var children = [];
-        for (var _i = 0; _i < arguments.length; _i++) {
-            children[_i] = arguments[_i];
-        }
-        (_a = this.children).push.apply(_a, children);
+    AbstractComponent.prototype.getSubComponentValue = function (component, type, page) {
+        return __awaiter(this, void 0, void 0, function () {
+            var subComponentSpecs, headerValues;
+            var _this = this;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        subComponentSpecs = component.children.filter(function (c) { return c.type === type.name; });
+                        return [4, Promise.all(subComponentSpecs.map(function (subComponentSpec) { return __awaiter(_this, void 0, void 0, function () {
+                                var subComponent, subElement, _a;
+                                return __generator(this, function (_b) {
+                                    switch (_b.label) {
+                                        case 0:
+                                            subComponent = PageComponentTypeRegistry_1.default.getComponentByType(subComponentSpec.type);
+                                            return [4, page.getElement(ComponentSpecService_1.getElementRoutes(subComponentSpec))];
+                                        case 1:
+                                            subElement = _b.sent();
+                                            _a = subElement;
+                                            if (!_a) return [3, 3];
+                                            return [4, subComponent.getValue(subElement, page, subComponentSpec)];
+                                        case 2:
+                                            _a = (_b.sent());
+                                            _b.label = 3;
+                                        case 3: return [2, _a];
+                                    }
+                                });
+                            }); }))];
+                    case 1:
+                        headerValues = _a.sent();
+                        return [2, headerValues];
+                }
+            });
+        });
     };
     return AbstractComponent;
 }());

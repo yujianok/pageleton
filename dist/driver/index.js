@@ -12,5 +12,5 @@ var __exportStar = (this && this.__exportStar) || function(m, exports) {
 Object.defineProperty(exports, "__esModule", { value: true });
 __exportStar(require("./BrowserDriver"), exports);
 __exportStar(require("./BrowserDriverFactory"), exports);
-__exportStar(require("./PageAdapter"), exports);
-__exportStar(require("./ElementAdapter"), exports);
+__exportStar(require("./PageDriver"), exports);
+__exportStar(require("./ElementDriver"), exports);

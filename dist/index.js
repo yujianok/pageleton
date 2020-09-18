@@ -45,65 +45,37 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Pageleton = void 0;
 var driver_1 = require("./driver");
-var page_1 = require("./page");
 var component_1 = require("./component");
+var spec_1 = require("./spec");
+var PageletonBrowser_1 = __importDefault(require("./page/PageletonBrowser"));
 __exportStar(require("./component"), exports);
 __exportStar(require("./page"), exports);
 __exportStar(require("./driver"), exports);
 var DEFAULT_PAGE_SPEC_PATHS = ['./pages/*.xml'];
 exports.Pageleton = function (config) {
-    var pageletonPageFactory = new page_1.PageletonPageFactory(config.specPaths || DEFAULT_PAGE_SPEC_PATHS, config.specEncoding);
     if (config.customComponentTypes) {
         config.customComponentTypes.forEach(function (cst) { return component_1.pageComponentTypeRegistry.registerComponentType(cst); });
     }
     return {
         launchBrowser: function () { return __awaiter(void 0, void 0, void 0, function () {
-            var browserDriver;
+            var pageletonPageFactory, browserDriver;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0:
+                    case 0: return [4, spec_1.PageSpecFactory.init(config.specPaths || DEFAULT_PAGE_SPEC_PATHS, config.specEncoding)];
+                    case 1:
+                        pageletonPageFactory = _a.sent();
                         browserDriver = driver_1.browserDriverFactory.getBrowserDriver(config.driverType);
                         return [4, browserDriver.launch(config)];
-                    case 1:
+                    case 2:
                         _a.sent();
-                        return [2, {
-                                openPage: function (name) { return __awaiter(void 0, void 0, void 0, function () {
-                                    var pageletonPage;
-                                    return __generator(this, function (_a) {
-                                        switch (_a.label) {
-                                            case 0: return [4, pageletonPageFactory.getPageByName(name)];
-                                            case 1:
-                                                pageletonPage = _a.sent();
-                                                if (!pageletonPage) {
-                                                    throw new Error('Page not exists: ' + name);
-                                                }
-                                                return [4, pageletonPage.open(browserDriver)];
-                                            case 2:
-                                                _a.sent();
-                                                return [2, pageletonPage];
-                                        }
-                                    });
-                                }); },
-                                shutdown: function () { return __awaiter(void 0, void 0, void 0, function () {
-                                    return __generator(this, function (_a) {
-                                        switch (_a.label) {
-                                            case 0: return [4, browserDriver.shotdown()];
-                                            case 1:
-                                                _a.sent();
-                                                return [2];
-                                        }
-                                    });
-                                }); },
-                            }];
+                        return [2, new PageletonBrowser_1.default(browserDriver, pageletonPageFactory)];
                 }
-            });
-        }); },
-        getPageSpec: function (name) { return __awaiter(void 0, void 0, void 0, function () {
-            return __generator(this, function (_a) {
-                return [2, pageletonPageFactory.getPageByName(name)];
             });
         }); }
     };

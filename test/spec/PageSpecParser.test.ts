@@ -1,11 +1,10 @@
-import { expect, assert } from 'chai';
-import { pageletonPageLoader } from '../../src';
+import { assert, expect } from 'chai';
+import pageSpecLoader from '../../src/spec/PageSpecLoader';
 
-describe('Test PageletonPageParser', () => {
+describe('Test PageSpecParser', () => {
 
     it('test readPageSpec', async () => {
-        const page = await pageletonPageLoader.loadPageSpec('./test/resources/pages/todo-list-page.xml', 'UTF-8');
-
+        const page = await pageSpecLoader.loadPageSpec('./test/resources/pages/todo-list-page.xml', 'UTF-8');
         expect(page.name).equal('Pageleton');
         expect(page.url).equal('/test/resources/html/example-page.html');
         expect(page.rootComponents.length).equal(3);

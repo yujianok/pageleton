@@ -1,105 +1,42 @@
-import { PageAdapter, ElementAdapter, ElementRoute } from "../driver";
-import { PageComponent, WaitCondition, PageComponentConfig, PageCompnentType } from "./PageComponent";
+import pageComponentTypeRegistry from "./PageComponentTypeRegistry";
+import { ElementDriver, PageDriver } from "../driver";
+import { ComponentSpec } from "../spec";
+import { PageCompnentType, PageComponent, WaitCondition } from "./PageComponent";
+import { getElementRoutes } from "../service/ComponentSpecService";
 
 export abstract class AbstractComponent implements PageComponent {
-    readonly name: string;
-    readonly selector?: string;
-    readonly xpath?: string;
-    readonly parent?: PageComponent;
-    readonly children: PageComponent[];
 
-    constructor(config: PageComponentConfig) {
-        this.name = config.name;
-        this.selector = config.selector;
-        this.xpath = config.xpath;
-        this.parent = config.parent;
-        this.children = [...config.children];
+    async setValue(value: string, element: ElementDriver, page: PageDriver, component: ComponentSpec): Promise<void> {
+        throw new Error(`${this.constructor.name} not supports setting value`);
     }
 
-    protected getChildComponent(name: string): PageComponent | undefined {
-        return this.children.find(child => child.name === name);
+    async getValue(element: ElementDriver, page: PageDriver, component: ComponentSpec): Promise<any> {
+        throw new Error(`${this.constructor.name} not supports getting value`);
     }
 
-    protected getSubComponentOfType(componentType: PageCompnentType): PageComponent[] {
-        return this.children.filter(child => child instanceof componentType);
+    async getText(element: ElementDriver, page: PageDriver, component: ComponentSpec): Promise<string> {
+        return await element.getInnerText();
     }
 
-    protected async getComponentElement(pageAdapter: PageAdapter): Promise<ElementAdapter | undefined> {
-        const routes: ElementRoute[] = [];
-        let cursor: PageComponent | undefined = this;
-        while (cursor) {
-            routes.unshift({ name: cursor.name, selector: cursor.selector, xpath: cursor.xpath });
-            cursor = cursor.parent;
-        }
-
-        return await pageAdapter.getElement(routes);
-    }
-
-    protected async isElementPresent(element?: ElementAdapter): Promise<boolean> {
-        if (!element) {
-            return false;
-        }
-
-        const [width, height] = await element.getSize();
-        return width > 0 && height > 0;
-    }
-
-    async setValue(value: string, pageAdapter: PageAdapter): Promise<void> {
-        throw new Error(`${this.name} not supports setting value`);
-    }
-
-    async getValue(pageAdapter: PageAdapter): Promise<any> {
-        throw new Error(`${this.name} not supports getting value`);
-    }
-
-    async getText(pageAdapter: PageAdapter): Promise<string> {
-        const element = await this.getComponentElement(pageAdapter);
-
-        if (!await this.isElementPresent(element)) {
-            throw new Error('Component\'s element is not exist: ' + this.name);
-        }
-
-        return await element!.getInnerText();
-    }
-
-    async getAttribute(name: string, pageAdapter: PageAdapter): Promise<string | undefined> {
-        const element = await this.getComponentElement(pageAdapter);
-
-        if (!element) {
-            throw new Error('Component\'s element is not exist: ' + this.name);
-        }
-
+    async getAttribute(name: string, element: ElementDriver, page: PageDriver, component: ComponentSpec): Promise<string | undefined> {
         return element.getAttribute(name);
     }
 
-    async click(pageAdapter: PageAdapter): Promise<void> {
-        const element = await this.getComponentElement(pageAdapter);
-
-        if (!await this.isElementPresent(element)) {
-            throw new Error('Component\'s element has not presented: ' + this.name);
-        }
-
-        await element!.click();
+    async click(element: ElementDriver, page: PageDriver, component: ComponentSpec): Promise<void> {
+        await element.click();
     }
 
-    async mouseOver(pageAdapter: PageAdapter): Promise<void> {
-        const element = await this.getComponentElement(pageAdapter);
-
-        if (!await this.isElementPresent(element)) {
-            throw new Error('Component\'s element has not presented: ' + this.name);
-        }
-
-        await element!.mouseOver();
+    async mouseOver(element: ElementDriver, page: PageDriver, component: ComponentSpec): Promise<void> {
+        await element.mouseOver();
     }
 
-    async waitUntil(condition: WaitCondition, timeout: number, pageAdapter: PageAdapter): Promise<void> {
+    async waitUntil(condition: WaitCondition, timeout: number, element: ElementDriver, page: PageDriver, component: ComponentSpec): Promise<void> {
         const interval = 1000;
         const forever = timeout <= 0;
         let vestige = forever ? interval : timeout;
 
         while (vestige > 0) {
-            const element = await this.getComponentElement(pageAdapter);
-            if (element && await condition(element)) {
+            if (element && await condition(element, page, component)) {
                 return;
             } else if (vestige > 0) {
                 const nextInterval = vestige >= interval ? interval : vestige;
@@ -111,16 +48,25 @@ export abstract class AbstractComponent implements PageComponent {
         throw new Error('Waiting for component to fit condition is timeout: ' + timeout);
     }
 
-    async isPresent(pageAdapter: PageAdapter): Promise<boolean> {
-        const element = await this.getComponentElement(pageAdapter);
-        return await this.isElementPresent(element);
+    async isPresent(element: ElementDriver, page: PageDriver, component: ComponentSpec): Promise<boolean> {
+        const [width, height] = await element.getSize();
+        return width > 0 && height > 0;
     }
 
-    async waitUntilPresent(timeout: number, pageAdapter: PageAdapter): Promise<void> {
-        return await this.waitUntil(this.isElementPresent, timeout, pageAdapter);
+    async waitUntilPresent(timeout: number, element: ElementDriver, page: PageDriver, component: ComponentSpec): Promise<void> {
+        return await this.waitUntil((e, p, c) => this.isPresent(e, p, c), timeout, element, page, component);
     }
 
-    pushChildComponents(...children: PageComponent[]) {
-        this.children.push(...children);
+    protected async getSubComponentValue(component: ComponentSpec, type: PageCompnentType, page: PageDriver) {
+        const subComponentSpecs = component.children.filter(c => c.type === type.name);
+       
+        const headerValues = await Promise.all(subComponentSpecs.map(async (subComponentSpec) => {
+            const subComponent = pageComponentTypeRegistry.getComponentByType(subComponentSpec.type);
+            const subElement = await page.getElement(getElementRoutes(subComponentSpec));
+            return subElement && await subComponent.getValue(subElement, page, subComponentSpec);
+        }));
+
+        return headerValues;
     }
+
 }

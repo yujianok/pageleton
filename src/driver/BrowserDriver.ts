@@ -1,4 +1,4 @@
-import { PageAdapter } from "./PageAdapter";
+import { PageDriver } from "./PageDriver";
 
 export type LaunchOptions = {
     executablePath?: string;
@@ -19,7 +19,7 @@ export type LaunchOptions = {
 export interface BrowserDriver {
     launch(options?: LaunchOptions): Promise<void>;
     shotdown(): Promise<void>;
-    newPage(): Promise<PageAdapter>;
+    newPage(): Promise<PageDriver>;
 }
 
 export interface BrowserDriverType {

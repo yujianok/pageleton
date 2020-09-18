@@ -35,127 +35,62 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.PageletonPage = void 0;
+var PageletonComponent_1 = __importDefault(require("./PageletonComponent"));
 var PageletonPage = (function () {
-    function PageletonPage(name, url, rootComponents) {
-        this.name = name;
-        this.url = url;
-        this.rootComponents = rootComponents;
+    function PageletonPage(pageDriver, pageSpecFactory) {
+        this.pageDriver = pageDriver;
+        this.pageSpecFactory = pageSpecFactory;
     }
-    PageletonPage.prototype.getPageAdapter = function () {
-        throw new Error("Page has not bean opened:" + this.name);
-    };
     PageletonPage.prototype.getComponent = function (routes) {
-        var current;
-        var children = this.rootComponents;
-        var _loop_1 = function (route) {
-            current = children.find(function (c) { return c.name === route; });
-            if (!current) {
-                throw new Error('Component can not be found, path:' + routes.join('>'));
-            }
-            children = current.children;
-        };
-        for (var _i = 0, routes_1 = routes; _i < routes_1.length; _i++) {
-            var route = routes_1[_i];
-            _loop_1(route);
+        if (!this.currentPage) {
+            throw new Error('No page has bean opened yet.');
         }
-        return current;
+        var componentSpec = this.currentPage.getComponent(routes);
+        return new PageletonComponent_1.default(componentSpec, this.pageDriver);
+    };
+    PageletonPage.prototype.open = function (name) {
+        return __awaiter(this, void 0, void 0, function () {
+            var pageSpec;
+            var _this = this;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        pageSpec = this.pageSpecFactory.getPageByName(name);
+                        if (!pageSpec) {
+                            throw new Error('Page can not be found: ' + name);
+                        }
+                        this.currentPage = pageSpec;
+                        return [4, this.pageDriver.goto(pageSpec.url)];
+                    case 1:
+                        _a.sent();
+                        this.pageDriver.onNavigated(function (url) {
+                            _this.currentPage = _this.pageSpecFactory.getPageByUrl(url);
+                        });
+                        return [2];
+                }
+            });
+        });
     };
     PageletonPage.prototype.getTitle = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var pageAdapter;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0:
-                        pageAdapter = this.getPageAdapter();
-                        return [4, pageAdapter.getTitle()];
+                    case 0: return [4, this.pageDriver.getTitle()];
                     case 1: return [2, _a.sent()];
-                }
-            });
-        });
-    };
-    PageletonPage.prototype.getComponentValue = function (routes) {
-        return __awaiter(this, void 0, void 0, function () {
-            var component, pageAdapter;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        component = this.getComponent(routes);
-                        pageAdapter = this.getPageAdapter();
-                        return [4, component.getValue(pageAdapter)];
-                    case 1: return [2, _a.sent()];
-                }
-            });
-        });
-    };
-    PageletonPage.prototype.setComponentValue = function (value, routes) {
-        return __awaiter(this, void 0, void 0, function () {
-            var component, pageAdapter;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        component = this.getComponent(routes);
-                        pageAdapter = this.getPageAdapter();
-                        return [4, component.setValue(value, pageAdapter)];
-                    case 1: return [2, _a.sent()];
-                }
-            });
-        });
-    };
-    PageletonPage.prototype.clickComponent = function (routes) {
-        return __awaiter(this, void 0, void 0, function () {
-            var component, pageAdapter;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        component = this.getComponent(routes);
-                        pageAdapter = this.getPageAdapter();
-                        return [4, component.click(pageAdapter)];
-                    case 1: return [2, _a.sent()];
-                }
-            });
-        });
-    };
-    PageletonPage.prototype.isComponentPresent = function (routes) {
-        return __awaiter(this, void 0, void 0, function () {
-            var component, pageAdapter;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        component = this.getComponent(routes);
-                        pageAdapter = this.getPageAdapter();
-                        return [4, component.isPresent(pageAdapter)];
-                    case 1: return [2, _a.sent()];
-                }
-            });
-        });
-    };
-    PageletonPage.prototype.open = function (browserDriver) {
-        return __awaiter(this, void 0, void 0, function () {
-            var pageAdapter;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0: return [4, browserDriver.newPage()];
-                    case 1:
-                        pageAdapter = _a.sent();
-                        return [4, pageAdapter.goto(this.url)];
-                    case 2:
-                        _a.sent();
-                        this.getPageAdapter = function () { return pageAdapter; };
-                        return [2];
                 }
             });
         });
     };
     PageletonPage.prototype.close = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var pageAdapter;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0:
-                        pageAdapter = this.getPageAdapter();
-                        return [4, pageAdapter.close()];
+                    case 0: return [4, this.pageDriver.close()];
                     case 1:
                         _a.sent();
                         return [2];
@@ -165,43 +100,12 @@ var PageletonPage = (function () {
     };
     PageletonPage.prototype.waitForNavigation = function (timeout) {
         return __awaiter(this, void 0, void 0, function () {
-            var pageAdapter;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0:
-                        pageAdapter = this.getPageAdapter();
-                        return [4, pageAdapter.waitForNavigation(timeout)];
+                    case 0: return [4, this.pageDriver.waitForNavigation(timeout)];
                     case 1:
                         _a.sent();
                         return [2];
-                }
-            });
-        });
-    };
-    PageletonPage.prototype.getComponentAttribute = function (name, routes) {
-        return __awaiter(this, void 0, void 0, function () {
-            var component, pageAdapter;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        component = this.getComponent(routes);
-                        pageAdapter = this.getPageAdapter();
-                        return [4, component.getAttribute(name, pageAdapter)];
-                    case 1: return [2, _a.sent()];
-                }
-            });
-        });
-    };
-    PageletonPage.prototype.getComponentText = function (routes) {
-        return __awaiter(this, void 0, void 0, function () {
-            var component, pageAdapter;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        component = this.getComponent(routes);
-                        pageAdapter = this.getPageAdapter();
-                        return [4, component.getText(pageAdapter)];
-                    case 1: return [2, _a.sent()];
                 }
             });
         });

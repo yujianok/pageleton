@@ -1,9 +1,9 @@
-import { PageCompnentType } from "./PageComponent";
+import { PageCompnentType, PageComponent } from "./PageComponent";
 declare class PageComponentTypeRegistry {
     private readonly componentTypeRegistry;
     constructor();
-    getComponentType(name: string): PageCompnentType;
+    getComponentByType(name: string): PageComponent;
     registerComponentType(pageCompnentType: PageCompnentType): void;
 }
-export declare const pageComponentTypeRegistry: PageComponentTypeRegistry;
-export {};
+declare const _default: PageComponentTypeRegistry;
+export default _default;

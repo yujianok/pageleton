@@ -19,16 +19,17 @@ describe('Test PageletonPage', () => {
         }).launchBrowser();
 
         try {
-            const testPage = await browser.openPage('Pageleton');
+            const testPage = await browser.newPage();
+            await testPage.open('Pageleton');
             assert.exists(testPage);
 
             const title = await testPage.getTitle();
             expect(title).equal('example page for pageleton unit testing');
 
-            const listTitle = await testPage.getComponentText(['Header', 'My To Do List']);
+            const listTitle = await testPage.getComponent(['Header', 'My To Do List']).getText();
             expect(listTitle).equal('My To Do List');
 
-            const tableData = await testPage.getComponentValue(['Todo List']);
+            const tableData = await testPage.getComponent(['Todo List']).getValue();
             const expectData = {
                 headers: [],
                 rows: [
@@ -42,33 +43,33 @@ describe('Test PageletonPage', () => {
             };
             expect(tableData).to.deep.equal(expectData);
 
-            const secondItemTitle = await testPage.getComponentText(['Todo List', 'Item-2', 'Item Title']);
+            const secondItemTitle = await testPage.getComponent(['Todo List', 'Item-2', 'Item Title']).getText();
             expect(secondItemTitle).equal('Pay bills');
 
-            const secondItemClass = await testPage.getComponentAttribute('class', ['Todo List', 'Item-2'])
+            const secondItemClass = await testPage.getComponent(['Todo List', 'Item-2']).getAttribute('class');
             expect(secondItemClass).equal('checked');
 
-            await testPage.clickComponent(['Todo List', 'Item-2', 'Delete']);
-            const secondItemPresent = await testPage.isComponentPresent(['Todo List', 'Item-2']);
+            await testPage.getComponent(['Todo List', 'Item-2', 'Delete']).click();
+            const secondItemPresent = await testPage.getComponent(['Todo List', 'Item-2']).isPresent();
             expect(secondItemPresent).equal(false);
 
-            await testPage.clickComponent(['Header', 'Add']);
-            const alertPresent = await testPage.isComponentPresent(['Alert Message']);
+            await testPage.getComponent(['Header', 'Add']).click();
+            const alertPresent = await testPage.getComponent(['Alert Message']).isPresent();
             expect(alertPresent).equal(true);
-            const alertMessage = await testPage.getComponentText(['Alert Message', 'Message Content']);
+            const alertMessage = await testPage.getComponent(['Alert Message', 'Message Content']).getText();
             expect(alertMessage).equal('You must write something!');
 
-            await testPage.clickComponent(['Alert Message', 'Message Content']);
-            const alertPresent2 = await testPage.isComponentPresent(['Alert Message']);
+            await testPage.getComponent(['Alert Message', 'Message Content']).click();
+            const alertPresent2 = await testPage.getComponent(['Alert Message']).isPresent();
             expect(alertPresent2).equal(false);
 
-            await testPage.setComponentValue('Test Pageleton', ['Header', 'My Input']);
-            const inputValue = await testPage.getComponentValue(['Header', 'My Input']);
+            await testPage.getComponent(['Header', 'My Input']).setValue('Test Pageleton');
+            const inputValue = await testPage.getComponent(['Header', 'My Input']).getValue();
             expect(inputValue).equal('Test Pageleton');
-            await testPage.clickComponent(['Header', 'Add']);
-            const lastItemIndex = await testPage.getComponentText(['Todo List', 'Item-7', 'Item Index']);
+            await testPage.getComponent(['Header', 'Add']).click();
+            const lastItemIndex = await testPage.getComponent(['Todo List', 'Item-7', 'Item Index']).getText();
             expect(lastItemIndex).equal('7');
-            const lastItemTitle = await testPage.getComponentText(['Todo List', 'Item-7', 'Item Title']);
+            const lastItemTitle = await testPage.getComponent(['Todo List', 'Item-7', 'Item Title']).getText();
             expect(lastItemTitle).equal('Test Pageleton');
 
             await testPage.close();

@@ -1,6 +1,5 @@
 
-export interface ElementAdapter {
-    getSubElement(selector?: string, xpath?: string): Promise<ElementAdapter | undefined>;
+export interface ElementDriver {
     getInnerText(): Promise<string>;
     getValue(): Promise<string>;
     setValue(value: string): Promise<void>;

@@ -1,4 +1,4 @@
-import { PageCompnentType } from "./PageComponent";
+import { PageCompnentType, PageComponent } from "./PageComponent";
 
 class PageComponentTypeRegistry {
 
@@ -8,8 +8,9 @@ class PageComponentTypeRegistry {
         this.componentTypeRegistry = {};
     }
 
-    getComponentType(name: string): PageCompnentType {
-        return this.componentTypeRegistry[name] || this.componentTypeRegistry['Component'];
+    getComponentByType(name: string): PageComponent {
+        const PageComponentType = this.componentTypeRegistry[name] || this.componentTypeRegistry['Component'];
+        return new PageComponentType();
     }
 
     registerComponentType(pageCompnentType: PageCompnentType): void {
@@ -17,4 +18,4 @@ class PageComponentTypeRegistry {
     }
 }
 
-export const pageComponentTypeRegistry = new PageComponentTypeRegistry();
+export default new PageComponentTypeRegistry();

@@ -1,6 +1,7 @@
+import { ElementDriver, PageDriver } from "../driver";
+import { ComponentSpec } from "../spec";
 import { AbstractComponent } from "./AbstractComponent";
-import { pageComponentTypeRegistry } from "./PageComponentTypeRegistry";
-import { PageAdapter } from "../driver";
+import pageComponentTypeRegistry from './PageComponentTypeRegistry';
 
 class Component extends AbstractComponent {
 
@@ -8,14 +9,12 @@ class Component extends AbstractComponent {
 pageComponentTypeRegistry.registerComponentType(Component);
 
 class Input extends AbstractComponent {
-    public async getValue(pageAdapter: PageAdapter) {
-        const element = await this.getComponentElement(pageAdapter);
-        return await element?.getValue();
+    public async getValue(element: ElementDriver) {
+        return await element.getValue();
     }
 
-    public async setValue(value: string, pageAdapter: PageAdapter) {
-        const element = await this.getComponentElement(pageAdapter);
-        await element?.setValue(value);
+    public async setValue(value: string, element: ElementDriver) {
+        await element.setValue(value);
     }
 }
 pageComponentTypeRegistry.registerComponentType(Input);
@@ -26,43 +25,37 @@ type TableData = {
 }
 
 class Table extends AbstractComponent {
-    public async getValue(pageAdapter: PageAdapter): Promise<TableData> {
-        const heads = this.getSubComponentOfType(TableHeader);
-        const rows = this.getSubComponentOfType(TableRow);
-
-        const headerValues = await Promise.all(heads.map(head => head.getValue(pageAdapter)));
-        const rowValues = await Promise.all(rows.map(row => row.getValue(pageAdapter)));
+    public async getValue(element: ElementDriver, page: PageDriver, component: ComponentSpec): Promise<TableData> {
+        const headerValues = await this.getSubComponentValue(component, TableHeader, page);
+        const rowValues = await this.getSubComponentValue(component, TableRow, page);
 
         return {
-            headers: headerValues,
-            rows: rowValues.filter(r => r.length),
+            headers: headerValues[0] || [],
+            rows: rowValues.filter(r => r && r.length),
         };
     }
 }
 pageComponentTypeRegistry.registerComponentType(Table);
 
 class TableHeader extends AbstractComponent {
-    public async getValue(pageAdapter: PageAdapter) {
-        const cells = this.getSubComponentOfType(TableField);
-        const headers = await Promise.all(cells.map(cell => cell.getValue(pageAdapter)));
-        return headers.filter(h => h !== undefined);
+    public async getValue(element: ElementDriver, page: PageDriver, component: ComponentSpec) {
+        const cellValues = await this.getSubComponentValue(component, TableField, page);
+        return cellValues.filter(c => c !== undefined);
     }
 }
 pageComponentTypeRegistry.registerComponentType(TableHeader);
 
 class TableRow extends AbstractComponent {
-    public async getValue(pageAdapter: PageAdapter) {
-        const cells = this.getSubComponentOfType(TableField);
-        const fields = await Promise.all(cells.map(cell => cell.getValue(pageAdapter)));
-        return fields.filter(f => f !== undefined);
+    public async getValue(element: ElementDriver, page: PageDriver, component: ComponentSpec) {
+        const cellValues = await this.getSubComponentValue(component, TableField, page);
+        return cellValues.filter(c => c !== undefined);
     }
 }
 pageComponentTypeRegistry.registerComponentType(TableRow);
 
 class TableField extends AbstractComponent {
-    public async getValue(pageAdapter: PageAdapter) {
-        const element = await this.getComponentElement(pageAdapter);
-        return await element?.getInnerText();
+    public async getValue(element: ElementDriver) {
+        return await element.getInnerText();
     }
 }
 pageComponentTypeRegistry.registerComponentType(TableField);

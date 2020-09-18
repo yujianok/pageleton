@@ -1,10 +1,9 @@
 import puppeteer, { Browser, Page, ElementHandle } from 'puppeteer-core';
 import { BrowserDriver, LaunchOptions } from "./BrowserDriver";
-import { PageAdapter, ElementRoute } from './PageAdapter';
-import { ElementAdapter } from './ElementAdapter';
+import { ElementRoute, NavigationListener, PageDriver } from './PageDriver';
+import { ElementDriver } from './ElementDriver';
 
-
-class PuppeteerElementAdapter implements ElementAdapter {
+class PuppeteerElementDriver implements ElementDriver {
     private readonly elementHandler: ElementHandle;
 
     constructor(elementHandler: ElementHandle) {
@@ -55,29 +54,12 @@ class PuppeteerElementAdapter implements ElementAdapter {
         return await this.elementHandler.evaluate((el) => (el as HTMLElement).innerText);
     }
 
-    async getSubElement(selector?: string | undefined, xpath?: string | undefined): Promise<ElementAdapter | undefined> {
-        let elementHandler: ElementHandle | undefined;
-        if (!selector && !xpath) {
-            throw new Error('Parameter Selector and xpath can not both been null at the same time');
-        }
-
-        if (selector) {
-            elementHandler = await this.elementHandler.$(selector) || undefined;
-        }
-
-        if (xpath) {
-            elementHandler = (elementHandler ? await elementHandler.$x(xpath) : await this.elementHandler.$x(xpath)).pop();
-        }
-
-        return elementHandler && new PuppeteerElementAdapter(elementHandler);
-    }
-
     getAttribute(name: string): Promise<string | undefined> {
         return this.elementHandler.evaluate((el, attr) => el.getAttribute(attr) || undefined, name);
     }
 }
 
-class PuppeteerPageAdapter implements PageAdapter {
+class PuppeteerPageDriver implements PageDriver {
 
     private readonly page: Page;
     private readonly baseUrl?: string;
@@ -96,6 +78,7 @@ class PuppeteerPageAdapter implements PageAdapter {
         if (!this.page.url() || this.page.url() === 'about:blank' || !/^([a-z][a-z0-9+\-.]*):/.test(url)) {
             resovledUrl = (this.baseUrl || '') + url;
         }
+
         await this.page.goto(resovledUrl);
     }
 
@@ -107,7 +90,7 @@ class PuppeteerPageAdapter implements PageAdapter {
         await this.page.waitForNavigation({ timeout })
     }
 
-    async getElement(routes: ElementRoute[]): Promise<ElementAdapter | undefined> {
+    async getElement(routes: ElementRoute[]): Promise<ElementDriver | undefined> {
 
         const jsHandle = await this.page.evaluateHandle((routesJson) => {
             const rs = JSON.parse(routesJson) as ElementRoute[];
@@ -139,7 +122,14 @@ class PuppeteerPageAdapter implements PageAdapter {
 
         const elementHandle = jsHandle.asElement() || undefined;
 
-        return elementHandle && new PuppeteerElementAdapter(elementHandle);
+        return elementHandle && new PuppeteerElementDriver(elementHandle);
+    }
+
+    onNavigated(listener: NavigationListener): void {
+        this.page.on('framenavigated', (frame) => {
+            const url = frame.url();
+            listener(url);
+        })
     }
 }
 
@@ -159,7 +149,7 @@ export class PuppeteerBrowserDriver implements BrowserDriver {
         }
     }
 
-    async newPage(): Promise<PageAdapter> {
+    async newPage(): Promise<PageDriver> {
         if (!this.browser) {
             throw new Error('Browser has not been launched.');
         }
@@ -171,7 +161,7 @@ export class PuppeteerBrowserDriver implements BrowserDriver {
             page.setDefaultTimeout(this.options.timeout);
         }
 
-        return new PuppeteerPageAdapter(page, this.options?.baseUrl);
+        return new PuppeteerPageDriver(page, this.options?.baseUrl);
     }
 }
 

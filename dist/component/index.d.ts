@@ -1,3 +1,4 @@
 import './DefaultPageComponents';
-export * from "./PageComponentTypeRegistry";
+export { default as pageComponentTypeRegistry } from "./PageComponentTypeRegistry";
 export * from './PageComponent';
+export * from './AbstractComponent';

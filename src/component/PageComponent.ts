@@ -1,32 +1,19 @@
-import { PageAdapter, ElementAdapter } from "../driver";
+import { ElementDriver, PageDriver } from "../driver";
+import { ComponentSpec } from "../spec";
 
-export type WaitCondition = (element: ElementAdapter) => Promise<boolean>;
+export type WaitCondition = (element: ElementDriver, page: PageDriver, componentSpec: ComponentSpec) => Promise<boolean>;
 export interface PageComponent {
-    readonly name: string;
-    readonly selector?: string;
-    readonly xpath?: string;
-    readonly parent?: PageComponent;
-    readonly children: readonly PageComponent[];
-
-    setValue(value: string, pageAdapter: PageAdapter): Promise<void>;
-    getValue(pageAdapter: PageAdapter): Promise<any>;
-    getText(pageAdapter: PageAdapter): Promise<string>;
-    getAttribute(name: string, pageAdapter: PageAdapter): Promise<string | undefined>;
-    click(pageAdapter: PageAdapter): Promise<void>;
-    mouseOver(pageAdapter: PageAdapter): Promise<void>;
-    isPresent(pageAdapter: PageAdapter): Promise<boolean>;
-    waitUntil(condition: WaitCondition, timeout: number, pageAdapter: PageAdapter): Promise<void>;
-    waitUntilPresent(timeout: number, pageAdapter: PageAdapter): Promise<void>;
-}
-
-export type PageComponentConfig = {
-    name: string;
-    selector?: string;
-    xpath?: string;
-    parent?: PageComponent;
-    children: PageComponent[];
+    setValue(value: string, element: ElementDriver, page: PageDriver, componentSpec: ComponentSpec): Promise<void>;
+    getValue(element: ElementDriver, page: PageDriver, componentSpec: ComponentSpec): Promise<any>;
+    getText(element: ElementDriver, page: PageDriver, componentSpec: ComponentSpec): Promise<string>;
+    getAttribute(name: string, element: ElementDriver, page: PageDriver, componentSpec: ComponentSpec): Promise<string | undefined>;
+    click(element: ElementDriver, page: PageDriver, componentSpec: ComponentSpec): Promise<void>;
+    mouseOver(element: ElementDriver, page: PageDriver, componentSpec: ComponentSpec): Promise<void>;
+    isPresent(element: ElementDriver, page: PageDriver, componentSpec: ComponentSpec): Promise<boolean>;
+    waitUntil(condition: WaitCondition, timeout: number, element: ElementDriver, page: PageDriver, componentSpec: ComponentSpec): Promise<void>;
+    waitUntilPresent(timeout: number, element: ElementDriver, page: PageDriver, componentSpec: ComponentSpec): Promise<void>;
 }
 
 export interface PageCompnentType {
-    new(config: PageComponentConfig): PageComponent;
+    new(): PageComponent;
 }
