@@ -157,6 +157,7 @@
         <h2 style="margin:5px">My To Do List</h2>
         <input type="text" id="myInput" placeholder="Title...">
         <span onclick="newElement()" class="addBtn">Add</span>
+        <span onclick="leaveSite()" class="addBtn">Leave</span>
     </div>
 
     <ul id="myUL">
@@ -245,6 +246,10 @@
                     div.style.display = "none";
                 }
             }
+        }
+
+        function leaveSite() {
+            window.location.href = "./empty-page.html";
         }
     </script>
 

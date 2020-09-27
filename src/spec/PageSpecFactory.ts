@@ -29,21 +29,10 @@ class PageSpecFactory {
 
     getPageByUrl(url: string): PageSpec | undefined {
         return this.pages.find(page => {
-            let paramPath;
-            try {
-                paramPath = new URL(url).pathname;
-            } catch (e) {
-                paramPath = url.split('?')[0];
-            }
+            const pageUrl = url.split('?')[0];
+            const pageSpecPath = page.url.split('?')[0];
 
-            let pagePath;
-            try {
-                pagePath = new URL(page.url).pathname;
-            } catch (e) {
-                pagePath = page.url.split('?')[0];
-            }
-
-            return paramPath === pagePath;
+            return pageUrl.endsWith(pageSpecPath);
         });
     }
 }

@@ -15,7 +15,7 @@ describe('Test PageSpecParser', () => {
         expect(Header.name).equal('Header');
         expect(Header.selector).equal('.header')
         assert.notExists(Header.xpath);
-        expect(Header.children.length).equal(3);
+        expect(Header.children.length).equal(4);
 
         const Title = page.getComponent(['Header', 'My To Do List']);
         assert.exists(Title);

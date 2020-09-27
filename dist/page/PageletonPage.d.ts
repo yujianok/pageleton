@@ -9,6 +9,7 @@ export declare class PageletonPage {
     getComponent(routes: string[]): PageletonComponent;
     open(name: string): Promise<void>;
     getTitle(): Promise<string>;
+    getPageName(): string | undefined;
     close(): Promise<void>;
-    waitForNavigation(timeout: number): Promise<void>;
+    waitForNavigation(timeout?: number): Promise<void>;
 }

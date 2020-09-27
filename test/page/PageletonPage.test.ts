@@ -72,6 +72,11 @@ describe('Test PageletonPage', () => {
             const lastItemTitle = await testPage.getComponent(['Todo List', 'Item-7', 'Item Title']).getText();
             expect(lastItemTitle).equal('Test Pageleton');
 
+            await testPage.getComponent(['Header', 'Leave']).click();
+            await testPage.waitForNavigation();
+            const pageName = testPage.getPageName();
+            expect(pageName).equal('Empty');
+
             await testPage.close();
         } finally {
             await browser.shutdown()

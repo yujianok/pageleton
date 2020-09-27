@@ -81,21 +81,9 @@ var PageSpecFactory = (function () {
     };
     PageSpecFactory.prototype.getPageByUrl = function (url) {
         return this.pages.find(function (page) {
-            var paramPath;
-            try {
-                paramPath = new URL(url).pathname;
-            }
-            catch (e) {
-                paramPath = url.split('?')[0];
-            }
-            var pagePath;
-            try {
-                pagePath = new URL(page.url).pathname;
-            }
-            catch (e) {
-                pagePath = page.url.split('?')[0];
-            }
-            return paramPath === pagePath;
+            var pageUrl = url.split('?')[0];
+            var pageSpecPath = page.url.split('?')[0];
+            return pageUrl.endsWith(pageSpecPath);
         });
     };
     return PageSpecFactory;

@@ -5,6 +5,7 @@
         <Title name="My To Do List" />
         <Input name="My Input" selector="#myInput" />
         <Button name="Add" />
+        <Button name="Leave" />
     </Header>
     <Table name="Todo List" selector="#myUL">
         <TableRow name="Item-{index}" selector="li:nth-child({index})" multiple="10">

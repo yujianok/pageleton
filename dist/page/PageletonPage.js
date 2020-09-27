@@ -83,6 +83,10 @@ var PageletonPage = (function () {
             });
         });
     };
+    PageletonPage.prototype.getPageName = function () {
+        var _a;
+        return (_a = this.currentPage) === null || _a === void 0 ? void 0 : _a.name;
+    };
     PageletonPage.prototype.close = function () {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {

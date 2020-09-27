@@ -41,11 +41,15 @@ export class PageletonPage {
         return await this.pageDriver.getTitle();
     }
 
+    getPageName(): string | undefined {
+        return this.currentPage?.name;
+    }
+
     async close(): Promise<void> {
         await this.pageDriver.close();
     }
 
-    async waitForNavigation(timeout: number): Promise<void> {
+    async waitForNavigation(timeout?: number): Promise<void> {
         await this.pageDriver.waitForNavigation(timeout);
     }
 

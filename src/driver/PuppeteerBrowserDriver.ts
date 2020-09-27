@@ -86,8 +86,8 @@ class PuppeteerPageDriver implements PageDriver {
         await this.page.close();
     }
 
-    async waitForNavigation(timeout: number): Promise<void> {
-        await this.page.waitForNavigation({ timeout })
+    async waitForNavigation(timeout?: number): Promise<void> {
+        await this.page.waitForNavigation({ timeout: timeout || 0 })
     }
 
     async getElement(routes: ElementRoute[]): Promise<ElementDriver | undefined> {
