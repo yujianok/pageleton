@@ -1,7 +1,7 @@
 import { BrowserDriver } from "../driver";
 import { PageSpecFactory } from "../spec";
 import { PageletonPage } from "./PageletonPage";
-export default class PageletonBrowser {
+export declare class PageletonBrowser {
     private readonly browserDriver;
     private readonly pageSpecFactory;
     constructor(browserDriver: BrowserDriver, pageSpecFactory: PageSpecFactory);

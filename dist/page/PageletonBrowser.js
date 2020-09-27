@@ -36,6 +36,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.PageletonBrowser = void 0;
 var PageletonPage_1 = require("./PageletonPage");
 var PageletonBrowser = (function () {
     function PageletonBrowser(browserDriver, pageSpecFactory) {
@@ -69,4 +70,4 @@ var PageletonBrowser = (function () {
     };
     return PageletonBrowser;
 }());
-exports.default = PageletonBrowser;
+exports.PageletonBrowser = PageletonBrowser;

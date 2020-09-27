@@ -1,6 +1,6 @@
 import { BrowserDriverType } from './driver';
 import { PageCompnentType } from './component';
-import PageletonBrowser from './page/PageletonBrowser';
+import { PageletonBrowser } from './page';
 export * from './component';
 export * from './page';
 export * from './driver';

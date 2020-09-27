@@ -5,7 +5,7 @@ import { ComponentSpec } from "../spec";
 
 type ComponentCommand = (pageComponent: PageComponent, elementDriver: ElementDriver, pageDriver: PageDriver) => Promise<any>
 
-class PageletonComponent {
+export class PageletonComponent {
     private readonly componentSpec: ComponentSpec;
     private readonly pageDriver: PageDriver;
 
@@ -56,5 +56,3 @@ class PageletonComponent {
 
 
 }
-
-export default PageletonComponent;

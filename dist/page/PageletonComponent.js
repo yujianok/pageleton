@@ -36,6 +36,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.PageletonComponent = void 0;
 var component_1 = require("../component");
 var ComponentSpecService_1 = require("../service/ComponentSpecService");
 var PageletonComponent = (function () {
@@ -144,4 +145,4 @@ var PageletonComponent = (function () {
     };
     return PageletonComponent;
 }());
-exports.default = PageletonComponent;
+exports.PageletonComponent = PageletonComponent;

@@ -45,15 +45,12 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Pageleton = void 0;
 var driver_1 = require("./driver");
 var component_1 = require("./component");
 var spec_1 = require("./spec");
-var PageletonBrowser_1 = __importDefault(require("./page/PageletonBrowser"));
+var page_1 = require("./page");
 __exportStar(require("./component"), exports);
 __exportStar(require("./page"), exports);
 __exportStar(require("./driver"), exports);
@@ -74,7 +71,7 @@ exports.Pageleton = function (config) {
                         return [4, browserDriver.launch(config)];
                     case 2:
                         _a.sent();
-                        return [2, new PageletonBrowser_1.default(browserDriver, pageletonPageFactory)];
+                        return [2, new page_1.PageletonBrowser(browserDriver, pageletonPageFactory)];
                 }
             });
         }); }

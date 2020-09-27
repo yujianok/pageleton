@@ -1,6 +1,6 @@
 import { PageDriver } from "../driver";
 import { PageSpec, PageSpecFactory } from "../spec";
-import PageletonComponent from './PageletonComponent';
+import { PageletonComponent } from './PageletonComponent';
 
 export class PageletonPage {
     private readonly pageDriver: PageDriver;
@@ -16,7 +16,7 @@ export class PageletonPage {
         if (!this.currentPage) {
             throw new Error('No page has bean opened yet.')
         }
-        
+
         const componentSpec = this.currentPage.getComponent(routes);
 
         return new PageletonComponent(componentSpec, this.pageDriver);

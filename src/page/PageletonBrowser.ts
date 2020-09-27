@@ -2,7 +2,7 @@ import { BrowserDriver } from "../driver";
 import { PageSpecFactory } from "../spec";
 import { PageletonPage } from "./PageletonPage";
 
-export default class PageletonBrowser {
+export class PageletonBrowser {
     private readonly browserDriver: BrowserDriver;
     private readonly pageSpecFactory: PageSpecFactory;
 

@@ -1,6 +1,6 @@
 import { PageDriver } from "../driver";
 import { ComponentSpec } from "../spec";
-declare class PageletonComponent {
+export declare class PageletonComponent {
     private readonly componentSpec;
     private readonly pageDriver;
     constructor(componentSpec: ComponentSpec, pageDriver: PageDriver);
@@ -12,4 +12,3 @@ declare class PageletonComponent {
     getText(): Promise<string>;
     private execute;
 }
-export default PageletonComponent;
