@@ -292,24 +292,16 @@ var PuppeteerBrowserDriver = (function () {
     PuppeteerBrowserDriver.prototype.newPage = function () {
         var _a, _b;
         return __awaiter(this, void 0, void 0, function () {
-            var pages, page, _c;
-            return __generator(this, function (_d) {
-                switch (_d.label) {
+            var page;
+            return __generator(this, function (_c) {
+                switch (_c.label) {
                     case 0:
                         if (!this.browser) {
                             throw new Error('Browser has not been launched.');
                         }
-                        return [4, this.browser.pages()];
-                    case 1:
-                        pages = _d.sent();
-                        _c = pages.find(function (p) { return !p.url() || p.url() === 'about:blank'; });
-                        if (_c) return [3, 3];
                         return [4, this.browser.newPage()];
-                    case 2:
-                        _c = (_d.sent());
-                        _d.label = 3;
-                    case 3:
-                        page = _c;
+                    case 1:
+                        page = _c.sent();
                         if (((_a = this.options) === null || _a === void 0 ? void 0 : _a.timeout) !== undefined) {
                             page.setDefaultTimeout(this.options.timeout);
                         }

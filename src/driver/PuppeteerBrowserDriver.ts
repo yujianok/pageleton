@@ -154,8 +154,7 @@ export class PuppeteerBrowserDriver implements BrowserDriver {
             throw new Error('Browser has not been launched.');
         }
 
-        const pages = await this.browser.pages();
-        const page = pages.find(p => !p.url() || p.url() === 'about:blank') || await this.browser.newPage();
+        const page = await this.browser.newPage();
 
         if (this.options?.timeout !== undefined) {
             page.setDefaultTimeout(this.options.timeout);
