@@ -12,12 +12,12 @@ export class PageletonPage {
         this.pageSpecFactory = pageSpecFactory;
     }
 
-    getComponent(routes: string[]): PageletonComponent {
+    getComponent(...routes: string[]): PageletonComponent {
         if (!this.currentPage) {
             throw new Error('No page has bean opened yet.')
         }
 
-        const componentSpec = this.currentPage.getComponent(routes);
+        const componentSpec = this.currentPage.getComponent(...routes);
 
         return new PageletonComponent(componentSpec, this.pageDriver);
     }

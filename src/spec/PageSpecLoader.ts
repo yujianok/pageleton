@@ -6,10 +6,10 @@ export type PageSpec = {
     readonly name: string;
     readonly url: string;
     readonly rootComponents: ComponentSpec[];
-    readonly getComponent: (routes: string[]) => ComponentSpec;
+    readonly getComponent: (...routes: string[]) => ComponentSpec;
 }
 
-const getComponent = function (this: PageSpec, routes: string[]) {
+const getComponent = function (this: PageSpec, ...routes: string[]) {
     let current: ComponentSpec | undefined
     let children: readonly ComponentSpec[] = this.rootComponents;
 

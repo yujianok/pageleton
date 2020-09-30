@@ -9,7 +9,7 @@ describe('Test PageSpecParser', () => {
         expect(page.url).equal('/test/resources/html/example-page.html');
         expect(page.rootComponents.length).equal(3);
 
-        const Header = page.getComponent(['Header']);
+        const Header = page.getComponent('Header');
         assert.exists(Header);
         assert.notExists(Header.parent);
         expect(Header.name).equal('Header');
@@ -17,7 +17,7 @@ describe('Test PageSpecParser', () => {
         assert.notExists(Header.xpath);
         expect(Header.children.length).equal(4);
 
-        const Title = page.getComponent(['Header', 'My To Do List']);
+        const Title = page.getComponent('Header', 'My To Do List');
         assert.exists(Title);
         expect(Title.parent?.name).equal('Header');
         expect(Title.name).equal('My To Do List');
@@ -25,7 +25,7 @@ describe('Test PageSpecParser', () => {
         assert.notExists(Title.xpath);
         expect(Title.children.length).equal(0);
 
-        const Input = page.getComponent(['Header', 'My Input']);
+        const Input = page.getComponent('Header', 'My Input');
         assert.exists(Input);
         expect(Input.parent?.name).equal('Header');
         expect(Input.name).equal('My Input');
@@ -33,7 +33,7 @@ describe('Test PageSpecParser', () => {
         assert.notExists(Input.xpath);
         expect(Input.children.length).equal(0);
 
-        const Button = page.getComponent(['Header', 'Add']);
+        const Button = page.getComponent('Header', 'Add');
         assert.exists(Button);
         expect(Button.parent?.name).equal('Header');
         expect(Button.name).equal('Add');
@@ -41,7 +41,7 @@ describe('Test PageSpecParser', () => {
         assert.notExists(Button.xpath);
         expect(Button.children.length).equal(0);
 
-        const Table = page.getComponent(['Todo List']);
+        const Table = page.getComponent('Todo List');
         assert.exists(Table);
         expect(Table.name).equal('Todo List');
         expect(Table.selector).equal('#myUL');
@@ -57,7 +57,7 @@ describe('Test PageSpecParser', () => {
             assert.notExists(Button.xpath);
             expect(Table.children.length).equal(10);
 
-            const Index = page.getComponent(['Todo List', `Item-${i + 1}`, 'Item Index']);
+            const Index = page.getComponent('Todo List', `Item-${i + 1}`, 'Item Index');
             assert.exists(Index);
             expect(Index.parent?.name).equal(`Item-${i + 1}`);
             expect(Index.name).equal('Item Index');
@@ -65,7 +65,7 @@ describe('Test PageSpecParser', () => {
             assert.notExists(Index.selector);
             expect(Index.children.length).equal(0);
 
-            const Title = page.getComponent(['Todo List', `Item-${i + 1}`, 'Item Title']);
+            const Title = page.getComponent('Todo List', `Item-${i + 1}`, 'Item Title');
             assert.exists(Title);
             expect(Title.parent?.name).equal(`Item-${i + 1}`);
             expect(Title.name).equal('Item Title');
@@ -73,7 +73,7 @@ describe('Test PageSpecParser', () => {
             assert.notExists(Title.selector);
             expect(Title.children.length).equal(0);
 
-            const Icon = page.getComponent(['Todo List', `Item-${i + 1}`, 'Delete']);
+            const Icon = page.getComponent('Todo List', `Item-${i + 1}`, 'Delete');
             assert.exists(Icon);
             expect(Icon.parent?.name).equal(`Item-${i + 1}`);
             expect(Icon.name).equal('Delete');
