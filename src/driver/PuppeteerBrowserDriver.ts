@@ -1,6 +1,6 @@
 import puppeteer, { Browser, Page, ElementHandle } from 'puppeteer-core';
 import { BrowserDriver, LaunchOptions } from "./BrowserDriver";
-import { ElementRoute, NavigationListener, PageDriver } from './PageDriver';
+import { ElementNode, ElementRoute, NavigationListener, PageDriver } from './PageDriver';
 import { ElementDriver } from './ElementDriver';
 
 class PuppeteerElementDriver implements ElementDriver {
@@ -125,12 +125,76 @@ class PuppeteerPageDriver implements PageDriver {
         return elementHandle && new PuppeteerElementDriver(elementHandle);
     }
 
+    async identifyComponents(rootNodes: ElementNode[]): Promise<void> {
+        await this.page.evaluateHandle((rootNodesJson) => {
+            const rootNodes = JSON.parse(rootNodesJson) as ElementNode[];
+
+            const tempQueue: { parent?: Element, node: ElementNode, zIndex: number }[] = [];
+            tempQueue.push(...rootNodes.map(node => ({ node, zIndex: 100 })));
+            let current = tempQueue.pop();
+            while (current) {
+                const currentNode = current.node;
+                const { name, selector, xpath, children } = currentNode;
+                let element: Element | null = current.parent || null;
+                if (selector) {
+                    element = (element || document).querySelector(selector);
+                }
+
+                if (xpath) {
+                    element = document.evaluate(xpath, element || document).iterateNext() as Element;
+                }
+
+                if (!selector && !xpath) {
+                    element = document.evaluate(`(.//*[normalize-space()='${name}'])[last()]`, element || document).iterateNext() as Element;
+                }
+
+                if (element) {
+                    const ancestor = document.createElement('span');
+                    ancestor.setAttribute('style', `position: relative;height: 0px;width: 0px;z-index: ${current.zIndex};`);
+                    element.parentElement?.append(ancestor);
+
+                    const elRect = element.getBoundingClientRect();
+                    const actRect = ancestor.getBoundingClientRect()
+
+                    const cover = document.createElement('div');
+                    cover.textContent = name;
+                    const coverStyle = `position: absolute;
+                                        opacity: 0;
+                                        top: 0px;
+                                        top: ${elRect.top - actRect.top}px;
+                                        left: ${elRect.left - actRect.left}px;
+                                        height: ${elRect.height}px;
+                                        width: ${elRect.width}px;
+                                        z-index: ${current.zIndex};
+                                        border: solid 1px red;
+                                        color: red;
+                                        overflow: visible;
+                                        background-color: white;`;
+                    cover.setAttribute('style', coverStyle);
+                    cover.addEventListener('mouseover', () => {
+                        cover.setAttribute('style', coverStyle + 'opacity: 0.8;');
+                    });
+                    cover.addEventListener('mouseleave', () => {
+                        cover.setAttribute('style', coverStyle);
+                    });
+
+                    ancestor.append(cover);
+                    tempQueue.push(...children.map(node => ({ node, parent: element || undefined, zIndex: current!.zIndex + 100 })))
+                }
+
+                current = tempQueue.pop();
+            }
+
+        }, JSON.stringify(rootNodes));
+    }
+
     onNavigated(listener: NavigationListener): void {
         this.page.on('framenavigated', (frame) => {
             const url = frame.url();
             listener(url);
         })
     }
+
 }
 
 export class PuppeteerBrowserDriver implements BrowserDriver {

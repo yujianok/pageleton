@@ -2,7 +2,7 @@ import { expect } from 'chai';
 import fs from 'fs';
 import os from 'os';
 import path from 'path';
-import { getAllFiles, readFileAsString } from '../../src/service';
+import { getAllFiles, readFileAsString } from '../../src/service/FileService';
 
 describe('Test FileUtils', () => {
 

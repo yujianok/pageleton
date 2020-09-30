@@ -1,5 +1,5 @@
 import { assert, expect } from "chai";
-import { PageSpecFactory } from "../../src/spec";
+import PageSpecFactory from "../../src/spec/PageSpecFactory";
 
 describe('Test PageSpecFactory', () => {
 

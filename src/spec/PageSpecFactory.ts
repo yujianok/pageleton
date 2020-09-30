@@ -1,4 +1,4 @@
-import { getAllFiles } from "../service";
+import { getAllFiles } from "../service/FileService";
 import pageSpecLoader, { PageSpec } from "./PageSpecLoader";
 
 class PageSpecFactory {

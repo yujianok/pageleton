@@ -1,5 +1,7 @@
 import { PageDriver } from "../driver";
-import { PageSpec, PageSpecFactory } from "../spec";
+import { getRootElementNodes } from "../service/ComponentSpecService";
+import { PageSpec } from "../spec";
+import PageSpecFactory from "../spec/PageSpecFactory";
 import { PageletonComponent } from './PageletonComponent';
 
 export class PageletonPage {
@@ -53,4 +55,10 @@ export class PageletonPage {
         await this.pageDriver.waitForNavigation(timeout);
     }
 
+    async identifyComponents(): Promise<void> {
+        if (this.currentPage) {
+            const rootComponents = getRootElementNodes(this.currentPage.rootComponents)
+            await this.pageDriver.identifyComponents(rootComponents);
+        }
+    }
 }

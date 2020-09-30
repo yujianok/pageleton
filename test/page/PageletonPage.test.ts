@@ -1,23 +1,23 @@
 import { assert, expect } from "chai";
 import { Pageleton } from "../../src";
 
+
 describe('Test PageletonPage', () => {
+    const pageleton = Pageleton({
+        specPaths: ['./test/resources/pages/*-page.xml'],
+        headless: false,
+        baseUrl: 'file://' + process.cwd(),
+        timeout: 0,
+        viewport: {
+            width: 1440,
+            height: 900,
+        },
+        executablePath: '/usr/bin/google-chrome-stable',
+        args: ['--no-sandbox', '--disable-setuid-sandbox']
+    });
 
     it('test PageletonPage functions', async () => {
-
-        const browser = await Pageleton({
-            specPaths: ['./test/resources/pages/*-page.xml'],
-            headless: false,
-            baseUrl: 'file://' + process.cwd(),
-            timeout: 0,
-            viewport: {
-                width: 1440,
-                height: 900,
-            },
-            executablePath: '/usr/bin/google-chrome-stable',
-            args: ['--no-sandbox', '--disable-setuid-sandbox']
-        }).launchBrowser();
-
+        const browser = await pageleton.launchBrowser();
         try {
             const testPage = await browser.newPage();
             await testPage.open('Pageleton');
@@ -79,7 +79,21 @@ describe('Test PageletonPage', () => {
 
             await testPage.close();
         } finally {
-            await browser.shutdown()
+            await browser.shutdown();
+        }
+    })
+
+    it('test identifyComponents', async () => {
+        const browser = await pageleton.launchBrowser();
+        try {
+            const testPage = await browser.newPage();
+            await testPage.open('Pageleton');
+            await testPage.identifyComponents();
+
+            await testPage.getComponent('Todo List', 'Item-1').mouseOver();
+            await testPage.close();
+        } finally {
+            await browser.shutdown();
         }
     })
 

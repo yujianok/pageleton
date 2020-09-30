@@ -6,6 +6,7 @@ import { ComponentSpec } from "../spec";
 type ComponentCommand = (pageComponent: PageComponent, elementDriver: ElementDriver, pageDriver: PageDriver) => Promise<any>
 
 export class PageletonComponent {
+
     private readonly componentSpec: ComponentSpec;
     private readonly pageDriver: PageDriver;
 
@@ -31,7 +32,7 @@ export class PageletonComponent {
         const elementRoutes = getElementRoutes(this.componentSpec);
         const elementDriver = await this.pageDriver.getElement(elementRoutes);
 
-        return elementDriver ?  await pageComponent.isPresent(elementDriver, this.pageDriver, this.componentSpec) : false;
+        return elementDriver ? await pageComponent.isPresent(elementDriver, this.pageDriver, this.componentSpec) : false;
     }
 
     async getAttribute(name: string): Promise<string> {
@@ -40,6 +41,10 @@ export class PageletonComponent {
 
     async getText(): Promise<string> {
         return await this.execute((pageComponent, elementDriver, pageDriver) => pageComponent.getText(elementDriver, pageDriver, this.componentSpec));
+    }
+
+    async mouseOver(): Promise<void> {
+        return await this.execute((pageComponent, elementDriver, pageDriver) => pageComponent.mouseOver(elementDriver, pageDriver, this.componentSpec));
     }
 
     private async execute(command: ComponentCommand) {

@@ -1,11 +1,12 @@
 import { BrowserDriverType, browserDriverFactory } from './driver';
 import { PageCompnentType, pageComponentTypeRegistry } from './component';
-import { PageSpecFactory } from './spec';
 import { PageletonBrowser } from './page';
+import PageSpecFactory from './spec/PageSpecFactory';
 
 export * from './component';
 export * from './page';
 export * from './driver';
+export * from './spec'
 
 const DEFAULT_PAGE_SPEC_PATHS = ['./pages/*.xml'];
 

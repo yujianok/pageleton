@@ -1,6 +1,6 @@
 import path from 'path';
 import xml2js from 'xml2js';
-import { readFileAsString } from '../service';
+import { readFileAsString } from '../service/FileService';
 
 export type PageSpec = {
     readonly name: string;
