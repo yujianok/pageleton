@@ -39,7 +39,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var service_1 = require("../service");
+var FileService_1 = require("../service/FileService");
 var PageSpecLoader_1 = __importDefault(require("./PageSpecLoader"));
 var PageSpecFactory = (function () {
     function PageSpecFactory(specPaths, specEncoding) {
@@ -60,7 +60,7 @@ var PageSpecFactory = (function () {
                     case 1:
                         if (!(_i < _a.length)) return [3, 5];
                         specPath = _a[_i];
-                        return [4, service_1.getAllFiles(specPath)];
+                        return [4, FileService_1.getAllFiles(specPath)];
                     case 2:
                         files = _c.sent();
                         return [4, Promise.all(files.map(function (file) { return PageSpecLoader_1.default.loadPageSpec(file, instance.specEncoding); }))];

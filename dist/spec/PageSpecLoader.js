@@ -59,8 +59,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var path_1 = __importDefault(require("path"));
 var xml2js_1 = __importDefault(require("xml2js"));
-var service_1 = require("../service");
-var getComponent = function (routes) {
+var FileService_1 = require("../service/FileService");
+var getComponent = function () {
+    var routes = [];
+    for (var _i = 0; _i < arguments.length; _i++) {
+        routes[_i] = arguments[_i];
+    }
     var current;
     var children = this.rootComponents;
     var _loop_1 = function (route) {
@@ -70,8 +74,8 @@ var getComponent = function (routes) {
         }
         children = current.children;
     };
-    for (var _i = 0, routes_1 = routes; _i < routes_1.length; _i++) {
-        var route = routes_1[_i];
+    for (var _a = 0, routes_1 = routes; _a < routes_1.length; _a++) {
+        var route = routes_1[_a];
         _loop_1(route);
     }
     return current;
@@ -101,7 +105,7 @@ var PageSpecLoader = (function () {
             var specContent, json;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4, service_1.readFileAsString(inculdePath, specEncoding)];
+                    case 0: return [4, FileService_1.readFileAsString(inculdePath, specEncoding)];
                     case 1:
                         specContent = _a.sent();
                         return [4, parseXmlToJson(specContent)];
@@ -207,7 +211,7 @@ var PageSpecLoader = (function () {
             var specContent, json, _a, $, others, rootComponents;
             return __generator(this, function (_b) {
                 switch (_b.label) {
-                    case 0: return [4, service_1.readFileAsString(specPath, specEncoding)];
+                    case 0: return [4, FileService_1.readFileAsString(specPath, specEncoding)];
                     case 1:
                         specContent = _b.sent();
                         return [4, parseXmlToJson(specContent)];

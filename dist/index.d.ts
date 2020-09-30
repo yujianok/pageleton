@@ -4,6 +4,7 @@ import { PageletonBrowser } from './page';
 export * from './component';
 export * from './page';
 export * from './driver';
+export * from './spec';
 export declare type PageletonConfig = {
     specPaths?: string[];
     specEncoding?: string;

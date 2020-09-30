@@ -10,5 +10,6 @@ export declare class PageletonComponent {
     isPresent(): Promise<boolean>;
     getAttribute(name: string): Promise<string>;
     getText(): Promise<string>;
+    mouseOver(): Promise<void>;
     private execute;
 }

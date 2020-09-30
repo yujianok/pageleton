@@ -45,15 +45,19 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Pageleton = void 0;
 var driver_1 = require("./driver");
 var component_1 = require("./component");
-var spec_1 = require("./spec");
 var page_1 = require("./page");
+var PageSpecFactory_1 = __importDefault(require("./spec/PageSpecFactory"));
 __exportStar(require("./component"), exports);
 __exportStar(require("./page"), exports);
 __exportStar(require("./driver"), exports);
+__exportStar(require("./spec"), exports);
 var DEFAULT_PAGE_SPEC_PATHS = ['./pages/*.xml'];
 exports.Pageleton = function (config) {
     if (config.customComponentTypes) {
@@ -64,7 +68,7 @@ exports.Pageleton = function (config) {
             var pageletonPageFactory, browserDriver;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4, spec_1.PageSpecFactory.init(config.specPaths || DEFAULT_PAGE_SPEC_PATHS, config.specEncoding)];
+                    case 0: return [4, PageSpecFactory_1.default.init(config.specPaths || DEFAULT_PAGE_SPEC_PATHS, config.specEncoding)];
                     case 1:
                         pageletonPageFactory = _a.sent();
                         browserDriver = driver_1.browserDriverFactory.getBrowserDriver(config.driverType);

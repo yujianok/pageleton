@@ -2,7 +2,7 @@ export declare type PageSpec = {
     readonly name: string;
     readonly url: string;
     readonly rootComponents: ComponentSpec[];
-    readonly getComponent: (routes: string[]) => ComponentSpec;
+    readonly getComponent: (...routes: string[]) => ComponentSpec;
 };
 export declare type ComponentSpec = {
     readonly name: string;

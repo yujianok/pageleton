@@ -37,17 +37,23 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.PageletonPage = void 0;
+var ComponentSpecService_1 = require("../service/ComponentSpecService");
 var PageletonComponent_1 = require("./PageletonComponent");
 var PageletonPage = (function () {
     function PageletonPage(pageDriver, pageSpecFactory) {
         this.pageDriver = pageDriver;
         this.pageSpecFactory = pageSpecFactory;
     }
-    PageletonPage.prototype.getComponent = function (routes) {
+    PageletonPage.prototype.getComponent = function () {
+        var _a;
+        var routes = [];
+        for (var _i = 0; _i < arguments.length; _i++) {
+            routes[_i] = arguments[_i];
+        }
         if (!this.currentPage) {
             throw new Error('No page has bean opened yet.');
         }
-        var componentSpec = this.currentPage.getComponent(routes);
+        var componentSpec = (_a = this.currentPage).getComponent.apply(_a, routes);
         return new PageletonComponent_1.PageletonComponent(componentSpec, this.pageDriver);
     };
     PageletonPage.prototype.open = function (name) {
@@ -107,6 +113,23 @@ var PageletonPage = (function () {
                     case 1:
                         _a.sent();
                         return [2];
+                }
+            });
+        });
+    };
+    PageletonPage.prototype.identifyComponents = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            var rootComponents;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        if (!this.currentPage) return [3, 2];
+                        rootComponents = ComponentSpecService_1.getRootElementNodes(this.currentPage.rootComponents);
+                        return [4, this.pageDriver.identifyComponents(rootComponents)];
+                    case 1:
+                        _a.sent();
+                        _a.label = 2;
+                    case 2: return [2];
                 }
             });
         });

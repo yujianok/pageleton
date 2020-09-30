@@ -123,6 +123,17 @@ var PageletonComponent = (function () {
             });
         });
     };
+    PageletonComponent.prototype.mouseOver = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            var _this = this;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4, this.execute(function (pageComponent, elementDriver, pageDriver) { return pageComponent.mouseOver(elementDriver, pageDriver, _this.componentSpec); })];
+                    case 1: return [2, _a.sent()];
+                }
+            });
+        });
+    };
     PageletonComponent.prototype.execute = function (command) {
         return __awaiter(this, void 0, void 0, function () {
             var pageComponent, elementRoutes, elementDriver;
