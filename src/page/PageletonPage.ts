@@ -61,4 +61,8 @@ export class PageletonPage {
             await this.pageDriver.identifyComponents(rootComponents);
         }
     }
+
+    async getScreenShot(path: string, fullPage?: boolean): Promise<void> {
+        await this.pageDriver.getScreenShot(path, fullPage);
+    }
 }

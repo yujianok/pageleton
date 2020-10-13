@@ -25,6 +25,7 @@ describe('Test PageCompoent', () => {
         waitForNavigation: (timeout: number) => Promise.resolve(),
         onNavigated: (listener: NavigationListener) => { },
         identifyComponents: (roots) => Promise.resolve(),
+        getScreenShot: () => Promise.resolve(),
     };
 
     class TestComponent extends AbstractComponent { };

@@ -1,19 +1,20 @@
 import { assert, expect } from "chai";
 import { Pageleton } from "../../src";
+import fs from 'fs';
 
 
 describe('Test PageletonPage', () => {
     const pageleton = Pageleton({
         specPaths: ['./test/resources/pages/*-page.xml'],
-        headless: false,
+        headless: true,
         baseUrl: 'file://' + process.cwd(),
         timeout: 0,
         viewport: {
             width: 1440,
             height: 900,
         },
-        executablePath: '/usr/bin/google-chrome-stable',
-        args: ['--no-sandbox', '--disable-setuid-sandbox']
+        executablePath: 'google-chrome',
+        args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-gpu']
     });
 
     it('test PageletonPage functions', async () => {
@@ -91,6 +92,25 @@ describe('Test PageletonPage', () => {
             await testPage.identifyComponents();
 
             await testPage.getComponent('Todo List', 'Item-1').mouseOver();
+            await testPage.close();
+        } finally {
+            await browser.shutdown();
+        }
+    })
+
+    it('test getScreenShot', async () => {
+        const browser = await pageleton.launchBrowser();
+        try {
+            const testPage = await browser.newPage();
+            await testPage.open('Pageleton');
+            const filePath = './test/tmp/test-screenshot.png';
+            if (fs.existsSync(filePath)) {
+                fs.unlinkSync(filePath);
+            }
+            await testPage.getScreenShot('./test/tmp/test-screenshot.png');
+            const exist = fs.existsSync(filePath);
+            expect(exist).equal(true);
+
             await testPage.close();
         } finally {
             await browser.shutdown();

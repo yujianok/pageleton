@@ -90,6 +90,10 @@ class PuppeteerPageDriver implements PageDriver {
         await this.page.waitForNavigation({ timeout: timeout || 0 })
     }
 
+    async getScreenShot(path: string, fullPage?: boolean): Promise<void> {
+        await this.page.screenshot({ path, fullPage });
+    }
+
     async getElement(routes: ElementRoute[]): Promise<ElementDriver | undefined> {
 
         const jsHandle = await this.page.evaluateHandle((routesJson) => {
@@ -194,7 +198,6 @@ class PuppeteerPageDriver implements PageDriver {
             listener(url);
         })
     }
-
 }
 
 export class PuppeteerBrowserDriver implements BrowserDriver {
