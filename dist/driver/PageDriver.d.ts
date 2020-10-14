@@ -19,4 +19,5 @@ export interface PageDriver {
     getElement(routes: ElementRoute[]): Promise<ElementDriver | undefined>;
     onNavigated(listener: NavigationListener): void;
     identifyComponents(rootNodes: ElementNode[]): Promise<void>;
+    getScreenShot(path: string, fullPage?: boolean): Promise<void>;
 }

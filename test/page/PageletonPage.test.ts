@@ -14,6 +14,7 @@ describe('Test PageletonPage', () => {
             height: 900,
         },
         executablePath: 'google-chrome',
+        // args: ['--no-sandbox', '--disable-setuid-sandbox',  '--use-gl=swiftshader']
         args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-gpu']
     });
 

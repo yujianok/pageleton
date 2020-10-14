@@ -134,6 +134,18 @@ var PageletonPage = (function () {
             });
         });
     };
+    PageletonPage.prototype.getScreenShot = function (path, fullPage) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4, this.pageDriver.getScreenShot(path, fullPage)];
+                    case 1:
+                        _a.sent();
+                        return [2];
+                }
+            });
+        });
+    };
     return PageletonPage;
 }());
 exports.PageletonPage = PageletonPage;
