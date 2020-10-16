@@ -15,3 +15,4 @@ var PageComponentTypeRegistry_1 = require("./PageComponentTypeRegistry");
 Object.defineProperty(exports, "pageComponentTypeRegistry", { enumerable: true, get: function () { return PageComponentTypeRegistry_1.default; } });
 __exportStar(require("./PageComponent"), exports);
 __exportStar(require("./AbstractComponent"), exports);
+//# sourceMappingURL=index.js.map

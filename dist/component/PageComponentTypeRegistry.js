@@ -14,3 +14,4 @@ var PageComponentTypeRegistry = (function () {
     return PageComponentTypeRegistry;
 }());
 exports.default = new PageComponentTypeRegistry();
+//# sourceMappingURL=PageComponentTypeRegistry.js.map

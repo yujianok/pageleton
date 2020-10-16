@@ -81,3 +81,4 @@ exports.Pageleton = function (config) {
         }); }
     };
 };
+//# sourceMappingURL=index.js.map

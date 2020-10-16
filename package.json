@@ -9,7 +9,7 @@
   ],
   "scripts": {
     "test": "mocha --timeout 60000 -r ts-node/register test/**/*.test.ts",
-    "build": "tsc"
+    "build": "tsc --sourceMap"
   },
   "author": "Yu Jian",
   "license": "ISC",

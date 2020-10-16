@@ -179,3 +179,4 @@ var TableField = (function (_super) {
     return TableField;
 }(AbstractComponent_1.AbstractComponent));
 PageComponentTypeRegistry_1.default.registerComponentType(TableField);
+//# sourceMappingURL=DefaultPageComponents.js.map
