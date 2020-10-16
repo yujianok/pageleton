@@ -117,7 +117,7 @@ var PageletonPage = (function () {
             });
         });
     };
-    PageletonPage.prototype.identifyComponents = function () {
+    PageletonPage.prototype.checkComponents = function () {
         return __awaiter(this, void 0, void 0, function () {
             var rootComponents;
             return __generator(this, function (_a) {
@@ -125,11 +125,9 @@ var PageletonPage = (function () {
                     case 0:
                         if (!this.currentPage) return [3, 2];
                         rootComponents = ComponentSpecService_1.getRootElementNodes(this.currentPage.rootComponents);
-                        return [4, this.pageDriver.identifyComponents(rootComponents)];
-                    case 1:
-                        _a.sent();
-                        _a.label = 2;
-                    case 2: return [2];
+                        return [4, this.pageDriver.checkComponents(rootComponents)];
+                    case 1: return [2, _a.sent()];
+                    case 2: return [2, false];
                 }
             });
         });

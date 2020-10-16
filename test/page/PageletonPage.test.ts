@@ -85,19 +85,17 @@ describe('Test PageletonPage', () => {
         }
     })
 
-    it('test identifyComponents', async () => {
-        const browser = await pageleton.launchBrowser();
-        try {
-            const testPage = await browser.newPage();
-            await testPage.open('Pageleton');
-            await testPage.identifyComponents();
-
-            await testPage.getComponent('Todo List', 'Item-1').mouseOver();
-            await testPage.close();
-        } finally {
-            await browser.shutdown();
-        }
-    })
+    // it('test checkComponents', async () => {
+    //     const browser = await pageleton.launchBrowser();
+    //     try {
+    //         const testPage = await browser.newPage();
+    //         await testPage.open('Pageleton');
+    //         const match = await testPage.checkComponents();
+    //         expect(match).equal(true);
+    //     } finally {
+    //         await browser.shutdown();
+    //     }
+    // })
 
     it('test getScreenShot', async () => {
         const browser = await pageleton.launchBrowser();

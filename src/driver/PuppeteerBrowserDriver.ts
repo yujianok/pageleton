@@ -129,13 +129,14 @@ class PuppeteerPageDriver implements PageDriver {
         return elementHandle && new PuppeteerElementDriver(elementHandle);
     }
 
-    async identifyComponents(rootNodes: ElementNode[]): Promise<void> {
-        await this.page.evaluateHandle((rootNodesJson) => {
+    async checkComponents(rootNodes: ElementNode[]): Promise<boolean> {
+        const result = await this.page.evaluate((rootNodesJson) => {
             const rootNodes = JSON.parse(rootNodesJson) as ElementNode[];
 
             const tempQueue: { parent?: Element, node: ElementNode, zIndex: number }[] = [];
             tempQueue.push(...rootNodes.map(node => ({ node, zIndex: 100 })));
             let current = tempQueue.pop();
+            const indicatorEls: HTMLElement[] = [];
             while (current) {
                 const currentNode = current.node;
                 const { name, selector, xpath, children } = currentNode;
@@ -183,13 +184,41 @@ class PuppeteerPageDriver implements PageDriver {
                     });
 
                     ancestor.append(cover);
+                    indicatorEls.push(ancestor);
                     tempQueue.push(...children.map(node => ({ node, parent: element || undefined, zIndex: current!.zIndex + 100 })))
                 }
 
                 current = tempQueue.pop();
             }
 
+            return new Promise<boolean>((resolve) => {
+                const checkPannel = document.createElement('div');
+                checkPannel.setAttribute('style', 'position: fixed;bottom: 4px;left: 4px;z-index: 9999;border: solid 1px');
+
+                const matchButton = document.createElement('button');
+                matchButton.setAttribute('style', 'margin: 4px;height: 30px;width: 80px')
+                matchButton.innerHTML = 'Match';
+                matchButton.addEventListener('click', () => {
+                    indicatorEls.forEach(el => el.remove());
+                    resolve(true);
+                })
+                checkPannel.appendChild(matchButton);
+
+                const notMatchButton = document.createElement('button');
+                notMatchButton.setAttribute('style', 'margin: 4px;height: 30px;width: 120px;')
+                notMatchButton.innerHTML = 'Miss Match';
+                notMatchButton.addEventListener('click', () => {
+                    indicatorEls.forEach(el => el.remove());
+                    resolve(false);
+                })
+                checkPannel.appendChild(notMatchButton);
+
+                document.body.append(checkPannel);
+            });
+
         }, JSON.stringify(rootNodes));
+
+        return result;
     }
 
     onNavigated(listener: NavigationListener): void {

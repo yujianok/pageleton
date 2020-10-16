@@ -24,7 +24,7 @@ describe('Test PageCompoent', () => {
         getElement: (routes) => Promise.resolve(mockedElementAdapter),
         waitForNavigation: (timeout: number) => Promise.resolve(),
         onNavigated: (listener: NavigationListener) => { },
-        identifyComponents: (roots) => Promise.resolve(),
+        checkComponents: (roots) => Promise.resolve(true),
         getScreenShot: () => Promise.resolve(),
     };
 

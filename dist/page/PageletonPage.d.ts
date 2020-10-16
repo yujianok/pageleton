@@ -12,6 +12,6 @@ export declare class PageletonPage {
     getPageName(): string | undefined;
     close(): Promise<void>;
     waitForNavigation(timeout?: number): Promise<void>;
-    identifyComponents(): Promise<void>;
+    checkComponents(): Promise<boolean>;
     getScreenShot(path: string, fullPage?: boolean): Promise<void>;
 }

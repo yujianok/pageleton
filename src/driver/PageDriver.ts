@@ -22,6 +22,6 @@ export interface PageDriver {
     getTitle(): Promise<string>;
     getElement(routes: ElementRoute[]): Promise<ElementDriver | undefined>;
     onNavigated(listener: NavigationListener): void;
-    identifyComponents(rootNodes: ElementNode[]): Promise<void>;
+    checkComponents(rootNodes: ElementNode[]): Promise<boolean>;
     getScreenShot(path: string, fullPage?: boolean): Promise<void>;
 }

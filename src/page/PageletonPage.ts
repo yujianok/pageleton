@@ -55,10 +55,12 @@ export class PageletonPage {
         await this.pageDriver.waitForNavigation(timeout);
     }
 
-    async identifyComponents(): Promise<void> {
+    async checkComponents(): Promise<boolean> {
         if (this.currentPage) {
             const rootComponents = getRootElementNodes(this.currentPage.rootComponents)
-            await this.pageDriver.identifyComponents(rootComponents);
+            return await this.pageDriver.checkComponents(rootComponents);
+        } else {
+            return false;
         }
     }
 

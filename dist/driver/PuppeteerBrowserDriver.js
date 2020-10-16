@@ -258,16 +258,18 @@ var PuppeteerPageDriver = (function () {
             });
         });
     };
-    PuppeteerPageDriver.prototype.identifyComponents = function (rootNodes) {
+    PuppeteerPageDriver.prototype.checkComponents = function (rootNodes) {
         return __awaiter(this, void 0, void 0, function () {
+            var result;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4, this.page.evaluateHandle(function (rootNodesJson) {
+                    case 0: return [4, this.page.evaluate(function (rootNodesJson) {
                             var _a;
                             var rootNodes = JSON.parse(rootNodesJson);
                             var tempQueue = [];
                             tempQueue.push.apply(tempQueue, rootNodes.map(function (node) { return ({ node: node, zIndex: 100 }); }));
                             var current = tempQueue.pop();
+                            var indicatorEls = [];
                             var _loop_1 = function () {
                                 var currentNode = current.node;
                                 var name_2 = currentNode.name, selector = currentNode.selector, xpath = currentNode.xpath, children = currentNode.children;
@@ -298,6 +300,7 @@ var PuppeteerPageDriver = (function () {
                                         cover_1.setAttribute('style', coverStyle_1);
                                     });
                                     ancestor.append(cover_1);
+                                    indicatorEls.push(ancestor);
                                     tempQueue.push.apply(tempQueue, children.map(function (node) { return ({ node: node, parent: element || undefined, zIndex: current.zIndex + 100 }); }));
                                 }
                                 current = tempQueue.pop();
@@ -305,10 +308,31 @@ var PuppeteerPageDriver = (function () {
                             while (current) {
                                 _loop_1();
                             }
+                            return new Promise(function (resolve) {
+                                var checkPannel = document.createElement('div');
+                                checkPannel.setAttribute('style', 'position: fixed;bottom: 4px;left: 4px;z-index: 9999;border: solid 1px');
+                                var matchButton = document.createElement('button');
+                                matchButton.setAttribute('style', 'margin: 4px;height: 30px;width: 80px');
+                                matchButton.innerHTML = 'Match';
+                                matchButton.addEventListener('click', function () {
+                                    indicatorEls.forEach(function (el) { return el.remove(); });
+                                    resolve(true);
+                                });
+                                checkPannel.appendChild(matchButton);
+                                var notMatchButton = document.createElement('button');
+                                notMatchButton.setAttribute('style', 'margin: 4px;height: 30px;width: 120px;');
+                                notMatchButton.innerHTML = 'Miss Match';
+                                notMatchButton.addEventListener('click', function () {
+                                    indicatorEls.forEach(function (el) { return el.remove(); });
+                                    resolve(false);
+                                });
+                                checkPannel.appendChild(notMatchButton);
+                                document.body.append(checkPannel);
+                            });
                         }, JSON.stringify(rootNodes))];
                     case 1:
-                        _a.sent();
-                        return [2];
+                        result = _a.sent();
+                        return [2, result];
                 }
             });
         });
