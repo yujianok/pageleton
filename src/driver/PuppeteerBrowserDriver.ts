@@ -133,37 +133,38 @@ class PuppeteerPageDriver implements PageDriver {
         const result = await this.page.evaluate((rootNodesJson) => {
             const rootNodes = JSON.parse(rootNodesJson) as ElementNode[];
 
-            const tempQueue: { parent?: Element, node: ElementNode, zIndex: number }[] = [];
-            tempQueue.push(...rootNodes.map(node => ({ node, zIndex: 100 })));
-            let current = tempQueue.pop();
             const indicatorEls: HTMLElement[] = [];
-            while (current) {
-                const currentNode = current.node;
-                const { name, selector, xpath, children } = currentNode;
-                let element: Element | null = current.parent || null;
-                if (selector) {
-                    element = (element || document).querySelector(selector);
-                }
+            function identifyComponents() {
+                const tempQueue: { parent?: Element, node: ElementNode, zIndex: number }[] = [];
+                tempQueue.push(...rootNodes.map(node => ({ node, zIndex: 100 })));
+                let current = tempQueue.pop();
+                while (current) {
+                    const currentNode = current.node;
+                    const { name, selector, xpath, children } = currentNode;
+                    let element: Element | null = current.parent || null;
+                    if (selector) {
+                        element = (element || document).querySelector(selector);
+                    }
 
-                if (xpath) {
-                    element = document.evaluate(xpath, element || document).iterateNext() as Element;
-                }
+                    if (xpath) {
+                        element = document.evaluate(xpath, element || document).iterateNext() as Element;
+                    }
 
-                if (!selector && !xpath) {
-                    element = document.evaluate(`(.//*[normalize-space()='${name}'])[last()]`, element || document).iterateNext() as Element;
-                }
+                    if (!selector && !xpath) {
+                        element = document.evaluate(`(.//*[normalize-space()='${name}'])[last()]`, element || document).iterateNext() as Element;
+                    }
 
-                if (element) {
-                    const ancestor = document.createElement('span');
-                    ancestor.setAttribute('style', `position: relative;height: 0px;width: 0px;z-index: ${current.zIndex};`);
-                    element.parentElement?.append(ancestor);
+                    if (element) {
+                        const ancestor = document.createElement('span');
+                        ancestor.setAttribute('style', `position: relative;height: 0px;width: 0px;z-index: ${current.zIndex};`);
+                        element.parentElement?.append(ancestor);
 
-                    const elRect = element.getBoundingClientRect();
-                    const actRect = ancestor.getBoundingClientRect()
+                        const elRect = element.getBoundingClientRect();
+                        const actRect = ancestor.getBoundingClientRect()
 
-                    const cover = document.createElement('div');
-                    cover.textContent = name;
-                    const coverStyle = `position: absolute;
+                        const cover = document.createElement('div');
+                        cover.textContent = name;
+                        const coverStyle = `position: absolute;
                                         opacity: 0;
                                         top: 0px;
                                         top: ${elRect.top - actRect.top}px;
@@ -175,25 +176,37 @@ class PuppeteerPageDriver implements PageDriver {
                                         color: red;
                                         overflow: visible;
                                         background-color: white;`;
-                    cover.setAttribute('style', coverStyle);
-                    cover.addEventListener('mouseover', () => {
-                        cover.setAttribute('style', coverStyle + 'opacity: 0.8;');
-                    });
-                    cover.addEventListener('mouseleave', () => {
                         cover.setAttribute('style', coverStyle);
-                    });
+                        cover.addEventListener('mouseover', () => {
+                            cover.setAttribute('style', coverStyle + 'opacity: 0.8;');
+                        });
+                        cover.addEventListener('mouseleave', () => {
+                            cover.setAttribute('style', coverStyle);
+                        });
 
-                    ancestor.append(cover);
-                    indicatorEls.push(ancestor);
-                    tempQueue.push(...children.map(node => ({ node, parent: element || undefined, zIndex: current!.zIndex + 100 })))
+                        ancestor.append(cover);
+                        indicatorEls.push(ancestor);
+                        tempQueue.push(...children.map(node => ({ node, parent: element || undefined, zIndex: current!.zIndex + 100 })))
+                    }
+
+                    current = tempQueue.pop();
                 }
+            };
 
-                current = tempQueue.pop();
-            }
-
+            identifyComponents();
+            
             return new Promise<boolean>((resolve) => {
                 const checkPannel = document.createElement('div');
                 checkPannel.setAttribute('style', 'position: fixed;bottom: 4px;left: 4px;z-index: 9999;border: solid 1px');
+
+                const identifyButton = document.createElement('button');
+                identifyButton.setAttribute('style', 'margin: 4px;height: 30px;width: 100px')
+                identifyButton.innerHTML = 'Reidentify';
+                identifyButton.addEventListener('click', () => {
+                    indicatorEls.forEach(el => el.remove());
+                    identifyComponents();
+                })
+                checkPannel.appendChild(identifyButton);
 
                 const matchButton = document.createElement('button');
                 matchButton.setAttribute('style', 'margin: 4px;height: 30px;width: 80px')

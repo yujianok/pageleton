@@ -264,53 +264,65 @@ var PuppeteerPageDriver = (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0: return [4, this.page.evaluate(function (rootNodesJson) {
-                            var _a;
                             var rootNodes = JSON.parse(rootNodesJson);
-                            var tempQueue = [];
-                            tempQueue.push.apply(tempQueue, rootNodes.map(function (node) { return ({ node: node, zIndex: 100 }); }));
-                            var current = tempQueue.pop();
                             var indicatorEls = [];
-                            var _loop_1 = function () {
-                                var currentNode = current.node;
-                                var name_2 = currentNode.name, selector = currentNode.selector, xpath = currentNode.xpath, children = currentNode.children;
-                                var element = current.parent || null;
-                                if (selector) {
-                                    element = (element || document).querySelector(selector);
-                                }
-                                if (xpath) {
-                                    element = document.evaluate(xpath, element || document).iterateNext();
-                                }
-                                if (!selector && !xpath) {
-                                    element = document.evaluate("(.//*[normalize-space()='" + name_2 + "'])[last()]", element || document).iterateNext();
-                                }
-                                if (element) {
-                                    var ancestor = document.createElement('span');
-                                    ancestor.setAttribute('style', "position: relative;height: 0px;width: 0px;z-index: " + current.zIndex + ";");
-                                    (_a = element.parentElement) === null || _a === void 0 ? void 0 : _a.append(ancestor);
-                                    var elRect = element.getBoundingClientRect();
-                                    var actRect = ancestor.getBoundingClientRect();
-                                    var cover_1 = document.createElement('div');
-                                    cover_1.textContent = name_2;
-                                    var coverStyle_1 = "position: absolute;\n                                        opacity: 0;\n                                        top: 0px;\n                                        top: " + (elRect.top - actRect.top) + "px;\n                                        left: " + (elRect.left - actRect.left) + "px;\n                                        height: " + elRect.height + "px;\n                                        width: " + elRect.width + "px;\n                                        z-index: " + current.zIndex + ";\n                                        border: solid 1px red;\n                                        color: red;\n                                        overflow: visible;\n                                        background-color: white;";
-                                    cover_1.setAttribute('style', coverStyle_1);
-                                    cover_1.addEventListener('mouseover', function () {
-                                        cover_1.setAttribute('style', coverStyle_1 + 'opacity: 0.8;');
-                                    });
-                                    cover_1.addEventListener('mouseleave', function () {
+                            function identifyComponents() {
+                                var _a;
+                                var tempQueue = [];
+                                tempQueue.push.apply(tempQueue, rootNodes.map(function (node) { return ({ node: node, zIndex: 100 }); }));
+                                var current = tempQueue.pop();
+                                var _loop_1 = function () {
+                                    var currentNode = current.node;
+                                    var name_2 = currentNode.name, selector = currentNode.selector, xpath = currentNode.xpath, children = currentNode.children;
+                                    var element = current.parent || null;
+                                    if (selector) {
+                                        element = (element || document).querySelector(selector);
+                                    }
+                                    if (xpath) {
+                                        element = document.evaluate(xpath, element || document).iterateNext();
+                                    }
+                                    if (!selector && !xpath) {
+                                        element = document.evaluate("(.//*[normalize-space()='" + name_2 + "'])[last()]", element || document).iterateNext();
+                                    }
+                                    if (element) {
+                                        var ancestor = document.createElement('span');
+                                        ancestor.setAttribute('style', "position: relative;height: 0px;width: 0px;z-index: " + current.zIndex + ";");
+                                        (_a = element.parentElement) === null || _a === void 0 ? void 0 : _a.append(ancestor);
+                                        var elRect = element.getBoundingClientRect();
+                                        var actRect = ancestor.getBoundingClientRect();
+                                        var cover_1 = document.createElement('div');
+                                        cover_1.textContent = name_2;
+                                        var coverStyle_1 = "position: absolute;\n                                        opacity: 0;\n                                        top: 0px;\n                                        top: " + (elRect.top - actRect.top) + "px;\n                                        left: " + (elRect.left - actRect.left) + "px;\n                                        height: " + elRect.height + "px;\n                                        width: " + elRect.width + "px;\n                                        z-index: " + current.zIndex + ";\n                                        border: solid 1px red;\n                                        color: red;\n                                        overflow: visible;\n                                        background-color: white;";
                                         cover_1.setAttribute('style', coverStyle_1);
-                                    });
-                                    ancestor.append(cover_1);
-                                    indicatorEls.push(ancestor);
-                                    tempQueue.push.apply(tempQueue, children.map(function (node) { return ({ node: node, parent: element || undefined, zIndex: current.zIndex + 100 }); }));
+                                        cover_1.addEventListener('mouseover', function () {
+                                            cover_1.setAttribute('style', coverStyle_1 + 'opacity: 0.8;');
+                                        });
+                                        cover_1.addEventListener('mouseleave', function () {
+                                            cover_1.setAttribute('style', coverStyle_1);
+                                        });
+                                        ancestor.append(cover_1);
+                                        indicatorEls.push(ancestor);
+                                        tempQueue.push.apply(tempQueue, children.map(function (node) { return ({ node: node, parent: element || undefined, zIndex: current.zIndex + 100 }); }));
+                                    }
+                                    current = tempQueue.pop();
+                                };
+                                while (current) {
+                                    _loop_1();
                                 }
-                                current = tempQueue.pop();
-                            };
-                            while (current) {
-                                _loop_1();
                             }
+                            ;
+                            identifyComponents();
                             return new Promise(function (resolve) {
                                 var checkPannel = document.createElement('div');
                                 checkPannel.setAttribute('style', 'position: fixed;bottom: 4px;left: 4px;z-index: 9999;border: solid 1px');
+                                var identifyButton = document.createElement('button');
+                                identifyButton.setAttribute('style', 'margin: 4px;height: 30px;width: 100px');
+                                identifyButton.innerHTML = 'Reidentify';
+                                identifyButton.addEventListener('click', function () {
+                                    indicatorEls.forEach(function (el) { return el.remove(); });
+                                    identifyComponents();
+                                });
+                                checkPannel.appendChild(identifyButton);
                                 var matchButton = document.createElement('button');
                                 matchButton.setAttribute('style', 'margin: 4px;height: 30px;width: 80px');
                                 matchButton.innerHTML = 'Match';
