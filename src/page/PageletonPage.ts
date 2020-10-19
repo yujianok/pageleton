@@ -51,8 +51,8 @@ export class PageletonPage {
         await this.pageDriver.close();
     }
 
-    async waitForNavigation(timeout?: number): Promise<void> {
-        await this.pageDriver.waitForNavigation(timeout);
+    async waitForNavigation(waitUntil?: "load" | "domcontentloaded" | "networkidle0" | "networkidle2", timeout?: number): Promise<void> {
+        await this.pageDriver.waitForNavigation(waitUntil, timeout);
     }
 
     async checkComponents(): Promise<boolean> {

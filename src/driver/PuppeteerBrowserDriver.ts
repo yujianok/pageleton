@@ -86,8 +86,8 @@ class PuppeteerPageDriver implements PageDriver {
         await this.page.close();
     }
 
-    async waitForNavigation(timeout?: number): Promise<void> {
-        await this.page.waitForNavigation({ timeout: timeout || 0 })
+    async waitForNavigation(waitUntil?: "load" | "domcontentloaded" | "networkidle0" | "networkidle2", timeout?: number): Promise<void> {
+        await this.page.waitForNavigation({ timeout: timeout || 0, waitUntil })
     }
 
     async getScreenShot(path: string, fullPage?: boolean): Promise<void> {

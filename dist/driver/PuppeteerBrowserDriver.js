@@ -200,11 +200,11 @@ var PuppeteerPageDriver = (function () {
             });
         });
     };
-    PuppeteerPageDriver.prototype.waitForNavigation = function (timeout) {
+    PuppeteerPageDriver.prototype.waitForNavigation = function (waitUntil, timeout) {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4, this.page.waitForNavigation({ timeout: timeout || 0 })];
+                    case 0: return [4, this.page.waitForNavigation({ timeout: timeout || 0, waitUntil: waitUntil })];
                     case 1:
                         _a.sent();
                         return [2];

@@ -18,7 +18,7 @@ export type NavigationListener = (url: string) => void;
 export interface PageDriver {
     goto(url: string): Promise<void>;
     close(): Promise<void>;
-    waitForNavigation(timeout?: number): Promise<void>;
+    waitForNavigation(waitUntil?: "load" | "domcontentloaded" | "networkidle0" | "networkidle2", timeout?: number): Promise<void>;
     getTitle(): Promise<string>;
     getElement(routes: ElementRoute[]): Promise<ElementDriver | undefined>;
     onNavigated(listener: NavigationListener): void;
