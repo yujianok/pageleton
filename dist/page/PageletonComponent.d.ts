@@ -1,3 +1,4 @@
+import { WaitCondition } from "../component";
 import { PageDriver } from "../driver";
 import { ComponentSpec } from "../spec";
 export declare class PageletonComponent {
@@ -11,5 +12,7 @@ export declare class PageletonComponent {
     getAttribute(name: string): Promise<string>;
     getText(): Promise<string>;
     mouseOver(): Promise<void>;
+    waitUntilPresent(timeout: number): Promise<void>;
+    waitUntil(condition: WaitCondition, timeout: number): Promise<void>;
     private execute;
 }

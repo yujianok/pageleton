@@ -1,4 +1,4 @@
-import { PageComponent, pageComponentTypeRegistry } from "../component";
+import { PageComponent, pageComponentTypeRegistry, WaitCondition } from "../component";
 import { ElementDriver, PageDriver } from "../driver";
 import { getElementRoutes } from "../service/ComponentSpecService";
 import { ComponentSpec } from "../spec";
@@ -45,6 +45,14 @@ export class PageletonComponent {
 
     async mouseOver(): Promise<void> {
         return await this.execute((pageComponent, elementDriver, pageDriver) => pageComponent.mouseOver(elementDriver, pageDriver, this.componentSpec));
+    }
+
+    async waitUntilPresent(timeout: number): Promise<void> {
+        return await this.execute((pageComponent, elementDriver, pageDriver) => pageComponent.waitUntilPresent(timeout, elementDriver, pageDriver, this.componentSpec));
+    }
+
+    async waitUntil(condition: WaitCondition, timeout: number): Promise<void> {
+        return await this.execute((pageComponent, elementDriver, pageDriver) => pageComponent.waitUntil(condition, timeout, elementDriver, pageDriver, this.componentSpec));
     }
 
     private async execute(command: ComponentCommand) {
