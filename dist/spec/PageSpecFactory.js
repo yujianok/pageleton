@@ -39,37 +39,55 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Pageleton = void 0;
-var page_1 = require("./page");
-var spec_1 = require("./spec");
-var PageComponentTypeRegistry_1 = __importDefault(require("./component/PageComponentTypeRegistry"));
-var BrowserDriverFactory_1 = __importDefault(require("./driver/BrowserDriverFactory"));
-var component_1 = require("./component");
-Object.defineProperty(exports, "AbstractComponent", { enumerable: true, get: function () { return component_1.AbstractComponent; } });
-var page_2 = require("./page");
-Object.defineProperty(exports, "PageletonBrowser", { enumerable: true, get: function () { return page_2.PageletonBrowser; } });
-Object.defineProperty(exports, "PageletonPage", { enumerable: true, get: function () { return page_2.PageletonPage; } });
-var DEFAULT_PAGE_SPEC_PATHS = ['./pages/*.xml'];
-exports.Pageleton = function (config) {
-    if (config.customComponentTypes) {
-        config.customComponentTypes.forEach(function (cst) { return PageComponentTypeRegistry_1.default.registerComponentType(cst); });
+exports.PageSpecFactory = void 0;
+var FileService_1 = __importDefault(require("../service/FileService"));
+var PageSpecLoader_1 = require("./PageSpecLoader");
+var PageSpecFactory = (function () {
+    function PageSpecFactory(specPaths, specEncoding) {
+        this.specPaths = specPaths;
+        this.specEncoding = specEncoding || 'UTF-8';
+        this.pages = [];
     }
-    return {
-        launchBrowser: function () { return __awaiter(void 0, void 0, void 0, function () {
-            var pageletonPageFactory, browserDriver;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0: return [4, spec_1.PageSpecFactory.init(config.specPaths || DEFAULT_PAGE_SPEC_PATHS, config.specEncoding)];
+    PageSpecFactory.init = function (specPaths, specEncoding) {
+        return __awaiter(this, void 0, void 0, function () {
+            var instance, _i, _a, specPath, files, pages;
+            var _b;
+            return __generator(this, function (_c) {
+                switch (_c.label) {
+                    case 0:
+                        instance = new PageSpecFactory(specPaths, specEncoding);
+                        _i = 0, _a = instance.specPaths;
+                        _c.label = 1;
                     case 1:
-                        pageletonPageFactory = _a.sent();
-                        browserDriver = BrowserDriverFactory_1.default.getBrowserDriver(config.driverType);
-                        return [4, browserDriver.launch(config)];
+                        if (!(_i < _a.length)) return [3, 5];
+                        specPath = _a[_i];
+                        return [4, FileService_1.default.getAllFiles(specPath)];
                     case 2:
-                        _a.sent();
-                        return [2, new page_1.PageletonBrowser(browserDriver, pageletonPageFactory)];
+                        files = _c.sent();
+                        return [4, Promise.all(files.map(function (file) { return PageSpecLoader_1.pageSpecLoader.loadPageSpec(file, instance.specEncoding); }))];
+                    case 3:
+                        pages = _c.sent();
+                        (_b = instance.pages).push.apply(_b, pages);
+                        _c.label = 4;
+                    case 4:
+                        _i++;
+                        return [3, 1];
+                    case 5: return [2, instance];
                 }
             });
-        }); }
+        });
     };
-};
-//# sourceMappingURL=index.js.map
+    PageSpecFactory.prototype.getPageByName = function (name) {
+        return this.pages.find(function (page) { return page.name === name; });
+    };
+    PageSpecFactory.prototype.getPageByUrl = function (url) {
+        return this.pages.find(function (page) {
+            var pageUrl = url.split('?')[0];
+            var pageSpecPath = page.url.split('?')[0];
+            return pageUrl.endsWith(pageSpecPath);
+        });
+    };
+    return PageSpecFactory;
+}());
+exports.PageSpecFactory = PageSpecFactory;
+//# sourceMappingURL=PageSpecFactory.js.map

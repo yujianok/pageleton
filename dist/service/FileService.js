@@ -39,37 +39,39 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Pageleton = void 0;
-var page_1 = require("./page");
-var spec_1 = require("./spec");
-var PageComponentTypeRegistry_1 = __importDefault(require("./component/PageComponentTypeRegistry"));
-var BrowserDriverFactory_1 = __importDefault(require("./driver/BrowserDriverFactory"));
-var component_1 = require("./component");
-Object.defineProperty(exports, "AbstractComponent", { enumerable: true, get: function () { return component_1.AbstractComponent; } });
-var page_2 = require("./page");
-Object.defineProperty(exports, "PageletonBrowser", { enumerable: true, get: function () { return page_2.PageletonBrowser; } });
-Object.defineProperty(exports, "PageletonPage", { enumerable: true, get: function () { return page_2.PageletonPage; } });
-var DEFAULT_PAGE_SPEC_PATHS = ['./pages/*.xml'];
-exports.Pageleton = function (config) {
-    if (config.customComponentTypes) {
-        config.customComponentTypes.forEach(function (cst) { return PageComponentTypeRegistry_1.default.registerComponentType(cst); });
-    }
-    return {
-        launchBrowser: function () { return __awaiter(void 0, void 0, void 0, function () {
-            var pageletonPageFactory, browserDriver;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0: return [4, spec_1.PageSpecFactory.init(config.specPaths || DEFAULT_PAGE_SPEC_PATHS, config.specEncoding)];
-                    case 1:
-                        pageletonPageFactory = _a.sent();
-                        browserDriver = BrowserDriverFactory_1.default.getBrowserDriver(config.driverType);
-                        return [4, browserDriver.launch(config)];
-                    case 2:
-                        _a.sent();
-                        return [2, new page_1.PageletonBrowser(browserDriver, pageletonPageFactory)];
-                }
-            });
-        }); }
-    };
-};
-//# sourceMappingURL=index.js.map
+var fs_1 = __importDefault(require("fs"));
+var glob_1 = __importDefault(require("glob"));
+function getAllFiles(filePath) {
+    return __awaiter(this, void 0, void 0, function () {
+        return __generator(this, function (_a) {
+            return [2, new Promise(function (resolve, reject) {
+                    glob_1.default(filePath, function (err, files) {
+                        if (err) {
+                            reject(err);
+                        }
+                        else {
+                            resolve(files);
+                        }
+                    });
+                })];
+        });
+    });
+}
+function readFileAsString(filePath, encoding) {
+    return __awaiter(this, void 0, void 0, function () {
+        return __generator(this, function (_a) {
+            return [2, new Promise(function (resolve, reject) {
+                    fs_1.default.readFile(filePath, encoding, function (err, content) {
+                        if (err) {
+                            reject(err);
+                        }
+                        else {
+                            resolve(content);
+                        }
+                    });
+                })];
+        });
+    });
+}
+exports.default = { getAllFiles: getAllFiles, readFileAsString: readFileAsString };
+//# sourceMappingURL=FileService.js.map
