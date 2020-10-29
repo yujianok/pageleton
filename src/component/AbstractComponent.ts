@@ -5,8 +5,8 @@ import { PageComponent, PageComponentType, WaitCondition } from "./PageComponent
 import { getElementRoutes } from "../service/ComponentSpecService";
 
 export abstract class AbstractComponent implements PageComponent {
-    private pageDriver: PageDriver;
-    private componentSpec: ComponentSpec;
+    protected readonly pageDriver: PageDriver;
+    protected readonly componentSpec: ComponentSpec;
 
     constructor(pageDriver: PageDriver, componentSpec: ComponentSpec) {
         this.pageDriver = pageDriver;
