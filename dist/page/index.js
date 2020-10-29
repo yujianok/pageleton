@@ -11,6 +11,5 @@ var __exportStar = (this && this.__exportStar) || function(m, exports) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 __exportStar(require("./PageletonBrowser"), exports);
-__exportStar(require("./PageletonComponent"), exports);
 __exportStar(require("./PageletonPage"), exports);
 //# sourceMappingURL=index.js.map

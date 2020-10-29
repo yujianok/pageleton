@@ -67,22 +67,30 @@ var Input = (function (_super) {
     function Input() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
-    Input.prototype.getValue = function (element) {
+    Input.prototype.getValue = function () {
         return __awaiter(this, void 0, void 0, function () {
+            var element;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4, element.getValue()];
-                    case 1: return [2, _a.sent()];
+                    case 0: return [4, this.getElementDriver()];
+                    case 1:
+                        element = _a.sent();
+                        return [4, element.getValue()];
+                    case 2: return [2, _a.sent()];
                 }
             });
         });
     };
-    Input.prototype.setValue = function (value, element) {
+    Input.prototype.setValue = function (value) {
         return __awaiter(this, void 0, void 0, function () {
+            var element;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4, element.setValue(value)];
+                    case 0: return [4, this.getElementDriver()];
                     case 1:
+                        element = _a.sent();
+                        return [4, element.setValue(value)];
+                    case 2:
                         _a.sent();
                         return [2];
                 }
@@ -97,15 +105,15 @@ var Table = (function (_super) {
     function Table() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
-    Table.prototype.getValue = function (element, page, component) {
+    Table.prototype.getValue = function () {
         return __awaiter(this, void 0, void 0, function () {
             var headerValues, rowValues;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4, this.getSubComponentValue(component, TableHeader, page)];
+                    case 0: return [4, Promise.all(this.getSubComponents(TableHeader).map(function (header) { return header.getValue(); }))];
                     case 1:
                         headerValues = _a.sent();
-                        return [4, this.getSubComponentValue(component, TableRow, page)];
+                        return [4, Promise.all(this.getSubComponents(TableRow).map(function (row) { return row.getValue(); }))];
                     case 2:
                         rowValues = _a.sent();
                         return [2, {
@@ -124,12 +132,12 @@ var TableHeader = (function (_super) {
     function TableHeader() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
-    TableHeader.prototype.getValue = function (element, page, component) {
+    TableHeader.prototype.getValue = function () {
         return __awaiter(this, void 0, void 0, function () {
             var cellValues;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4, this.getSubComponentValue(component, TableField, page)];
+                    case 0: return [4, Promise.all(this.getSubComponents(TableField).map(function (cell) { return cell.getValue(); }))];
                     case 1:
                         cellValues = _a.sent();
                         return [2, cellValues.filter(function (c) { return c !== undefined; })];
@@ -145,12 +153,12 @@ var TableRow = (function (_super) {
     function TableRow() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
-    TableRow.prototype.getValue = function (element, page, component) {
+    TableRow.prototype.getValue = function () {
         return __awaiter(this, void 0, void 0, function () {
             var cellValues;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4, this.getSubComponentValue(component, TableField, page)];
+                    case 0: return [4, Promise.all(this.getSubComponents(TableField).map(function (cell) { return cell.getValue(); }))];
                     case 1:
                         cellValues = _a.sent();
                         return [2, cellValues.filter(function (c) { return c !== undefined; })];
@@ -166,12 +174,21 @@ var TableField = (function (_super) {
     function TableField() {
         return _super !== null && _super.apply(this, arguments) || this;
     }
-    TableField.prototype.getValue = function (element) {
+    TableField.prototype.getValue = function () {
         return __awaiter(this, void 0, void 0, function () {
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0: return [4, element.getInnerText()];
-                    case 1: return [2, _a.sent()];
+            var element, _a;
+            return __generator(this, function (_b) {
+                switch (_b.label) {
+                    case 0: return [4, this.getElementDriver(true)];
+                    case 1:
+                        element = _b.sent();
+                        _a = element;
+                        if (!_a) return [3, 3];
+                        return [4, element.getInnerText()];
+                    case 2:
+                        _a = (_b.sent());
+                        _b.label = 3;
+                    case 3: return [2, _a];
                 }
             });
         });

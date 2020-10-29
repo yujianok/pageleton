@@ -43,66 +43,87 @@ exports.AbstractComponent = void 0;
 var PageComponentTypeRegistry_1 = __importDefault(require("./PageComponentTypeRegistry"));
 var ComponentSpecService_1 = require("../service/ComponentSpecService");
 var AbstractComponent = (function () {
-    function AbstractComponent() {
+    function AbstractComponent(pageDriver, componentSpec) {
+        this.pageDriver = pageDriver;
+        this.componentSpec = componentSpec;
     }
-    AbstractComponent.prototype.setValue = function (value, element, page, component) {
+    AbstractComponent.prototype.setValue = function (value) {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 throw new Error(this.constructor.name + " not supports setting value");
             });
         });
     };
-    AbstractComponent.prototype.getValue = function (element, page, component) {
+    AbstractComponent.prototype.getValue = function () {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 throw new Error(this.constructor.name + " not supports getting value");
             });
         });
     };
-    AbstractComponent.prototype.getText = function (element, page, component) {
+    AbstractComponent.prototype.getText = function () {
         return __awaiter(this, void 0, void 0, function () {
+            var element;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4, element.getInnerText()];
-                    case 1: return [2, _a.sent()];
+                    case 0: return [4, this.getElementDriver()];
+                    case 1:
+                        element = _a.sent();
+                        return [4, element.getInnerText()];
+                    case 2: return [2, _a.sent()];
                 }
             });
         });
     };
-    AbstractComponent.prototype.getAttribute = function (name, element, page, component) {
+    AbstractComponent.prototype.getAttribute = function (name) {
         return __awaiter(this, void 0, void 0, function () {
+            var element;
             return __generator(this, function (_a) {
-                return [2, element.getAttribute(name)];
+                switch (_a.label) {
+                    case 0: return [4, this.getElementDriver()];
+                    case 1:
+                        element = _a.sent();
+                        return [4, element.getAttribute(name)];
+                    case 2: return [2, _a.sent()];
+                }
             });
         });
     };
-    AbstractComponent.prototype.click = function (element, page, component) {
+    AbstractComponent.prototype.click = function () {
         return __awaiter(this, void 0, void 0, function () {
+            var element;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4, element.click()];
+                    case 0: return [4, this.getElementDriver()];
                     case 1:
+                        element = _a.sent();
+                        return [4, element.click()];
+                    case 2:
                         _a.sent();
                         return [2];
                 }
             });
         });
     };
-    AbstractComponent.prototype.mouseOver = function (element, page, component) {
+    AbstractComponent.prototype.mouseOver = function () {
         return __awaiter(this, void 0, void 0, function () {
+            var element;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4, element.mouseOver()];
+                    case 0: return [4, this.getElementDriver()];
                     case 1:
+                        element = _a.sent();
+                        return [4, element.mouseOver()];
+                    case 2:
                         _a.sent();
                         return [2];
                 }
             });
         });
     };
-    AbstractComponent.prototype.waitUntil = function (condition, timeout, element, page, component) {
+    AbstractComponent.prototype.waitUntil = function (condition, timeout) {
         return __awaiter(this, void 0, void 0, function () {
-            var interval, forever, vestige, _loop_1, state_1;
+            var interval, forever, vestige, _loop_1, this_1, state_1;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -110,31 +131,26 @@ var AbstractComponent = (function () {
                         forever = timeout <= 0;
                         vestige = forever ? interval : timeout;
                         _loop_1 = function () {
-                            var _a, nextInterval_1;
-                            return __generator(this, function (_b) {
-                                switch (_b.label) {
-                                    case 0:
-                                        _a = element;
-                                        if (!_a) return [3, 2];
-                                        return [4, condition(element, page, component)];
+                            var nextInterval_1;
+                            return __generator(this, function (_a) {
+                                switch (_a.label) {
+                                    case 0: return [4, condition(this_1)];
                                     case 1:
-                                        _a = (_b.sent());
-                                        _b.label = 2;
-                                    case 2:
-                                        if (!_a) return [3, 3];
+                                        if (!_a.sent()) return [3, 2];
                                         return [2, { value: void 0 }];
-                                    case 3:
-                                        if (!(vestige > 0)) return [3, 5];
+                                    case 2:
+                                        if (!(vestige > 0)) return [3, 4];
                                         nextInterval_1 = vestige >= interval ? interval : vestige;
                                         return [4, new Promise(function (res) { return setTimeout(res, nextInterval_1); })];
-                                    case 4:
-                                        _b.sent();
+                                    case 3:
+                                        _a.sent();
                                         vestige = forever ? interval : vestige - interval;
-                                        _b.label = 5;
-                                    case 5: return [2];
+                                        _a.label = 4;
+                                    case 4: return [2];
                                 }
                             });
                         };
+                        this_1 = this;
                         _a.label = 1;
                     case 1:
                         if (!(vestige > 0)) return [3, 3];
@@ -149,60 +165,80 @@ var AbstractComponent = (function () {
             });
         });
     };
-    AbstractComponent.prototype.isPresent = function (element, page, component) {
+    AbstractComponent.prototype.isPresent = function () {
         return __awaiter(this, void 0, void 0, function () {
-            var _a, width, height;
+            var element, _a, width, height;
             return __generator(this, function (_b) {
                 switch (_b.label) {
-                    case 0: return [4, element.getSize()];
+                    case 0: return [4, this.getElementDriver(true)];
                     case 1:
+                        element = _b.sent();
+                        if (!element) {
+                            return [2, false];
+                        }
+                        return [4, element.getSize()];
+                    case 2:
                         _a = _b.sent(), width = _a[0], height = _a[1];
                         return [2, width > 0 && height > 0];
                 }
             });
         });
     };
-    AbstractComponent.prototype.waitUntilPresent = function (timeout, element, page, component) {
+    AbstractComponent.prototype.waitUntilPresent = function (timeout) {
         return __awaiter(this, void 0, void 0, function () {
             var _this = this;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4, this.waitUntil(function (e, p, c) { return _this.isPresent(e, p, c); }, timeout, element, page, component)];
+                    case 0: return [4, this.waitUntil(function (component) { return __awaiter(_this, void 0, void 0, function () { return __generator(this, function (_a) {
+                            switch (_a.label) {
+                                case 0: return [4, component.isPresent()];
+                                case 1: return [2, _a.sent()];
+                            }
+                        }); }); }, timeout)];
                     case 1: return [2, _a.sent()];
                 }
             });
         });
     };
-    AbstractComponent.prototype.getSubComponentValue = function (component, type, page) {
+    AbstractComponent.prototype.waitUntilVanished = function (timeout) {
         return __awaiter(this, void 0, void 0, function () {
-            var subComponentSpecs, headerValues;
             var _this = this;
             return __generator(this, function (_a) {
                 switch (_a.label) {
+                    case 0: return [4, this.waitUntil(function (component) { return __awaiter(_this, void 0, void 0, function () { return __generator(this, function (_a) {
+                            switch (_a.label) {
+                                case 0: return [4, component.isPresent()];
+                                case 1: return [2, !(_a.sent())];
+                            }
+                        }); }); }, timeout)];
+                    case 1: return [2, _a.sent()];
+                }
+            });
+        });
+    };
+    AbstractComponent.prototype.getSubComponents = function (type) {
+        var _this = this;
+        var subComponentSpecs = this.componentSpec.children.filter(function (c) { return c.type === type.name; });
+        var subComponents = subComponentSpecs.map(function (subComponentSpec) {
+            var SubComponentType = PageComponentTypeRegistry_1.default.getComponentType(subComponentSpec.type);
+            return new SubComponentType(_this.pageDriver, subComponentSpec);
+        });
+        return subComponents;
+    };
+    AbstractComponent.prototype.getElementDriver = function (canBeNull) {
+        return __awaiter(this, void 0, void 0, function () {
+            var elementRoutes, elementDriver;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
                     case 0:
-                        subComponentSpecs = component.children.filter(function (c) { return c.type === type.name; });
-                        return [4, Promise.all(subComponentSpecs.map(function (subComponentSpec) { return __awaiter(_this, void 0, void 0, function () {
-                                var subComponent, subElement, _a;
-                                return __generator(this, function (_b) {
-                                    switch (_b.label) {
-                                        case 0:
-                                            subComponent = PageComponentTypeRegistry_1.default.getComponentByType(subComponentSpec.type);
-                                            return [4, page.getElement(ComponentSpecService_1.getElementRoutes(subComponentSpec))];
-                                        case 1:
-                                            subElement = _b.sent();
-                                            _a = subElement;
-                                            if (!_a) return [3, 3];
-                                            return [4, subComponent.getValue(subElement, page, subComponentSpec)];
-                                        case 2:
-                                            _a = (_b.sent());
-                                            _b.label = 3;
-                                        case 3: return [2, _a];
-                                    }
-                                });
-                            }); }))];
+                        elementRoutes = ComponentSpecService_1.getElementRoutes(this.componentSpec);
+                        return [4, this.pageDriver.getElement(elementRoutes)];
                     case 1:
-                        headerValues = _a.sent();
-                        return [2, headerValues];
+                        elementDriver = _a.sent();
+                        if (!elementDriver && !canBeNull) {
+                            throw new Error('Can not locate element by component:' + elementRoutes.map(function (er) { return er.name; }).join('>'));
+                        }
+                        return [2, elementDriver];
                 }
             });
         });

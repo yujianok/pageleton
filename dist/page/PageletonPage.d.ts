@@ -1,12 +1,12 @@
+import { PageComponent } from "../component";
 import { PageDriver } from "../driver";
 import PageSpecFactory from "../spec/PageSpecFactory";
-import { PageletonComponent } from './PageletonComponent';
 export declare class PageletonPage {
     private readonly pageDriver;
     private readonly pageSpecFactory;
     private currentPage?;
     constructor(pageDriver: PageDriver, pageSpecFactory: PageSpecFactory);
-    getComponent(...routes: string[]): PageletonComponent;
+    getComponent(...routes: string[]): PageComponent;
     open(name: string): Promise<void>;
     getTitle(): Promise<string>;
     getPageName(): string | undefined;

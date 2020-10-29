@@ -37,8 +37,8 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.PageletonPage = void 0;
+var component_1 = require("../component");
 var ComponentSpecService_1 = require("../service/ComponentSpecService");
-var PageletonComponent_1 = require("./PageletonComponent");
 var PageletonPage = (function () {
     function PageletonPage(pageDriver, pageSpecFactory) {
         this.pageDriver = pageDriver;
@@ -54,7 +54,8 @@ var PageletonPage = (function () {
             throw new Error('No page has bean opened yet.');
         }
         var componentSpec = (_a = this.currentPage).getComponent.apply(_a, routes);
-        return new PageletonComponent_1.PageletonComponent(componentSpec, this.pageDriver);
+        var PageComponentType = component_1.pageComponentTypeRegistry.getComponentType(componentSpec.type);
+        return new PageComponentType(this.pageDriver, componentSpec);
     };
     PageletonPage.prototype.open = function (name) {
         return __awaiter(this, void 0, void 0, function () {

@@ -1,19 +1,18 @@
-import { PageCompnentType, PageComponent } from "./PageComponent";
+import { PageComponentType } from "./PageComponent";
 
 class PageComponentTypeRegistry {
 
-    private readonly componentTypeRegistry: { [key: string]: PageCompnentType };
+    private readonly componentTypeRegistry: { [key: string]: PageComponentType };
 
     constructor() {
         this.componentTypeRegistry = {};
     }
 
-    getComponentByType(name: string): PageComponent {
-        const PageComponentType = this.componentTypeRegistry[name] || this.componentTypeRegistry['Component'];
-        return new PageComponentType();
+    getComponentType(name: string): PageComponentType {
+        return this.componentTypeRegistry[name] || this.componentTypeRegistry['Component'];
     }
 
-    registerComponentType(pageCompnentType: PageCompnentType): void {
+    registerComponentType(pageCompnentType: PageComponentType): void {
         this.componentTypeRegistry[pageCompnentType.name] = pageCompnentType;
     }
 }

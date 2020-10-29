@@ -1,5 +1,5 @@
 import { BrowserDriverType, browserDriverFactory } from './driver';
-import { PageCompnentType, pageComponentTypeRegistry } from './component';
+import { PageComponentType, pageComponentTypeRegistry } from './component';
 import { PageletonBrowser } from './page';
 import PageSpecFactory from './spec/PageSpecFactory';
 
@@ -28,7 +28,7 @@ export type PageletonConfig = {
         hasTouch?: boolean;
         isLandscape?: boolean;
     },
-    customComponentTypes?: PageCompnentType[],
+    customComponentTypes?: PageComponentType[],
     customBrowserDriver?: BrowserDriverType,
 }
 

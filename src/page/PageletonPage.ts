@@ -1,8 +1,8 @@
+import { PageComponent, pageComponentTypeRegistry } from "../component";
 import { PageDriver } from "../driver";
 import { getRootElementNodes } from "../service/ComponentSpecService";
 import { PageSpec } from "../spec";
 import PageSpecFactory from "../spec/PageSpecFactory";
-import { PageletonComponent } from './PageletonComponent';
 
 export class PageletonPage {
     private readonly pageDriver: PageDriver;
@@ -14,14 +14,15 @@ export class PageletonPage {
         this.pageSpecFactory = pageSpecFactory;
     }
 
-    getComponent(...routes: string[]): PageletonComponent {
+    getComponent(...routes: string[]): PageComponent {
         if (!this.currentPage) {
             throw new Error('No page has bean opened yet.')
         }
 
         const componentSpec = this.currentPage.getComponent(...routes);
+        const PageComponentType = pageComponentTypeRegistry.getComponentType(componentSpec.type)
 
-        return new PageletonComponent(componentSpec, this.pageDriver);
+        return new PageComponentType(this.pageDriver, componentSpec);
     }
 
     async open(name: string): Promise<void> {

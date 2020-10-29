@@ -1,17 +1,18 @@
-import { ElementDriver, PageDriver } from "../driver";
+import { PageDriver } from "../driver";
 import { ComponentSpec } from "../spec";
-export declare type WaitCondition = (element: ElementDriver, page: PageDriver, componentSpec: ComponentSpec) => Promise<boolean>;
+export declare type WaitCondition = (pageComponent: PageComponent) => Promise<boolean>;
 export interface PageComponent {
-    setValue(value: string, element: ElementDriver, page: PageDriver, componentSpec: ComponentSpec): Promise<void>;
-    getValue(element: ElementDriver, page: PageDriver, componentSpec: ComponentSpec): Promise<any>;
-    getText(element: ElementDriver, page: PageDriver, componentSpec: ComponentSpec): Promise<string>;
-    getAttribute(name: string, element: ElementDriver, page: PageDriver, componentSpec: ComponentSpec): Promise<string | undefined>;
-    click(element: ElementDriver, page: PageDriver, componentSpec: ComponentSpec): Promise<void>;
-    mouseOver(element: ElementDriver, page: PageDriver, componentSpec: ComponentSpec): Promise<void>;
-    isPresent(element: ElementDriver, page: PageDriver, componentSpec: ComponentSpec): Promise<boolean>;
-    waitUntil(condition: WaitCondition, timeout: number, element: ElementDriver, page: PageDriver, componentSpec: ComponentSpec): Promise<void>;
-    waitUntilPresent(timeout: number, element: ElementDriver, page: PageDriver, componentSpec: ComponentSpec): Promise<void>;
+    setValue(value: string): Promise<void>;
+    getValue(): Promise<any>;
+    getText(): Promise<string>;
+    getAttribute(name: string): Promise<string | undefined>;
+    click(): Promise<void>;
+    mouseOver(): Promise<void>;
+    isPresent(): Promise<boolean>;
+    waitUntil(condition: WaitCondition, timeout: number): Promise<void>;
+    waitUntilPresent(timeout: number): Promise<void>;
+    waitUntilVanished(timeout: number): Promise<void>;
 }
-export interface PageCompnentType {
-    new (): PageComponent;
+export interface PageComponentType {
+    new (pageDriver: PageDriver, componentSpec: ComponentSpec): PageComponent;
 }

@@ -4,9 +4,8 @@ var PageComponentTypeRegistry = (function () {
     function PageComponentTypeRegistry() {
         this.componentTypeRegistry = {};
     }
-    PageComponentTypeRegistry.prototype.getComponentByType = function (name) {
-        var PageComponentType = this.componentTypeRegistry[name] || this.componentTypeRegistry['Component'];
-        return new PageComponentType();
+    PageComponentTypeRegistry.prototype.getComponentType = function (name) {
+        return this.componentTypeRegistry[name] || this.componentTypeRegistry['Component'];
     };
     PageComponentTypeRegistry.prototype.registerComponentType = function (pageCompnentType) {
         this.componentTypeRegistry[pageCompnentType.name] = pageCompnentType;
