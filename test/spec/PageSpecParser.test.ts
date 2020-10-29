@@ -1,5 +1,5 @@
 import { assert, expect } from 'chai';
-import pageSpecLoader from '../../src/spec/PageSpecLoader';
+import { pageSpecLoader } from '../../src/spec/PageSpecLoader';
 
 describe('Test PageSpecParser', () => {
 

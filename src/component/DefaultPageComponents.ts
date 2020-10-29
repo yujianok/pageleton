@@ -1,5 +1,5 @@
 import { AbstractComponent } from "./AbstractComponent";
-import pageComponentTypeRegistry from './PageComponentTypeRegistry';
+import { pageComponentTypeRegistry } from "./PageComponentTypeRegistry";
 
 class Component extends AbstractComponent {
 

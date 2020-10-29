@@ -35,12 +35,10 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.PageSpecFactory = void 0;
 var FileService_1 = require("../service/FileService");
-var PageSpecLoader_1 = __importDefault(require("./PageSpecLoader"));
+var PageSpecLoader_1 = require("./PageSpecLoader");
 var PageSpecFactory = (function () {
     function PageSpecFactory(specPaths, specEncoding) {
         this.specPaths = specPaths;
@@ -63,7 +61,7 @@ var PageSpecFactory = (function () {
                         return [4, FileService_1.getAllFiles(specPath)];
                     case 2:
                         files = _c.sent();
-                        return [4, Promise.all(files.map(function (file) { return PageSpecLoader_1.default.loadPageSpec(file, instance.specEncoding); }))];
+                        return [4, Promise.all(files.map(function (file) { return PageSpecLoader_1.pageSpecLoader.loadPageSpec(file, instance.specEncoding); }))];
                     case 3:
                         pages = _c.sent();
                         (_b = instance.pages).push.apply(_b, pages);
@@ -88,5 +86,5 @@ var PageSpecFactory = (function () {
     };
     return PageSpecFactory;
 }());
-exports.default = PageSpecFactory;
+exports.PageSpecFactory = PageSpecFactory;
 //# sourceMappingURL=PageSpecFactory.js.map

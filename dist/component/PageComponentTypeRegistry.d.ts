@@ -5,5 +5,5 @@ declare class PageComponentTypeRegistry {
     getComponentType(name: string): PageComponentType;
     registerComponentType(pageCompnentType: PageComponentType): void;
 }
-declare const _default: PageComponentTypeRegistry;
-export default _default;
+export declare const pageComponentTypeRegistry: PageComponentTypeRegistry;
+export {};

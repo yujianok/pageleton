@@ -1,6 +1,6 @@
 import { PageComponent } from "../component";
 import { PageDriver } from "../driver";
-import PageSpecFactory from "../spec/PageSpecFactory";
+import { PageSpecFactory } from "../spec";
 export declare class PageletonPage {
     private readonly pageDriver;
     private readonly pageSpecFactory;

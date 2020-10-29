@@ -1,8 +1,7 @@
 import { PageComponent, pageComponentTypeRegistry } from "../component";
 import { PageDriver } from "../driver";
 import { getRootElementNodes } from "../service/ComponentSpecService";
-import { PageSpec } from "../spec";
-import PageSpecFactory from "../spec/PageSpecFactory";
+import { PageSpec, PageSpecFactory } from "../spec";
 
 export class PageletonPage {
     private readonly pageDriver: PageDriver;

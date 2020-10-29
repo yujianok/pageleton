@@ -1,8 +1,8 @@
-import pageComponentTypeRegistry from "./PageComponentTypeRegistry";
 import { ElementDriver, PageDriver } from "../driver";
 import { ComponentSpec } from "../spec";
 import { PageComponent, PageComponentType, WaitCondition } from "./PageComponent";
 import { getElementRoutes } from "../service/ComponentSpecService";
+import { pageComponentTypeRegistry } from "./PageComponentTypeRegistry";
 
 export abstract class AbstractComponent implements PageComponent {
     protected readonly pageDriver: PageDriver;

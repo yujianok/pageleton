@@ -15,6 +15,6 @@ export declare abstract class AbstractComponent implements PageComponent {
     isPresent(): Promise<boolean>;
     waitUntilPresent(timeout?: number): Promise<void>;
     waitUntilVanished(timeout?: number): Promise<void>;
-    protected getSubComponents(type: PageComponentType): PageComponent[];
+    protected getSubComponents(type: PageComponentType): any[];
     protected getElementDriver(canBeNull?: boolean): Promise<ElementDriver | undefined>;
 }

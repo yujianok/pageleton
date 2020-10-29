@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.pageComponentTypeRegistry = void 0;
 var PageComponentTypeRegistry = (function () {
     function PageComponentTypeRegistry() {
         this.componentTypeRegistry = {};
@@ -12,5 +13,5 @@ var PageComponentTypeRegistry = (function () {
     };
     return PageComponentTypeRegistry;
 }());
-exports.default = new PageComponentTypeRegistry();
+exports.pageComponentTypeRegistry = new PageComponentTypeRegistry();
 //# sourceMappingURL=PageComponentTypeRegistry.js.map

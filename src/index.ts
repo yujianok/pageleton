@@ -1,12 +1,11 @@
-import { BrowserDriverType, browserDriverFactory } from './driver';
 import { PageComponentType, pageComponentTypeRegistry } from './component';
+import { browserDriverFactory } from './driver';
 import { PageletonBrowser } from './page';
-import PageSpecFactory from './spec/PageSpecFactory';
+import { PageSpecFactory } from './spec';
 
-export * from './component';
-export * from './page';
-export * from './driver';
-export * from './spec'
+export { AbstractComponent, PageComponent } from './component';
+export { PageletonBrowser, PageletonPage } from './page';
+export { PageSpec, ComponentSpec } from './spec';
 
 const DEFAULT_PAGE_SPEC_PATHS = ['./pages/*.xml'];
 
@@ -29,7 +28,6 @@ export type PageletonConfig = {
         isLandscape?: boolean;
     },
     customComponentTypes?: PageComponentType[],
-    customBrowserDriver?: BrowserDriverType,
 }
 
 export type PageletonInstance = {

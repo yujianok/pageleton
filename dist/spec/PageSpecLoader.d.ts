@@ -17,5 +17,5 @@ declare class PageSpecLoader {
     private parsePageComponent;
     loadPageSpec(specPath: string, specEncoding: string): Promise<PageSpec>;
 }
-declare const _default: PageSpecLoader;
-export default _default;
+export declare const pageSpecLoader: PageSpecLoader;
+export {};

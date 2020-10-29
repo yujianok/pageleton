@@ -48,12 +48,9 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 var AbstractComponent_1 = require("./AbstractComponent");
-var PageComponentTypeRegistry_1 = __importDefault(require("./PageComponentTypeRegistry"));
+var PageComponentTypeRegistry_1 = require("./PageComponentTypeRegistry");
 var Component = (function (_super) {
     __extends(Component, _super);
     function Component() {
@@ -61,7 +58,7 @@ var Component = (function (_super) {
     }
     return Component;
 }(AbstractComponent_1.AbstractComponent));
-PageComponentTypeRegistry_1.default.registerComponentType(Component);
+PageComponentTypeRegistry_1.pageComponentTypeRegistry.registerComponentType(Component);
 var Input = (function (_super) {
     __extends(Input, _super);
     function Input() {
@@ -99,7 +96,7 @@ var Input = (function (_super) {
     };
     return Input;
 }(AbstractComponent_1.AbstractComponent));
-PageComponentTypeRegistry_1.default.registerComponentType(Input);
+PageComponentTypeRegistry_1.pageComponentTypeRegistry.registerComponentType(Input);
 var Table = (function (_super) {
     __extends(Table, _super);
     function Table() {
@@ -126,7 +123,7 @@ var Table = (function (_super) {
     };
     return Table;
 }(AbstractComponent_1.AbstractComponent));
-PageComponentTypeRegistry_1.default.registerComponentType(Table);
+PageComponentTypeRegistry_1.pageComponentTypeRegistry.registerComponentType(Table);
 var TableHeader = (function (_super) {
     __extends(TableHeader, _super);
     function TableHeader() {
@@ -147,7 +144,7 @@ var TableHeader = (function (_super) {
     };
     return TableHeader;
 }(AbstractComponent_1.AbstractComponent));
-PageComponentTypeRegistry_1.default.registerComponentType(TableHeader);
+PageComponentTypeRegistry_1.pageComponentTypeRegistry.registerComponentType(TableHeader);
 var TableRow = (function (_super) {
     __extends(TableRow, _super);
     function TableRow() {
@@ -168,7 +165,7 @@ var TableRow = (function (_super) {
     };
     return TableRow;
 }(AbstractComponent_1.AbstractComponent));
-PageComponentTypeRegistry_1.default.registerComponentType(TableRow);
+PageComponentTypeRegistry_1.pageComponentTypeRegistry.registerComponentType(TableRow);
 var TableField = (function (_super) {
     __extends(TableField, _super);
     function TableField() {
@@ -195,5 +192,5 @@ var TableField = (function (_super) {
     };
     return TableField;
 }(AbstractComponent_1.AbstractComponent));
-PageComponentTypeRegistry_1.default.registerComponentType(TableField);
+PageComponentTypeRegistry_1.pageComponentTypeRegistry.registerComponentType(TableField);
 //# sourceMappingURL=DefaultPageComponents.js.map

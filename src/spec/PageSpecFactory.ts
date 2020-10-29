@@ -1,7 +1,7 @@
 import { getAllFiles } from "../service/FileService";
-import pageSpecLoader, { PageSpec } from "./PageSpecLoader";
+import { PageSpec, pageSpecLoader } from "./PageSpecLoader";
 
-class PageSpecFactory {
+export class PageSpecFactory {
 
     private readonly specPaths: string[];
     private readonly specEncoding: string;
@@ -36,5 +36,3 @@ class PageSpecFactory {
         });
     }
 }
-
-export default PageSpecFactory;

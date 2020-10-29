@@ -1,5 +1,5 @@
 import { BrowserDriver } from "../driver";
-import PageSpecFactory from "../spec/PageSpecFactory";
+import { PageSpecFactory } from "../spec";
 import { PageletonPage } from "./PageletonPage";
 export declare class PageletonBrowser {
     private readonly browserDriver;

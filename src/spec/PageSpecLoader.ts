@@ -2,13 +2,6 @@ import path from 'path';
 import xml2js from 'xml2js';
 import { readFileAsString } from '../service/FileService';
 
-export type PageSpec = {
-    readonly name: string;
-    readonly url: string;
-    readonly rootComponents: ComponentSpec[];
-    readonly getComponent: (...routes: string[]) => ComponentSpec;
-}
-
 const getComponent = function (this: PageSpec, ...routes: string[]) {
     let current: ComponentSpec | undefined
     let children: readonly ComponentSpec[] = this.rootComponents;
@@ -24,15 +17,6 @@ const getComponent = function (this: PageSpec, ...routes: string[]) {
     return current!;
 }
 
-export type ComponentSpec = {
-    readonly name: string;
-    readonly selector?: string;
-    readonly xpath?: string;
-    readonly parent?: ComponentSpec;
-    readonly children: readonly ComponentSpec[];
-    readonly type: string;
-}
-
 async function parseXmlToJson(data: string): Promise<any> {
     return new Promise((resovle, reject) => {
         const parser = new xml2js.Parser({ explicitArray: false, trim: false });
@@ -44,6 +28,23 @@ async function parseXmlToJson(data: string): Promise<any> {
             }
         });
     });
+}
+
+export type PageSpec = {
+    readonly name: string;
+    readonly url: string;
+    readonly rootComponents: ComponentSpec[];
+    readonly getComponent: (...routes: string[]) => ComponentSpec;
+}
+
+
+export type ComponentSpec = {
+    readonly name: string;
+    readonly selector?: string;
+    readonly xpath?: string;
+    readonly parent?: ComponentSpec;
+    readonly children: readonly ComponentSpec[];
+    readonly type: string;
 }
 
 class PageSpecLoader {
@@ -107,4 +108,4 @@ class PageSpecLoader {
 
 }
 
-export default new PageSpecLoader();
+export const pageSpecLoader = new PageSpecLoader();

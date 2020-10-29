@@ -1,5 +1,5 @@
 import { PageSpec } from "./PageSpecLoader";
-declare class PageSpecFactory {
+export declare class PageSpecFactory {
     private readonly specPaths;
     private readonly specEncoding;
     private readonly pages;
@@ -8,4 +8,3 @@ declare class PageSpecFactory {
     getPageByName(name: string): PageSpec | undefined;
     getPageByUrl(url: string): PageSpec | undefined;
 }
-export default PageSpecFactory;

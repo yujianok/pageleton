@@ -57,6 +57,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.pageSpecLoader = void 0;
 var path_1 = __importDefault(require("path"));
 var xml2js_1 = __importDefault(require("xml2js"));
 var FileService_1 = require("../service/FileService");
@@ -228,5 +229,5 @@ var PageSpecLoader = (function () {
     };
     return PageSpecLoader;
 }());
-exports.default = new PageSpecLoader();
+exports.pageSpecLoader = new PageSpecLoader();
 //# sourceMappingURL=PageSpecLoader.js.map

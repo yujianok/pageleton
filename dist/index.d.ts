@@ -1,10 +1,8 @@
-import { BrowserDriverType } from './driver';
 import { PageComponentType } from './component';
 import { PageletonBrowser } from './page';
-export * from './component';
-export * from './page';
-export * from './driver';
-export * from './spec';
+export { AbstractComponent, PageComponent } from './component';
+export { PageletonBrowser, PageletonPage } from './page';
+export { PageSpec, ComponentSpec } from './spec';
 export declare type PageletonConfig = {
     specPaths?: string[];
     specEncoding?: string;
@@ -24,7 +22,6 @@ export declare type PageletonConfig = {
         isLandscape?: boolean;
     };
     customComponentTypes?: PageComponentType[];
-    customBrowserDriver?: BrowserDriverType;
 };
 export declare type PageletonInstance = {
     launchBrowser: () => Promise<PageletonBrowser>;
