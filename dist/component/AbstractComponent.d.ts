@@ -11,10 +11,10 @@ export declare abstract class AbstractComponent implements PageComponent {
     getAttribute(name: string): Promise<string | undefined>;
     click(): Promise<void>;
     mouseOver(): Promise<void>;
-    waitUntil(condition: WaitCondition, timeout: number): Promise<void>;
+    waitUntil(condition: WaitCondition, timeout?: number): Promise<void>;
     isPresent(): Promise<boolean>;
-    waitUntilPresent(timeout: number): Promise<void>;
-    waitUntilVanished(timeout: number): Promise<void>;
+    waitUntilPresent(timeout?: number): Promise<void>;
+    waitUntilVanished(timeout?: number): Promise<void>;
     protected getSubComponents(type: PageComponentType): PageComponent[];
     protected getElementDriver(canBeNull?: boolean): Promise<ElementDriver | undefined>;
 }

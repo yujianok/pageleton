@@ -41,7 +41,7 @@ export abstract class AbstractComponent implements PageComponent {
         await element!.mouseOver();
     }
 
-    async waitUntil(condition: WaitCondition, timeout: number): Promise<void> {
+    async waitUntil(condition: WaitCondition, timeout: number = 0): Promise<void> {
         const interval = 1000;
         const forever = timeout <= 0;
         let vestige = forever ? interval : timeout;
@@ -68,11 +68,11 @@ export abstract class AbstractComponent implements PageComponent {
         return width > 0 && height > 0;
     }
 
-    async waitUntilPresent(timeout: number): Promise<void> {
+    async waitUntilPresent(timeout?: number): Promise<void> {
         return await this.waitUntil(async (component) => await component.isPresent(), timeout);
     }
 
-    async waitUntilVanished(timeout: number): Promise<void> {
+    async waitUntilVanished(timeout?: number): Promise<void> {
         return await this.waitUntil(async (component) => !(await component.isPresent()), timeout);
     }
 

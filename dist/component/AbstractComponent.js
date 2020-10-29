@@ -122,6 +122,7 @@ var AbstractComponent = (function () {
         });
     };
     AbstractComponent.prototype.waitUntil = function (condition, timeout) {
+        if (timeout === void 0) { timeout = 0; }
         return __awaiter(this, void 0, void 0, function () {
             var interval, forever, vestige, _loop_1, this_1, state_1;
             return __generator(this, function (_a) {
