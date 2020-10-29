@@ -10,8 +10,8 @@ export interface PageComponent {
     mouseOver(): Promise<void>;
     isPresent(): Promise<boolean>;
     waitUntil(condition: WaitCondition, timeout: number): Promise<void>;
-    waitUntilPresent(timeout: number): Promise<void>;
-    waitUntilVanished(timeout: number): Promise<void>;
+    waitUntilPresent(timeout?: number): Promise<void>;
+    waitUntilVanished(timeout?: number): Promise<void>;
 }
 export interface PageComponentType {
     new (pageDriver: PageDriver, componentSpec: ComponentSpec): PageComponent;
