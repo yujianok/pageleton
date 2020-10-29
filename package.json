@@ -10,7 +10,7 @@
   ],
   "scripts": {
     "test": "mocha --timeout 60000 -r ts-node/register test/**/*.test.ts",
-    "build": "tsc --sourceMap"
+    "build": "rimraf ./dist && tsc --sourceMap"
   },
   "author": "Yu Jian",
   "license": "ISC",
@@ -27,6 +27,7 @@
     "@types/xml2js": "^0.4.5",
     "chai": "^4.2.0",
     "mocha": "^8.1.1",
+    "rimraf": "^3.0.2",
     "ts-node": "^8.10.2",
     "typescript": "^3.9.7"
   }

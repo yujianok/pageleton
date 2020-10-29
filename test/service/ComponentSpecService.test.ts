@@ -1,5 +1,5 @@
 import { ComponentSpec } from "../../src/spec";
-import { getRootElementNodes } from "../../src/service/ComponentSpecService";
+import componentSpecService from "../../src/service/ComponentSpecService";
 import { expect } from "chai";
 
 describe('Test ComponentSpecService', () => {
@@ -83,7 +83,7 @@ describe('Test ComponentSpecService', () => {
                 ]
             }
         ];
-        const actual = getRootElementNodes(rootComponents);
+        const actual = componentSpecService.getRootElementNodes(rootComponents);
         expect(actual).deep.equal([
             {
                 name: '1',

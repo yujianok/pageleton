@@ -1,8 +1,8 @@
 import { ElementDriver, PageDriver } from "../driver";
 import { ComponentSpec } from "../spec";
 import { PageComponent, PageComponentType, WaitCondition } from "./PageComponent";
-import { getElementRoutes } from "../service/ComponentSpecService";
-import { pageComponentTypeRegistry } from "./PageComponentTypeRegistry";
+import pageComponentTypeRegistry from "./PageComponentTypeRegistry";
+import componentSpecService from '../service/ComponentSpecService';
 
 export abstract class AbstractComponent implements PageComponent {
     protected readonly pageDriver: PageDriver;
@@ -88,7 +88,7 @@ export abstract class AbstractComponent implements PageComponent {
     }
 
     protected async getElementDriver(canBeNull?: boolean): Promise<ElementDriver | undefined> {
-        const elementRoutes = getElementRoutes(this.componentSpec);
+        const elementRoutes = componentSpecService.getElementRoutes(this.componentSpec);
         const elementDriver = await this.pageDriver.getElement(elementRoutes);
 
         if (!elementDriver && !canBeNull) {

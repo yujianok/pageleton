@@ -1,7 +1,8 @@
-import { PageComponentType, pageComponentTypeRegistry } from './component';
-import { browserDriverFactory } from './driver';
+import { PageComponentType } from './component';
 import { PageletonBrowser } from './page';
 import { PageSpecFactory } from './spec';
+import pageComponentTypeRegistry from './component/PageComponentTypeRegistry';
+import browserDriverFactory from './driver/BrowserDriverFactory';
 
 export { AbstractComponent, PageComponent } from './component';
 export { PageletonBrowser, PageletonPage } from './page';

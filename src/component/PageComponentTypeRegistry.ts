@@ -17,4 +17,4 @@ class PageComponentTypeRegistry {
     }
 }
 
-export const pageComponentTypeRegistry = new PageComponentTypeRegistry();
+export default new PageComponentTypeRegistry();

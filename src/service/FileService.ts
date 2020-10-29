@@ -3,7 +3,7 @@ import fs from 'fs';
 import glob from 'glob';
 
 
-export async function getAllFiles(filePath: string): Promise<string[]> {
+async function getAllFiles(filePath: string): Promise<string[]> {
     return new Promise((resolve, reject) => {
         glob(filePath, function (err, files) {
             if (err) {
@@ -15,7 +15,7 @@ export async function getAllFiles(filePath: string): Promise<string[]> {
     });
 }
 
-export async function readFileAsString(filePath: string, encoding: string): Promise<string> {
+async function readFileAsString(filePath: string, encoding: string): Promise<string> {
     return new Promise((resolve, reject) => {
         fs.readFile(filePath, encoding, function (err, content) {
             if (err) {
@@ -26,3 +26,5 @@ export async function readFileAsString(filePath: string, encoding: string): Prom
         });
     });
 }
+
+export default { getAllFiles, readFileAsString }

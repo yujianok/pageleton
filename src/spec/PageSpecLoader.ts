@@ -1,6 +1,6 @@
 import path from 'path';
 import xml2js from 'xml2js';
-import { readFileAsString } from '../service/FileService';
+import fileService from '../service/FileService';
 
 const getComponent = function (this: PageSpec, ...routes: string[]) {
     let current: ComponentSpec | undefined
@@ -50,7 +50,7 @@ export type ComponentSpec = {
 class PageSpecLoader {
 
     private async parseIncludeComponent(inculdePath: string, specEncoding: string, parent?: ComponentSpec): Promise<ComponentSpec[]> {
-        const specContent = await readFileAsString(inculdePath, specEncoding);
+        const specContent = await fileService.readFileAsString(inculdePath, specEncoding);
         const json = await parseXmlToJson(specContent);
         return await this.parsePageComponent(inculdePath, specEncoding, json, parent);
     }
@@ -97,7 +97,7 @@ class PageSpecLoader {
     }
 
     public async loadPageSpec(specPath: string, specEncoding: string): Promise<PageSpec> {
-        const specContent = await readFileAsString(specPath, specEncoding);
+        const specContent = await fileService.readFileAsString(specPath, specEncoding);
 
         const json = await parseXmlToJson(specContent);
         const { $, ...others } = json.Page;

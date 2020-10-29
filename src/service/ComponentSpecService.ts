@@ -1,7 +1,7 @@
 import { ElementNode, ElementRoute } from "../driver";
-import { ComponentSpec, PageSpec } from "../spec";
+import { ComponentSpec } from "../spec";
 
-export function getElementRoutes(componentSpec: ComponentSpec) {
+function getElementRoutes(componentSpec: ComponentSpec) {
     const elementRoutes: ElementRoute[] = [];
 
     let cursor: ComponentSpec | undefined = componentSpec;
@@ -13,7 +13,7 @@ export function getElementRoutes(componentSpec: ComponentSpec) {
     return elementRoutes;
 }
 
-export function getRootElementNodes(rootComponents: ComponentSpec[]) {
+function getRootElementNodes(rootComponents: ComponentSpec[]) {
     function componentToNode(component: ComponentSpec): ElementNode {
         return {
             name: component.name,
@@ -25,3 +25,5 @@ export function getRootElementNodes(rootComponents: ComponentSpec[]) {
 
     return rootComponents.map(componentToNode);
 }
+
+export default { getElementRoutes, getRootElementNodes };

@@ -1,7 +1,8 @@
-import { PageComponent, pageComponentTypeRegistry } from "../component";
+import { PageComponent } from "../component";
 import { PageDriver } from "../driver";
-import { getRootElementNodes } from "../service/ComponentSpecService";
 import { PageSpec, PageSpecFactory } from "../spec";
+import pageComponentTypeRegistry from '../component/PageComponentTypeRegistry'
+import componentSpecService from '../service/ComponentSpecService'
 
 export class PageletonPage {
     private readonly pageDriver: PageDriver;
@@ -57,7 +58,7 @@ export class PageletonPage {
 
     async checkComponents(): Promise<boolean> {
         if (this.currentPage) {
-            const rootComponents = getRootElementNodes(this.currentPage.rootComponents)
+            const rootComponents = componentSpecService.getRootElementNodes(this.currentPage.rootComponents)
             return await this.pageDriver.checkComponents(rootComponents);
         } else {
             return false;

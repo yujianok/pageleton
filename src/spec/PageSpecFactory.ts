@@ -1,4 +1,4 @@
-import { getAllFiles } from "../service/FileService";
+import fileService from "../service/FileService";
 import { PageSpec, pageSpecLoader } from "./PageSpecLoader";
 
 export class PageSpecFactory {
@@ -16,7 +16,7 @@ export class PageSpecFactory {
     static async init(specPaths: string[], specEncoding?: string) {
         const instance = new PageSpecFactory(specPaths, specEncoding);
         for (const specPath of instance.specPaths) {
-            const files = await getAllFiles(specPath);
+            const files = await fileService.getAllFiles(specPath);
             const pages = await Promise.all(files.map(file => pageSpecLoader.loadPageSpec(file, instance.specEncoding)));
             instance.pages.push(...pages);
         }

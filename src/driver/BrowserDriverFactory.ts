@@ -24,4 +24,4 @@ class BrowserDriverFactory {
     }
 }
 
-export const browserDriverFactory = new BrowserDriverFactory();
+export default new BrowserDriverFactory();
