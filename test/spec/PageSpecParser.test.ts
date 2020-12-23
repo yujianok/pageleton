@@ -15,7 +15,7 @@ describe('Test PageSpecParser', () => {
         expect(Header.name).equal('Header');
         expect(Header.selector).equal('.header')
         assert.notExists(Header.xpath);
-        expect(Header.children.length).equal(4);
+        expect(Header.children.length).equal(5);
 
         const Title = page.getComponent('Header', 'My To Do List');
         assert.exists(Title);
@@ -25,11 +25,11 @@ describe('Test PageSpecParser', () => {
         assert.notExists(Title.xpath);
         expect(Title.children.length).equal(0);
 
-        const Input = page.getComponent('Header', 'My Input');
+        const Input = page.getComponent('Header', 'Title Field', 'Title Input');
         assert.exists(Input);
-        expect(Input.parent?.name).equal('Header');
-        expect(Input.name).equal('My Input');
-        expect(Input.selector).equal('#myInput');
+        expect(Input.parent?.name).equal('Title Field');
+        expect(Input.name).equal('Title Input');
+        expect(Input.selector).equal('input');
         assert.notExists(Input.xpath);
         expect(Input.children.length).equal(0);
 
@@ -77,7 +77,7 @@ describe('Test PageSpecParser', () => {
             assert.exists(Icon);
             expect(Icon.parent?.name).equal(`Item-${i + 1}`);
             expect(Icon.name).equal('Delete');
-            expect(Icon.xpath).equal('./span[3]');
+            expect(Icon.xpath).equal('./span[4]');
             assert.notExists(Icon.selector);
             expect(Icon.children.length).equal(0);
 

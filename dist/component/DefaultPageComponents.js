@@ -12,6 +12,17 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
+var __assign = (this && this.__assign) || function () {
+    __assign = Object.assign || function(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+                t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
+};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -52,6 +63,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.BuildInComponents = void 0;
 var AbstractComponent_1 = require("./AbstractComponent");
 var PageComponentTypeRegistry_1 = __importDefault(require("./PageComponentTypeRegistry"));
 var Component = (function (_super) {
@@ -196,4 +208,190 @@ var TableField = (function (_super) {
     return TableField;
 }(AbstractComponent_1.AbstractComponent));
 PageComponentTypeRegistry_1.default.registerComponentType(TableField);
+var Form = (function (_super) {
+    __extends(Form, _super);
+    function Form() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    Form.prototype.getValue = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            var fields;
+            var _this = this;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4, Promise.all(this.getSubComponents(FormField).map(function (field) { return __awaiter(_this, void 0, void 0, function () {
+                            var label, value;
+                            var _a;
+                            return __generator(this, function (_b) {
+                                switch (_b.label) {
+                                    case 0: return [4, field.getLabel()];
+                                    case 1:
+                                        label = _b.sent();
+                                        return [4, field.getValue()];
+                                    case 2:
+                                        value = _b.sent();
+                                        return [2, label === undefined && value === undefined ? undefined : (_a = {}, _a[label || 'unknown'] = value, _a)];
+                                }
+                            });
+                        }); }))];
+                    case 1:
+                        fields = _a.sent();
+                        return [2, fields.filter(function (field) { return field !== undefined; }).reduce(function (rs, field) { return (__assign(__assign({}, rs), field)); }, {})];
+                }
+            });
+        });
+    };
+    Form.prototype.setValue = function (value) {
+        return __awaiter(this, void 0, void 0, function () {
+            var _a, _b, _i, fieldName, fieldValue, fields, _c, fields_1, field, fieldLabel;
+            return __generator(this, function (_d) {
+                switch (_d.label) {
+                    case 0:
+                        _a = [];
+                        for (_b in value)
+                            _a.push(_b);
+                        _i = 0;
+                        _d.label = 1;
+                    case 1:
+                        if (!(_i < _a.length)) return [3, 7];
+                        fieldName = _a[_i];
+                        fieldValue = value[fieldName];
+                        fields = this.getSubComponents(FormField);
+                        _c = 0, fields_1 = fields;
+                        _d.label = 2;
+                    case 2:
+                        if (!(_c < fields_1.length)) return [3, 6];
+                        field = fields_1[_c];
+                        return [4, field.getLabel()];
+                    case 3:
+                        fieldLabel = _d.sent();
+                        if (!(fieldLabel === fieldName)) return [3, 5];
+                        return [4, field.setValue(fieldValue)];
+                    case 4:
+                        _d.sent();
+                        _d.label = 5;
+                    case 5:
+                        _c++;
+                        return [3, 2];
+                    case 6:
+                        _i++;
+                        return [3, 1];
+                    case 7: return [2];
+                }
+            });
+        });
+    };
+    return Form;
+}(AbstractComponent_1.AbstractComponent));
+PageComponentTypeRegistry_1.default.registerComponentType(Form);
+var FormField = (function (_super) {
+    __extends(FormField, _super);
+    function FormField() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    FormField.prototype.getValue = function () {
+        var _a;
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_b) {
+                switch (_b.label) {
+                    case 0: return [4, ((_a = this.getSubComponent(FieldInput)) === null || _a === void 0 ? void 0 : _a.getValue())];
+                    case 1: return [2, _b.sent()];
+                }
+            });
+        });
+    };
+    FormField.prototype.getLabel = function () {
+        var _a;
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_b) {
+                switch (_b.label) {
+                    case 0: return [4, ((_a = this.getSubComponent(FieldLabel)) === null || _a === void 0 ? void 0 : _a.getText())];
+                    case 1: return [2, _b.sent()];
+                }
+            });
+        });
+    };
+    FormField.prototype.setValue = function (value) {
+        var _a;
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_b) {
+                switch (_b.label) {
+                    case 0: return [4, ((_a = this.getSubComponent(FieldInput)) === null || _a === void 0 ? void 0 : _a.setValue(value))];
+                    case 1:
+                        _b.sent();
+                        return [2];
+                }
+            });
+        });
+    };
+    return FormField;
+}(AbstractComponent_1.AbstractComponent));
+PageComponentTypeRegistry_1.default.registerComponentType(FormField);
+var FieldLabel = (function (_super) {
+    __extends(FieldLabel, _super);
+    function FieldLabel() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    return FieldLabel;
+}(AbstractComponent_1.AbstractComponent));
+PageComponentTypeRegistry_1.default.registerComponentType(FieldLabel);
+var FieldInput = (function (_super) {
+    __extends(FieldInput, _super);
+    function FieldInput() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    FieldInput.prototype.getValue = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            var element, _a;
+            return __generator(this, function (_b) {
+                switch (_b.label) {
+                    case 0: return [4, this.getElementDriver(true)];
+                    case 1:
+                        element = _b.sent();
+                        _a = element;
+                        if (!_a) return [3, 3];
+                        return [4, element.getValue()];
+                    case 2:
+                        _a = (_b.sent());
+                        _b.label = 3;
+                    case 3: return [2, _a];
+                }
+            });
+        });
+    };
+    FieldInput.prototype.setValue = function (value) {
+        return __awaiter(this, void 0, void 0, function () {
+            var element, _a;
+            return __generator(this, function (_b) {
+                switch (_b.label) {
+                    case 0: return [4, this.getElementDriver(true)];
+                    case 1:
+                        element = _b.sent();
+                        _a = element;
+                        if (!_a) return [3, 3];
+                        return [4, element.setValue(value)];
+                    case 2:
+                        _a = (_b.sent());
+                        _b.label = 3;
+                    case 3:
+                        _a;
+                        return [2];
+                }
+            });
+        });
+    };
+    return FieldInput;
+}(AbstractComponent_1.AbstractComponent));
+PageComponentTypeRegistry_1.default.registerComponentType(FieldInput);
+exports.BuildInComponents = {
+    Input: Input,
+    Table: Table,
+    TableRow: TableRow,
+    TableHeader: TableHeader,
+    TableField: TableField,
+    Form: Form,
+    FormField: FormField,
+    FieldLabel: FieldLabel,
+    FieldInput: FieldInput,
+};
 //# sourceMappingURL=DefaultPageComponents.js.map

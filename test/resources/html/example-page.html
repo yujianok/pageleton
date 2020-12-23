@@ -38,7 +38,7 @@
             user-select: none;
         }
 
-        ul li span{
+        ul li span {
             margin-left: 8px;
         }
 
@@ -92,13 +92,27 @@
             padding: 30px 40px;
             color: white;
             text-align: center;
+            display: flex;
+            flex-direction: column;
         }
 
-        /* Clear floats after the header */
-        .header:after {
-            content: "";
-            display: table;
-            clear: both;
+        .header-field {
+            margin-bottom: 8px;
+            display: flex;
+        }
+
+        .header-field > span {
+            width: 120px;
+        }
+
+        .header-buttons {
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+        }
+
+        .header-buttons > span {
+            margin-left: 32px;
         }
 
         /* Style the input */
@@ -129,7 +143,7 @@
         .addBtn:hover {
             background-color: #bbb;
         }
-        
+
         .myModal {
             position: fixed;
             top: 0;
@@ -155,18 +169,27 @@
 
     <div id="myDIV" class="header">
         <h2 style="margin:5px">My To Do List</h2>
-        <input type="text" id="myInput" placeholder="Title...">
-        <span onclick="newElement()" class="addBtn">Add</span>
-        <span onclick="leaveSite()" class="addBtn">Leave</span>
+        <div class="header-field">
+            <span>Title:</span>
+            <input type="text" id="myInput" placeholder="Title..." />
+        </div>
+        <div class="header-field">
+            <span>Description:</span>
+            <input type="text" id="myDesc" placeholder="Description..." />
+        </div>
+        <div class="header-buttons">
+            <span onclick="newElement()" class="addBtn">Add</span>
+            <span onclick="leaveSite()" class="addBtn">Leave</span>
+        </div>
     </div>
 
     <ul id="myUL">
-        <li><span>1</span><span>Hit the gym</span></li>
-        <li class="checked"><span>2</span><span>Pay bills</span></li>
-        <li><span>3</span><span>Meet George</span></li>
-        <li><span>4</span><span>Buy eggs</span></li>
-        <li><span>5</span><span>Read a book</span></li>
-        <li><span>6</span><span>Organize office</span></li>
+        <li><span>1</span><span>Hit the gym</span><span>Hit the gym desc...</span></li>
+        <li class="checked"><span>2</span><span>Pay bills</span><span>Pay bills desc...</span></li>
+        <li><span>3</span><span>Meet George</span><span>Meet George desc...</span></li>
+        <li><span>4</span><span>Buy eggs</span><span>Buy eggs desc...</span></li>
+        <li><span>5</span><span>Read a book</span><span>Read a book desc...</span></li>
+        <li><span>6</span><span>Organize office</span><span>Organize office desc...</span></li>
     </ul>
 
     <script>
@@ -220,19 +243,27 @@
             var span = document.createElement("SPAN");
             span.appendChild(num);
             li.appendChild(span);
-            
+
             var inputValue = document.getElementById("myInput").value;
             var t = document.createTextNode(inputValue);
             var span = document.createElement("SPAN");
             span.appendChild(t);
             li.appendChild(span);
-            
+
+            var description = document.getElementById("myDesc").value;
+            var d = document.createTextNode(description);
+            var span = document.createElement("SPAN");
+            span.appendChild(d);
+            li.appendChild(span);
+
+
             if (inputValue === '') {
                 showAlert("You must write something!");
             } else {
                 document.getElementById("myUL").appendChild(li);
             }
             document.getElementById("myInput").value = "";
+            document.getElementById("myDesc").value = "";
 
             var span = document.createElement("SPAN");
             var txt = document.createTextNode("\u00D7");

@@ -219,12 +219,15 @@ var AbstractComponent = (function () {
     };
     AbstractComponent.prototype.getSubComponents = function (type) {
         var _this = this;
-        var subComponentSpecs = this.componentSpec.children.filter(function (c) { return c.type === type.name; });
-        var subComponents = subComponentSpecs.map(function (subComponentSpec) {
+        return this.componentSpec.children
+            .map(function (subComponentSpec) {
             var SubComponentType = PageComponentTypeRegistry_1.default.getComponentType(subComponentSpec.type);
             return new SubComponentType(_this.pageDriver, subComponentSpec);
-        });
-        return subComponents;
+        })
+            .filter(function (subComponent) { return subComponent instanceof type; });
+    };
+    AbstractComponent.prototype.getSubComponent = function (type) {
+        return this.getSubComponents(type).shift();
     };
     AbstractComponent.prototype.getElementDriver = function (canBeNull) {
         return __awaiter(this, void 0, void 0, function () {

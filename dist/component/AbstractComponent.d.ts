@@ -5,7 +5,7 @@ export declare abstract class AbstractComponent implements PageComponent {
     protected readonly pageDriver: PageDriver;
     protected readonly componentSpec: ComponentSpec;
     constructor(pageDriver: PageDriver, componentSpec: ComponentSpec);
-    setValue(value: string): Promise<void>;
+    setValue(value: any): Promise<void>;
     getValue(): Promise<any>;
     getText(): Promise<string>;
     getAttribute(name: string): Promise<string | undefined>;
@@ -16,5 +16,6 @@ export declare abstract class AbstractComponent implements PageComponent {
     waitUntilPresent(timeout?: number): Promise<void>;
     waitUntilVanished(timeout?: number): Promise<void>;
     protected getSubComponents(type: PageComponentType): PageComponent[];
+    protected getSubComponent(type: PageComponentType): PageComponent | undefined;
     protected getElementDriver(canBeNull?: boolean): Promise<ElementDriver | undefined>;
 }

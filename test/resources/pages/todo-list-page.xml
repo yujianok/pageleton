@@ -1,17 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <Page name="Pageleton" url="/test/resources/html/example-page.html">
-    <Header name="Header" selector=".header">
+    <Form name="Header" selector=".header">
         <Title name="My To Do List" />
-        <Input name="My Input" selector="#myInput" />
+        <FormField name="Title Field" selector=".header-field:nth-child(2)">
+            <FieldLabel name="Title:"/>
+            <FieldInput name="Title Input" selector="input"/>
+        </FormField>
+        <FormField name="Desc Field" selector=".header-field:nth-child(3)">
+            <FieldLabel name="Description:"/>
+            <FieldInput name="Desc Input" selector="input"/>
+        </FormField>
         <Button name="Add" />
         <Button name="Leave" />
-    </Header>
+    </Form>
     <Table name="Todo List" selector="#myUL">
         <TableRow name="Item-{index}" selector="li:nth-child({index})" multiple="10">
-            <TableField name="Item Index" xpath="./span[1]"/>
-            <TableField name="Item Title" xpath="./span[2]"/>
-            <Icon name='Delete' xpath="./span[3]"/>
+            <TableField name="Item Index" xpath="./span[1]" />
+            <TableField name="Item Title" xpath="./span[2]" />
+            <TableField name="Item Desc" xpath="./span[3]" />
+            <Icon name='Delete' xpath="./span[4]" />
         </TableRow>
     </Table>
     <Include path="./alert-message.xml" />

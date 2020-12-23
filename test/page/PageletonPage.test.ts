@@ -14,7 +14,7 @@ describe('Test PageletonPage', () => {
             height: 900,
         },
         executablePath: 'google-chrome',
-        // args: ['--no-sandbox', '--disable-setuid-sandbox',  '--use-gl=swiftshader']
+        // args: ['--no-sandbox', '--disable-setuid-sandbox', '--use-gl=swiftshader']
         args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-gpu']
     });
 
@@ -35,12 +35,12 @@ describe('Test PageletonPage', () => {
             const expectData = {
                 headers: [],
                 rows: [
-                    ['1', 'Hit the gym'],
-                    ['2', 'Pay bills'],
-                    ['3', 'Meet George'],
-                    ['4', 'Buy eggs'],
-                    ['5', 'Read a book'],
-                    ['6', 'Organize office']
+                    ['1', 'Hit the gym', 'Hit the gym desc...'],
+                    ['2', 'Pay bills', 'Pay bills desc...'],
+                    ['3', 'Meet George', 'Meet George desc...'],
+                    ['4', 'Buy eggs', 'Buy eggs desc...'],
+                    ['5', 'Read a book', 'Read a book desc...'],
+                    ['6', 'Organize office', 'Organize office desc...']
                 ]
             };
             expect(tableData).to.deep.equal(expectData);
@@ -65,15 +65,26 @@ describe('Test PageletonPage', () => {
             const alertPresent2 = await testPage.getComponent('Alert Message').isPresent();
             expect(alertPresent2).equal(false);
 
-            await testPage.getComponent('Header', 'My Input').setValue('Test Pageleton');
-            const inputValue = await testPage.getComponent('Header', 'My Input').getValue();
+            await testPage.getComponent('Header', 'Title Field', 'Title Input').setValue('Test Pageleton');
+            const inputValue = await testPage.getComponent('Header', 'Title Field', 'Title Input').getValue();
             expect(inputValue).equal('Test Pageleton');
             await testPage.getComponent('Header', 'Add').click();
             const lastItemIndex = await testPage.getComponent('Todo List', 'Item-7', 'Item Index').getText();
             expect(lastItemIndex).equal('7');
             const lastItemTitle = await testPage.getComponent('Todo List', 'Item-7', 'Item Title').getText();
             expect(lastItemTitle).equal('Test Pageleton');
-
+            
+            await testPage.getComponent('Header').setValue({ 'Title:': 'Test form', 'Description:': 'Test form desc...' });
+            const formData = await testPage.getComponent('Header').getValue();
+            expect({ 'Title:': 'Test form', 'Description:': 'Test form desc...' }).to.deep.equal(formData);
+            await testPage.getComponent('Header', 'Add').click(); 
+            const itemIndex = await testPage.getComponent('Todo List', 'Item-8', 'Item Index').getText();
+            expect(itemIndex).equal('8');
+            const itemTitle = await testPage.getComponent('Todo List', 'Item-8', 'Item Title').getText();
+            expect(itemTitle).equal('Test form');
+            const itemDesc = await testPage.getComponent('Todo List', 'Item-8', 'Item Desc').getText();
+            expect(itemDesc).equal('Test form desc...');
+           
             await testPage.getComponent('Header', 'Leave').click();
             await testPage.waitForNavigation();
             const pageName = testPage.getPageName();

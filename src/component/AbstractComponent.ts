@@ -13,7 +13,7 @@ export abstract class AbstractComponent implements PageComponent {
         this.componentSpec = componentSpec;
     }
 
-    async setValue(value: string): Promise<void> {
+    async setValue(value: any): Promise<void> {
         throw new Error(`${this.constructor.name} not supports setting value`);
     }
 
@@ -77,14 +77,16 @@ export abstract class AbstractComponent implements PageComponent {
     }
 
     protected getSubComponents(type: PageComponentType) {
-        const subComponentSpecs = this.componentSpec.children.filter(c => c.type === type.name);
+        return this.componentSpec.children
+            .map((subComponentSpec) => {
+                const SubComponentType = pageComponentTypeRegistry.getComponentType(subComponentSpec.type);
+                return new SubComponentType(this.pageDriver, subComponentSpec);
+            })
+            .filter(subComponent => subComponent instanceof type);
+    }
 
-        const subComponents = subComponentSpecs.map((subComponentSpec) => {
-            const SubComponentType = pageComponentTypeRegistry.getComponentType(subComponentSpec.type);
-            return new SubComponentType(this.pageDriver, subComponentSpec);
-        });
-
-        return subComponents;
+    protected getSubComponent(type: PageComponentType) {
+        return this.getSubComponents(type).shift();
     }
 
     protected async getElementDriver(canBeNull?: boolean): Promise<ElementDriver | undefined> {

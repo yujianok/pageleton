@@ -3,7 +3,7 @@ import { ComponentSpec } from "../spec";
 
 export type WaitCondition = (pageComponent: PageComponent) => Promise<boolean>;
 export interface PageComponent {
-    setValue(value: string): Promise<void>;
+    setValue(value: any): Promise<void>;
     getValue(): Promise<any>;
     getText(): Promise<string>;
     getAttribute(name: string): Promise<string | undefined>;
